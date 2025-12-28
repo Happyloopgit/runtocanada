@@ -54,32 +54,34 @@ This sprint plan divides the entire implementation into logical, atomic, and seq
 **Dependencies:** Sprint 0
 
 ### Tasks:
-- [ ] Create Firebase project in Firebase Console
-- [ ] Add iOS app to Firebase project
-- [ ] Download and add `GoogleService-Info.plist` to iOS project
-- [ ] Add Android app to Firebase project
-- [ ] Download and add `google-services.json` to Android project
-- [ ] Configure Firebase in Flutter app (`firebase_core`)
-- [ ] Initialize Firebase in `main.dart`
-- [ ] Enable Email/Password authentication in Firebase Console
-- [ ] Create app theme (colors, text styles, button styles)
-- [ ] Design and implement Login screen UI
-- [ ] Design and implement Signup screen UI
-- [ ] Design and implement Forgot Password screen UI
-- [ ] Create reusable form widgets (text fields, buttons)
-- [ ] Add form validation (email, password strength)
-- [ ] Implement loading indicators for auth actions
-- [ ] Create error message display widgets
-- [ ] Set up navigation structure (routing)
-- [ ] Test UI on different screen sizes
-- [ ] Test UI in dark mode (if supporting)
-- [ ] Create auth state provider (Riverpod)
+- [x] Create Firebase project in Firebase Console
+- [x] Add iOS app to Firebase project
+- [x] Download and add `GoogleService-Info.plist` to iOS project
+- [x] Add Android app to Firebase project
+- [x] Download and add `google-services.json` to Android project
+- [x] Configure Firebase in Flutter app (`firebase_core`)
+- [x] Initialize Firebase in `main.dart`
+- [x] Enable Email/Password authentication in Firebase Console
+- [x] Create app theme (colors, text styles, button styles)
+- [x] Design and implement Login screen UI
+- [x] Design and implement Signup screen UI
+- [x] Design and implement Forgot Password screen UI
+- [x] Create reusable form widgets (text fields, buttons)
+- [x] Add form validation (email, password strength)
+- [x] Implement loading indicators for auth actions
+- [x] Create error message display widgets
+- [x] Set up navigation structure (routing)
+- [x] Test UI on different screen sizes
+- [x] Test UI in dark mode (if supporting)
+- [x] Create auth state provider (Riverpod)
 
 **Acceptance Criteria:**
-- Firebase configured for both iOS and Android
-- Authentication UI screens complete and visually polished
-- Form validation works correctly
-- Navigation between auth screens functional
+- [x] Firebase configured for both iOS and Android
+- [x] Authentication UI screens complete and visually polished
+- [x] Form validation works correctly
+- [x] Navigation between auth screens functional
+
+**Status:** ✅ COMPLETED (2025-12-28)
 
 ---
 
@@ -90,37 +92,39 @@ This sprint plan divides the entire implementation into logical, atomic, and seq
 **Dependencies:** Sprint 1
 
 ### Tasks:
-- [ ] Create `AuthService` class for Firebase Auth operations
-- [ ] Implement email/password sign up functionality
-- [ ] Implement email/password sign in functionality
-- [ ] Implement sign out functionality
-- [ ] Implement password reset functionality
-- [ ] Create `User` model class
-- [ ] Create `UserSettings` model class
-- [ ] Set up Firestore collection for user profiles
-- [ ] Create user profile on signup
-- [ ] Implement auth state stream (listen to auth changes)
-- [ ] Create auth providers using Riverpod
-- [ ] Connect login screen to authentication logic
-- [ ] Connect signup screen to authentication logic
-- [ ] Connect forgot password screen to logic
-- [ ] Handle authentication errors gracefully
-- [ ] Display error messages to user
-- [ ] Implement loading states during auth operations
-- [ ] Test successful signup flow
-- [ ] Test successful login flow
-- [ ] Test logout flow
-- [ ] Test error scenarios (wrong password, email in use, etc.)
-- [ ] Set up Firebase Security Rules for user data
-- [ ] Test security rules in Firebase Console
+- [x] Create `AuthService` class for Firebase Auth operations
+- [x] Implement email/password sign up functionality
+- [x] Implement email/password sign in functionality
+- [x] Implement sign out functionality
+- [x] Implement password reset functionality
+- [x] Create `User` model class
+- [x] Create `UserSettings` model class
+- [x] Set up Firestore collection for user profiles
+- [x] Create user profile on signup
+- [x] Implement auth state stream (listen to auth changes)
+- [x] Create auth providers using Riverpod
+- [x] Connect login screen to authentication logic
+- [x] Connect signup screen to authentication logic
+- [x] Connect forgot password screen to logic
+- [x] Handle authentication errors gracefully
+- [x] Display error messages to user
+- [x] Implement loading states during auth operations
+- [x] Test successful signup flow
+- [x] Test successful login flow
+- [x] Test logout flow
+- [x] Test error scenarios (wrong password, email in use, etc.)
+- [x] Set up Firebase Security Rules for user data
+- [x] Test security rules in Firebase Console
 
 **Acceptance Criteria:**
-- Users can successfully sign up with email/password
-- Users can log in and log out
-- Password reset emails are sent
-- User profiles created in Firestore
-- Auth state persists across app restarts
-- Errors handled and displayed appropriately
+- [x] Users can successfully sign up with email/password
+- [x] Users can log in and log out
+- [x] Password reset emails are sent
+- [x] User profiles created in Firestore
+- [x] Auth state persists across app restarts
+- [x] Errors handled and displayed appropriately
+
+**Status:** ✅ COMPLETED (2025-12-28)
 
 ---
 
