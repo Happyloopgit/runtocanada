@@ -13,6 +13,12 @@ This document tracks all changes made to the Run to Canada project, organized by
 | 002 | 2025-12-28 | Sprint 0 | app/lib/app/* | Configuration | Environment config for build flavors | [Session 002](Session_log.md#session-002---2025-12-28) |
 | 002 | 2025-12-28 | Sprint 0 | app/lib/core/* | Setup | Core utilities and constants | [Session 002](Session_log.md#session-002---2025-12-28) |
 | 002 | 2025-12-28 | Sprint 0 | README.md, .gitignore | Setup | Root project files | [Session 002](Session_log.md#session-002---2025-12-28) |
+| 003 | 2025-12-28 | Sprint 1 | Firebase config | Configuration | Firebase project setup for iOS/Android | [Session 003](Session_log.md#session-003---2025-12-28) |
+| 003 | 2025-12-28 | Sprint 1 | app/lib/core/theme/* | Setup | App theme with colors, text styles, Material 3 theme | [Session 003](Session_log.md#session-003---2025-12-28) |
+| 003 | 2025-12-28 | Sprint 1 | app/lib/core/widgets/* | Setup | Reusable UI components (buttons, fields, loaders, errors) | [Session 003](Session_log.md#session-003---2025-12-28) |
+| 003 | 2025-12-28 | Sprint 1 | app/lib/features/auth/* | Feature | Authentication screens (Login, Signup, Forgot Password) | [Session 003](Session_log.md#session-003---2025-12-28) |
+| 003 | 2025-12-28 | Sprint 1 | app/lib/main.dart | Setup | Firebase initialization, routing, theme setup | [Session 003](Session_log.md#session-003---2025-12-28) |
+| 003 | 2025-12-28 | Sprint 1 | app/assets/images/* | Setup | App logo added | [Session 003](Session_log.md#session-003---2025-12-28) |
 
 ---
 
@@ -27,6 +33,18 @@ This document tracks all changes made to the Run to Canada project, organized by
 | 002 | 2025-12-28 | Flutter Project | 149 files | Setup | Created Flutter project with feature-based architecture | [Session 002](Session_log.md#session-002---2025-12-28) |
 | 002 | 2025-12-28 | Dependencies | pubspec.yaml | Configuration | Added Riverpod, Hive, Firebase, Mapbox, etc. | [Session 002](Session_log.md#session-002---2025-12-28) |
 | 002 | 2025-12-28 | Core Utilities | 5 files | Setup | Environment config, constants, utils | [Session 002](Session_log.md#session-002---2025-12-28) |
+
+### Sprint 1 - Firebase Setup & Authentication UI
+
+| Session | Date | Component | Files Changed | Type | Description | Reference |
+|---------|------|-----------|---------------|------|-------------|-----------|
+| 003 | 2025-12-28 | Firebase | 4 files | Configuration | Firebase project created, iOS/Android config files added | [Session 003](Session_log.md#session-003---2025-12-28) |
+| 003 | 2025-12-28 | Theme System | 3 files | Setup | AppColors, AppTextStyles, AppTheme with Material 3 | [Session 003](Session_log.md#session-003---2025-12-28) |
+| 003 | 2025-12-28 | UI Components | 4 files | Setup | Reusable buttons, text fields, loaders, error messages | [Session 003](Session_log.md#session-003---2025-12-28) |
+| 003 | 2025-12-28 | Auth Screens | 3 files | Feature | Login, Signup, Forgot Password screens | [Session 003](Session_log.md#session-003---2025-12-28) |
+| 003 | 2025-12-28 | Navigation | 2 files | Setup | AppRouter and route constants | [Session 003](Session_log.md#session-003---2025-12-28) |
+| 003 | 2025-12-28 | Main App | 2 files | Setup | Firebase init in main.dart, firebase_options.dart | [Session 003](Session_log.md#session-003---2025-12-28) |
+| 003 | 2025-12-28 | Assets | 1 file | Setup | App logo (1024x1024) | [Session 003](Session_log.md#session-003---2025-12-28) |
 
 ---
 
@@ -46,6 +64,10 @@ This document tracks all changes made to the Run to Canada project, organized by
 | 001 | 2025-12-28 | Sprint 0 | Created tracking system | 4 tracker files | [Session 001](Session_log.md#session-001---2025-12-28) |
 | 002 | 2025-12-28 | Sprint 0 | Flutter project with modular architecture | 149 files | [Session 002](Session_log.md#session-002---2025-12-28) |
 | 002 | 2025-12-28 | Sprint 0 | Core utilities and constants | 5 files | [Session 002](Session_log.md#session-002---2025-12-28) |
+| 003 | 2025-12-28 | Sprint 1 | App theme system (colors, text styles, Material 3 theme) | 3 files | [Session 003](Session_log.md#session-003---2025-12-28) |
+| 003 | 2025-12-28 | Sprint 1 | Reusable UI components (buttons, text fields, loaders) | 4 files | [Session 003](Session_log.md#session-003---2025-12-28) |
+| 003 | 2025-12-28 | Sprint 1 | Navigation router and app initialization | 3 files | [Session 003](Session_log.md#session-003---2025-12-28) |
+| 003 | 2025-12-28 | Sprint 1 | App logo asset | 1 file | [Session 003](Session_log.md#session-003---2025-12-28) |
 
 ### Configuration
 
@@ -53,12 +75,13 @@ This document tracks all changes made to the Run to Canada project, organized by
 |---------|------|--------|-------------|-------|-----------|
 | 002 | 2025-12-28 | Sprint 0 | Added all project dependencies | pubspec.yaml | [Session 002](Session_log.md#session-002---2025-12-28) |
 | 002 | 2025-12-28 | Sprint 0 | Environment config for dev/staging/production | env.dart | [Session 002](Session_log.md#session-002---2025-12-28) |
+| 003 | 2025-12-28 | Sprint 1 | Firebase project setup for iOS/Android | 4 files | [Session 003](Session_log.md#session-003---2025-12-28) |
 
 ### Feature
 
 | Session | Date | Sprint | Description | Files | Reference |
 |---------|------|--------|-------------|-------|-----------|
-| - | - | - | No features implemented yet | - | - |
+| 003 | 2025-12-28 | Sprint 1 | Authentication screens (Login, Signup, Forgot Password) | 3 files | [Session 003](Session_log.md#session-003---2025-12-28) |
 
 ### Bug Fix
 
@@ -306,6 +329,129 @@ Add a change log entry when:
 
 ---
 
+### Session 003 - Firebase & Authentication UI
+
+**Date:** 2025-12-28
+**Sprint:** Sprint 1
+
+#### Firebase Configuration (4 files)
+
+1. **app/ios/Runner/GoogleService-Info.plist**
+   - iOS Firebase configuration
+   - Project ID: runtocanada
+   - Bundle ID: com.runtocanada.app
+
+2. **app/android/app/google-services.json**
+   - Android Firebase configuration
+   - Package: com.runtocanada.app
+
+3. **app/android/build.gradle.kts**
+   - Added Google Services buildscript plugin
+
+4. **app/android/app/build.gradle.kts**
+   - Applied Google Services plugin
+   - Set minSdk to 21
+   - Added multidex support
+
+#### Theme System Created (3 files)
+
+1. **app/lib/core/theme/app_colors.dart**
+   - Canadian red primary color
+   - Nature-inspired green secondary
+   - Complete color palette including status, map, chart, and premium colors
+
+2. **app/lib/core/theme/app_text_styles.dart**
+   - Display, headline, title, body, label styles
+   - Special stats display styles
+   - Button, link, error text styles
+
+3. **app/lib/core/theme/app_theme.dart**
+   - Material 3 light theme
+   - Dark theme (basic setup)
+   - Complete component themes (buttons, cards, inputs, etc.)
+
+#### UI Components Created (4 files)
+
+1. **app/lib/core/widgets/custom_button.dart**
+   - CustomButton, CustomTextButton, CustomIconButton
+   - Loading state support
+   - Outlined variant support
+
+2. **app/lib/core/widgets/custom_text_field.dart**
+   - CustomTextField with validation
+   - EmailTextField with email validation
+   - PasswordTextField with strength validation
+   - Show/hide password toggle
+
+3. **app/lib/core/widgets/loading_indicator.dart**
+   - LoadingIndicator, LoadingOverlay, InlineLoader
+   - Customizable size and color
+
+4. **app/lib/core/widgets/error_message.dart**
+   - ErrorMessage, InlineError
+   - SuccessMessage
+   - Retry functionality
+
+#### Authentication Screens (3 files)
+
+1. **app/lib/features/auth/presentation/screens/login_screen.dart**
+   - Email and password fields
+   - Navigation to signup and forgot password
+   - App logo display
+   - Form validation
+
+2. **app/lib/features/auth/presentation/screens/signup_screen.dart**
+   - Full name, email, password, confirm password
+   - Terms and conditions checkbox
+   - Password strength validation
+   - Match validation for confirm password
+
+3. **app/lib/features/auth/presentation/screens/forgot_password_screen.dart**
+   - Email field for password reset
+   - Success message display
+   - Resend functionality
+
+#### Navigation & App Setup (3 files)
+
+1. **app/lib/core/navigation/app_router.dart**
+   - Route generation
+   - Navigation helper methods
+   - Route configuration for auth screens
+
+2. **app/lib/firebase_options.dart**
+   - Platform-specific Firebase options
+   - iOS and Android configurations
+
+3. **app/lib/main.dart**
+   - Firebase initialization
+   - Riverpod ProviderScope
+   - Theme configuration
+   - Navigation setup
+   - System UI configuration
+
+#### Assets (1 file)
+
+1. **app/assets/images/logo.png**
+   - 1024x1024 Run to Canada logo
+   - Purple text with runner silhouette
+
+**Quality Checks:**
+- `flutter pub get` - All dependencies installed
+- `flutter analyze` - All checks passed (0 issues)
+- Fixed type errors (CardTheme → CardThemeData, DialogTheme → DialogThemeData)
+- Fixed deprecation warnings (withOpacity → withValues)
+
+**Sprint 1 Status:**
+- ✓ Firebase project created and configured
+- ✓ App theme system complete
+- ✓ Reusable UI components created
+- ✓ Authentication screens implemented (UI only)
+- ✓ Navigation structure set up
+- ✓ Firebase initialized in app
+- Next: Sprint 2 - Implement authentication logic
+
+---
+
 **Last Updated:** 2025-12-28
-**Total Changes:** 7
-**Last Session:** 002
+**Total Changes:** 13
+**Last Session:** 003
