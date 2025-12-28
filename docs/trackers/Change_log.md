@@ -8,6 +8,11 @@ This document tracks all changes made to the Run to Canada project, organized by
 |---------|------|--------|---------------|------|-------------|-----------|
 | 001 | 2025-12-28 | Sprint 0 | docs/* | Documentation | Created comprehensive documentation | [Session 001](Session_log.md#session-001---2025-12-28) |
 | 001 | 2025-12-28 | Sprint 0 | docs/trackers/* | Setup | Created tracker system | [Session 001](Session_log.md#session-001---2025-12-28) |
+| 002 | 2025-12-28 | Sprint 0 | app/* | Setup | Flutter project created with modular architecture | [Session 002](Session_log.md#session-002---2025-12-28) |
+| 002 | 2025-12-28 | Sprint 0 | app/pubspec.yaml | Configuration | Added all project dependencies | [Session 002](Session_log.md#session-002---2025-12-28) |
+| 002 | 2025-12-28 | Sprint 0 | app/lib/app/* | Configuration | Environment config for build flavors | [Session 002](Session_log.md#session-002---2025-12-28) |
+| 002 | 2025-12-28 | Sprint 0 | app/lib/core/* | Setup | Core utilities and constants | [Session 002](Session_log.md#session-002---2025-12-28) |
+| 002 | 2025-12-28 | Sprint 0 | README.md, .gitignore | Setup | Root project files | [Session 002](Session_log.md#session-002---2025-12-28) |
 
 ---
 
@@ -19,6 +24,9 @@ This document tracks all changes made to the Run to Canada project, organized by
 |---------|------|-----------|---------------|------|-------------|-----------|
 | 001 | 2025-12-28 | Documentation | 5 docs | Documentation | Product concept, architecture, sprint plan, wireframes | [Session 001](Session_log.md#session-001---2025-12-28) |
 | 001 | 2025-12-28 | Trackers | 4 trackers | Setup | Session log, change log, bug tracker, backlog | [Session 001](Session_log.md#session-001---2025-12-28) |
+| 002 | 2025-12-28 | Flutter Project | 149 files | Setup | Created Flutter project with feature-based architecture | [Session 002](Session_log.md#session-002---2025-12-28) |
+| 002 | 2025-12-28 | Dependencies | pubspec.yaml | Configuration | Added Riverpod, Hive, Firebase, Mapbox, etc. | [Session 002](Session_log.md#session-002---2025-12-28) |
+| 002 | 2025-12-28 | Core Utilities | 5 files | Setup | Environment config, constants, utils | [Session 002](Session_log.md#session-002---2025-12-28) |
 
 ---
 
@@ -29,18 +37,22 @@ This document tracks all changes made to the Run to Canada project, organized by
 | Session | Date | Sprint | Description | Files | Reference |
 |---------|------|--------|-------------|-------|-----------|
 | 001 | 2025-12-28 | Sprint 0 | Created comprehensive project documentation | 5 markdown files | [Session 001](Session_log.md#session-001---2025-12-28) |
+| 002 | 2025-12-28 | Sprint 0 | Updated session log and sprint plan | 2 markdown files | [Session 002](Session_log.md#session-002---2025-12-28) |
 
 ### Setup
 
 | Session | Date | Sprint | Description | Files | Reference |
 |---------|------|--------|-------------|-------|-----------|
 | 001 | 2025-12-28 | Sprint 0 | Created tracking system | 4 tracker files | [Session 001](Session_log.md#session-001---2025-12-28) |
+| 002 | 2025-12-28 | Sprint 0 | Flutter project with modular architecture | 149 files | [Session 002](Session_log.md#session-002---2025-12-28) |
+| 002 | 2025-12-28 | Sprint 0 | Core utilities and constants | 5 files | [Session 002](Session_log.md#session-002---2025-12-28) |
 
 ### Configuration
 
 | Session | Date | Sprint | Description | Files | Reference |
 |---------|------|--------|-------------|-------|-----------|
-| - | - | - | No configuration changes yet | - | - |
+| 002 | 2025-12-28 | Sprint 0 | Added all project dependencies | pubspec.yaml | [Session 002](Session_log.md#session-002---2025-12-28) |
+| 002 | 2025-12-28 | Sprint 0 | Environment config for dev/staging/production | env.dart | [Session 002](Session_log.md#session-002---2025-12-28) |
 
 ### Feature
 
@@ -210,6 +222,90 @@ Add a change log entry when:
 
 ---
 
+### Session 002 - Flutter Project Setup
+
+**Date:** 2025-12-28
+**Sprint:** Sprint 0
+
+#### Flutter Project Created (149 files)
+
+**Project Structure:**
+- Created `app/` directory for Flutter application
+- Created `docs/` directory for documentation (existing)
+- Root-level README.md and .gitignore
+
+**Modular Architecture (lib/ structure):**
+- `app/` - Application-level configuration
+  - `env.dart` - Environment management (dev/staging/production)
+- `core/` - Shared utilities
+  - `constants/` - App constants and route constants
+  - `utils/` - Distance and date utilities
+  - `extensions/` - Extension methods (empty, ready for future)
+  - `errors/` - Error handling (empty, ready for future)
+- `features/` - Feature modules (clean architecture)
+  - `auth/` - Authentication feature
+  - `tracking/` - Run tracking feature
+  - `journey/` - Journey/Goal feature
+  - `history/` - Run history feature
+  - `profile/` - User profile feature
+  - Each feature has: `data/`, `domain/`, `presentation/` layers
+
+**Dependencies Added:**
+1. **State Management:** flutter_riverpod, riverpod_annotation
+2. **Local Database:** hive, hive_flutter
+3. **Firebase:** firebase_core, firebase_auth, cloud_firestore, firebase_analytics, firebase_storage, firebase_crashlytics
+4. **Maps & Location:** mapbox_gl, geolocator, permission_handler, flutter_polyline_points, latlong2
+5. **HTTP & API:** dio, retrofit, json_annotation
+6. **UI Components:** cached_network_image, lottie, flutter_svg, shimmer
+7. **Utilities:** intl, uuid, connectivity_plus, package_info_plus, shared_preferences
+8. **Monitoring:** sentry_flutter
+9. **Dev Dependencies:** build_runner, hive_generator, riverpod_generator, json_serializable, retrofit_generator
+
+**Core Utilities Created:**
+
+1. **app/lib/app/env.dart**
+   - Environment enum (dev, staging, production)
+   - Environment detection from dart-define
+   - API base URL configuration
+   - API key management (Mapbox, Unsplash, Sentry)
+
+2. **app/lib/core/constants/app_constants.dart**
+   - App information
+   - Free tier limits (100km)
+   - GPS tracking settings
+   - Milestone intervals
+   - Cache durations
+   - Unit conversion factors
+   - Premium pricing
+
+3. **app/lib/core/constants/route_constants.dart**
+   - Navigation route names for all screens
+
+4. **app/lib/core/utils/distance_utils.dart**
+   - Haversine distance calculation
+   - Distance formatting (metric/imperial)
+   - Pace calculation (min/km or min/mile)
+   - Speed calculation
+   - Calorie estimation
+
+5. **app/lib/core/utils/date_utils.dart**
+   - Date/time formatting
+   - Duration formatting (HH:MM:SS)
+   - Human-readable durations
+   - Time ago strings ("2 hours ago")
+   - Date helpers (isToday, isYesterday)
+
+**Quality Checks:**
+- `flutter analyze` - All checks passed
+- Fixed linting warnings in date_utils.dart
+- All dependencies installed successfully
+
+**Git:**
+- Initial commit created
+- Pushed to GitHub (https://github.com/Happyloopgit/runtocanada.git)
+
+---
+
 **Last Updated:** 2025-12-28
-**Total Changes:** 2
-**Last Session:** 001
+**Total Changes:** 7
+**Last Session:** 002
