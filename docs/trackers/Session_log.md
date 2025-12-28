@@ -165,12 +165,22 @@ Each session entry should include:
 - Fixed all linting errors (CardTheme → CardThemeData, DialogTheme → DialogThemeData)
 - Fixed deprecation warnings (withOpacity → withValues)
 - Ran flutter analyze - all checks passed
+- Fixed Android build configuration issues:
+  - Downgraded Kotlin from 2.2.20 to 1.9.24 for compatibility with Flutter plugins (sentry_flutter)
+  - Updated kotlinOptions to use JVM target 17
+  - Added kotlin.jvmToolchain.version=17 to gradle.properties
+  - Fixed MainActivity package from com.runtocanada.run_to_canada to com.runtocanada.app
+  - Moved MainActivity to correct package directory
+- Successfully built and ran app on Android device
 
 **Files Modified:**
 - Created: `app/ios/Runner/GoogleService-Info.plist` - iOS Firebase config
 - Created: `app/android/app/google-services.json` - Android Firebase config
 - Modified: `app/android/build.gradle.kts` - Added Firebase buildscript
-- Modified: `app/android/app/build.gradle.kts` - Added Google Services plugin, fixed package name, minSdk 21
+- Modified: `app/android/app/build.gradle.kts` - Added Google Services plugin, fixed package name, minSdk 21, kotlinOptions
+- Modified: `app/android/settings.gradle.kts` - Downgraded Kotlin to 1.9.24
+- Modified: `app/android/gradle.properties` - Added kotlin.jvmToolchain.version=17
+- Created: `app/android/app/src/main/kotlin/com/runtocanada/app/MainActivity.kt` - Moved to correct package
 - Created: `app/lib/core/theme/app_colors.dart` - Color palette
 - Created: `app/lib/core/theme/app_text_styles.dart` - Text styles
 - Created: `app/lib/core/theme/app_theme.dart` - Theme configuration
@@ -191,7 +201,10 @@ Each session entry should include:
 - FlutterFire CLI not installed - Resolved by manually creating firebase_options.dart
 - CardTheme/DialogTheme type errors - Fixed by using CardThemeData/DialogThemeData
 - withOpacity deprecation warnings - Fixed by using withValues(alpha:)
-- All issues resolved successfully
+- Kotlin 2.2.20 incompatibility - Resolved by downgrading to 1.9.24
+- Kotlin language version 1.4 error in sentry_flutter - Fixed by setting JVM target and language version
+- MainActivity ClassNotFoundException - Fixed by moving MainActivity to correct package (com.runtocanada.app)
+- All issues resolved successfully, app builds and runs on Android device
 
 **Next Steps:**
 - Begin Sprint 2: Firebase Authentication Logic

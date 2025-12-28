@@ -19,6 +19,7 @@ This document tracks all changes made to the Run to Canada project, organized by
 | 003 | 2025-12-28 | Sprint 1 | app/lib/features/auth/* | Feature | Authentication screens (Login, Signup, Forgot Password) | [Session 003](Session_log.md#session-003---2025-12-28) |
 | 003 | 2025-12-28 | Sprint 1 | app/lib/main.dart | Setup | Firebase initialization, routing, theme setup | [Session 003](Session_log.md#session-003---2025-12-28) |
 | 003 | 2025-12-28 | Sprint 1 | app/assets/images/* | Setup | App logo added | [Session 003](Session_log.md#session-003---2025-12-28) |
+| 003 | 2025-12-28 | Sprint 1 | Android build config | Bug Fix | Fixed Kotlin compatibility and MainActivity package issues | [Session 003](Session_log.md#session-003---2025-12-28) |
 
 ---
 
@@ -45,6 +46,7 @@ This document tracks all changes made to the Run to Canada project, organized by
 | 003 | 2025-12-28 | Navigation | 2 files | Setup | AppRouter and route constants | [Session 003](Session_log.md#session-003---2025-12-28) |
 | 003 | 2025-12-28 | Main App | 2 files | Setup | Firebase init in main.dart, firebase_options.dart | [Session 003](Session_log.md#session-003---2025-12-28) |
 | 003 | 2025-12-28 | Assets | 1 file | Setup | App logo (1024x1024) | [Session 003](Session_log.md#session-003---2025-12-28) |
+| 003 | 2025-12-28 | Build Config | 4 files | Bug Fix | Fixed Kotlin version (2.2.20→1.9.24), MainActivity package, JVM settings | [Session 003](Session_log.md#session-003---2025-12-28) |
 
 ---
 
@@ -87,7 +89,9 @@ This document tracks all changes made to the Run to Canada project, organized by
 
 | Session | Date | Sprint | Description | Files | Reference |
 |---------|------|--------|-------------|-------|-----------|
-| - | - | - | No bugs fixed yet | - | - |
+| 003 | 2025-12-28 | Sprint 1 | Fixed Kotlin 2.2.20 incompatibility, downgraded to 1.9.24 | 4 files | [Session 003](Session_log.md#session-003---2025-12-28) |
+| 003 | 2025-12-28 | Sprint 1 | Fixed MainActivity package mismatch (run_to_canada → app) | 1 file | [Session 003](Session_log.md#session-003---2025-12-28) |
+| 003 | 2025-12-28 | Sprint 1 | Fixed Kotlin language version and JVM target settings | 3 files | [Session 003](Session_log.md#session-003---2025-12-28) |
 
 ### Refactor
 
@@ -441,6 +445,17 @@ Add a change log entry when:
 - Fixed type errors (CardTheme → CardThemeData, DialogTheme → DialogThemeData)
 - Fixed deprecation warnings (withOpacity → withValues)
 
+**Build Configuration Fixes:**
+- Fixed Kotlin version incompatibility:
+  - Downgraded from 2.2.20 to 1.9.24 in settings.gradle.kts
+  - Added kotlin.jvmToolchain.version=17 to gradle.properties
+  - Updated kotlinOptions to use JVM target 17
+- Fixed MainActivity package issue:
+  - Moved from com.runtocanada.run_to_canada to com.runtocanada.app
+  - Created correct package directory structure
+- `flutter build apk --debug` - Build successful
+- App runs successfully on Android device
+
 **Sprint 1 Status:**
 - ✓ Firebase project created and configured
 - ✓ App theme system complete
@@ -448,10 +463,12 @@ Add a change log entry when:
 - ✓ Authentication screens implemented (UI only)
 - ✓ Navigation structure set up
 - ✓ Firebase initialized in app
+- ✓ Android build configuration fixed
+- ✓ App builds and runs on Android device
 - Next: Sprint 2 - Implement authentication logic
 
 ---
 
 **Last Updated:** 2025-12-28
-**Total Changes:** 13
+**Total Changes:** 16
 **Last Session:** 003

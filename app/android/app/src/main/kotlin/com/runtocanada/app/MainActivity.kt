@@ -1,4 +1,4 @@
-package com.runtocanada.run_to_canada
+package com.runtocanada.app
 
 import io.flutter.embedding.android.FlutterActivity
 
