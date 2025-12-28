@@ -1,22 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:run_to_canada/core/theme/app_colors.dart';
 import 'package:run_to_canada/core/theme/app_text_styles.dart';
 import 'package:run_to_canada/core/widgets/custom_button.dart';
 import 'package:run_to_canada/core/widgets/custom_text_field.dart';
 import 'package:run_to_canada/core/widgets/error_message.dart';
+import '../providers/auth_providers.dart';
 
 /// Forgot password screen
-class ForgotPasswordScreen extends StatefulWidget {
+class ForgotPasswordScreen extends ConsumerStatefulWidget {
   const ForgotPasswordScreen({super.key});
 
   @override
-  State<ForgotPasswordScreen> createState() => _ForgotPasswordScreenState();
+  ConsumerState<ForgotPasswordScreen> createState() =>
+      _ForgotPasswordScreenState();
 }
 
-class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
+class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
-  bool _isLoading = false;
   bool _emailSent = false;
 
   @override
@@ -27,15 +29,15 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
   Future<void> _handleResetPassword() async {
     if (_formKey.currentState!.validate()) {
-      setState(() => _isLoading = true);
+      final authController = ref.read(authControllerProvider.notifier);
 
-      // TODO: Implement actual password reset logic in Sprint 2
-      await Future.delayed(const Duration(seconds: 2));
+      final success = await authController.sendPasswordResetEmail(
+        _emailController.text.trim(),
+      );
 
-      setState(() {
-        _isLoading = false;
-        _emailSent = true;
-      });
+      if (success) {
+        setState(() => _emailSent = true);
+      }
     }
   }
 
@@ -45,6 +47,8 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final authState = ref.watch(authControllerProvider);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Reset Password'),
@@ -87,6 +91,12 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
                 const SizedBox(height: 32),
 
+                // Error message
+                if (authState.errorMessage != null && !_emailSent) ...[
+                  ErrorMessage(message: authState.errorMessage!),
+                  const SizedBox(height: 16),
+                ],
+
                 if (_emailSent) ...[
                   // Success message
                   const SuccessMessage(
@@ -118,6 +128,8 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                     controller: _emailController,
                     autofocus: true,
                     textInputAction: TextInputAction.done,
+                    enabled: !authState.isLoading,
+                    onSubmitted: (_) => _handleResetPassword(),
                   ),
 
                   const SizedBox(height: 24),
@@ -126,7 +138,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                   CustomButton(
                     text: 'Send Reset Link',
                     onPressed: _handleResetPassword,
-                    isLoading: _isLoading,
+                    isLoading: authState.isLoading,
                     icon: Icons.email_outlined,
                   ),
 

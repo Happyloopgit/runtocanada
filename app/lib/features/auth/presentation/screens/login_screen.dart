@@ -1,23 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:run_to_canada/core/constants/route_constants.dart';
 import 'package:run_to_canada/core/theme/app_colors.dart';
 import 'package:run_to_canada/core/theme/app_text_styles.dart';
 import 'package:run_to_canada/core/widgets/custom_button.dart';
 import 'package:run_to_canada/core/widgets/custom_text_field.dart';
+import 'package:run_to_canada/core/widgets/error_message.dart';
+import '../providers/auth_providers.dart';
 
 /// Login screen
-class LoginScreen extends StatefulWidget {
+class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  ConsumerState<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _LoginScreenState extends ConsumerState<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  bool _isLoading = false;
 
   @override
   void dispose() {
@@ -28,14 +31,28 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Future<void> _handleLogin() async {
     if (_formKey.currentState!.validate()) {
-      setState(() => _isLoading = true);
+      final authController = ref.read(authControllerProvider.notifier);
 
-      // TODO: Implement actual login logic in Sprint 2
-      await Future.delayed(const Duration(seconds: 2));
+      final success = await authController.signIn(
+        email: _emailController.text.trim(),
+        password: _passwordController.text,
+      );
 
-      setState(() => _isLoading = false);
+      if (success && mounted) {
+        // Navigate to home screen after successful login
+        Navigator.pushReplacementNamed(context, RouteConstants.home);
+      }
+    }
+  }
 
-      // TODO: Navigate to home screen after successful login
+  Future<void> _handleGoogleSignIn() async {
+    final authController = ref.read(authControllerProvider.notifier);
+
+    final success = await authController.signInWithGoogle();
+
+    if (success && mounted) {
+      // Navigate to home screen after successful login
+      Navigator.pushReplacementNamed(context, RouteConstants.home);
     }
   }
 
@@ -49,6 +66,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final authState = ref.watch(authControllerProvider);
+
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
@@ -88,11 +107,24 @@ class _LoginScreenState extends State<LoginScreen> {
 
                 const SizedBox(height: 48),
 
+                // Error message
+                if (authState.errorMessage != null) ...[
+                  ErrorMessage(message: authState.errorMessage!),
+                  const SizedBox(height: 16),
+                ],
+
+                // Success message
+                if (authState.successMessage != null) ...[
+                  SuccessMessage(message: authState.successMessage!),
+                  const SizedBox(height: 16),
+                ],
+
                 // Email field
                 EmailTextField(
                   controller: _emailController,
                   autofocus: false,
                   textInputAction: TextInputAction.next,
+                  enabled: !authState.isLoading,
                 ),
 
                 const SizedBox(height: 16),
@@ -102,6 +134,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   controller: _passwordController,
                   requireStrength: false,
                   textInputAction: TextInputAction.done,
+                  enabled: !authState.isLoading,
+                  onSubmitted: (_) => _handleLogin(),
                 ),
 
                 const SizedBox(height: 8),
@@ -121,7 +155,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 CustomButton(
                   text: 'Sign In',
                   onPressed: _handleLogin,
-                  isLoading: _isLoading,
+                  isLoading: authState.isLoading,
                 ),
 
                 const SizedBox(height: 24),
@@ -139,6 +173,22 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     const Expanded(child: Divider()),
                   ],
+                ),
+
+                const SizedBox(height: 24),
+
+                // Google Sign-In button
+                OutlinedButton.icon(
+                  onPressed: authState.isLoading ? null : _handleGoogleSignIn,
+                  icon: const FaIcon(FontAwesomeIcons.google, size: 20),
+                  label: Text(
+                    'Continue with Google',
+                    style: AppTextStyles.labelLarge,
+                  ),
+                  style: OutlinedButton.styleFrom(
+                    minimumSize: const Size(double.infinity, 56),
+                    side: BorderSide(color: AppColors.border),
+                  ),
                 ),
 
                 const SizedBox(height: 24),

@@ -20,6 +20,15 @@ This document tracks all changes made to the Run to Canada project, organized by
 | 003 | 2025-12-28 | Sprint 1 | app/lib/main.dart | Setup | Firebase initialization, routing, theme setup | [Session 003](Session_log.md#session-003---2025-12-28) |
 | 003 | 2025-12-28 | Sprint 1 | app/assets/images/* | Setup | App logo added | [Session 003](Session_log.md#session-003---2025-12-28) |
 | 003 | 2025-12-28 | Sprint 1 | Android build config | Bug Fix | Fixed Kotlin compatibility and MainActivity package issues | [Session 003](Session_log.md#session-003---2025-12-28) |
+| 004 | 2025-12-28 | Sprint 2 | app/lib/features/auth/domain/models/* | Feature | User and UserSettings models with Firestore integration | [Session 004](Session_log.md#session-004---2025-12-28) |
+| 004 | 2025-12-28 | Sprint 2 | app/lib/features/auth/data/services/* | Feature | AuthService with email/password and Google Sign-In | [Session 004](Session_log.md#session-004---2025-12-28) |
+| 004 | 2025-12-28 | Sprint 2 | app/lib/features/auth/presentation/providers/* | Feature | Riverpod auth providers and state management | [Session 004](Session_log.md#session-004---2025-12-28) |
+| 004 | 2025-12-28 | Sprint 2 | app/lib/features/auth/presentation/screens/* | Feature | Connected auth screens to Firebase with Google Sign-In | [Session 004](Session_log.md#session-004---2025-12-28) |
+| 004 | 2025-12-28 | Sprint 2 | app/lib/features/home/presentation/screens/* | Feature | Created placeholder HomeScreen | [Session 004](Session_log.md#session-004---2025-12-28) |
+| 004 | 2025-12-28 | Sprint 2 | app/firestore.rules, app/firestore.indexes.json | Configuration | Firestore security rules and indexes | [Session 004](Session_log.md#session-004---2025-12-28) |
+| 004 | 2025-12-28 | Sprint 2 | app/lib/core/widgets/* | Enhancement | Added enabled and onSubmitted to text fields | [Session 004](Session_log.md#session-004---2025-12-28) |
+| 004 | 2025-12-28 | Sprint 2 | app/lib/core/theme/app_colors.dart | Enhancement | Added border color constant | [Session 004](Session_log.md#session-004---2025-12-28) |
+| 004 | 2025-12-28 | Sprint 2 | app/pubspec.yaml | Configuration | Added google_sign_in and font_awesome_flutter packages | [Session 004](Session_log.md#session-004---2025-12-28) |
 
 ---
 
@@ -47,6 +56,21 @@ This document tracks all changes made to the Run to Canada project, organized by
 | 003 | 2025-12-28 | Main App | 2 files | Setup | Firebase init in main.dart, firebase_options.dart | [Session 003](Session_log.md#session-003---2025-12-28) |
 | 003 | 2025-12-28 | Assets | 1 file | Setup | App logo (1024x1024) | [Session 003](Session_log.md#session-003---2025-12-28) |
 | 003 | 2025-12-28 | Build Config | 4 files | Bug Fix | Fixed Kotlin version (2.2.20→1.9.24), MainActivity package, JVM settings | [Session 003](Session_log.md#session-003---2025-12-28) |
+
+### Sprint 2 - Firebase Authentication Logic
+
+| Session | Date | Component | Files Changed | Type | Description | Reference |
+|---------|------|-----------|---------------|------|-------------|-----------|
+| 004 | 2025-12-28 | Data Models | 1 file | Feature | User and UserSettings models with Firestore serialization | [Session 004](Session_log.md#session-004---2025-12-28) |
+| 004 | 2025-12-28 | Auth Service | 1 file | Feature | Complete authentication service with email/password and Google Sign-In | [Session 004](Session_log.md#session-004---2025-12-28) |
+| 004 | 2025-12-28 | State Management | 1 file | Feature | Riverpod providers for auth state, user profile, and controller | [Session 004](Session_log.md#session-004---2025-12-28) |
+| 004 | 2025-12-28 | Auth Screens | 3 files | Feature | Connected login, signup, forgot password to Firebase | [Session 004](Session_log.md#session-004---2025-12-28) |
+| 004 | 2025-12-28 | Home Screen | 1 file | Feature | Placeholder home screen with logout functionality | [Session 004](Session_log.md#session-004---2025-12-28) |
+| 004 | 2025-12-28 | Firestore | 2 files | Configuration | Security rules and database indexes | [Session 004](Session_log.md#session-004---2025-12-28) |
+| 004 | 2025-12-28 | UI Components | 1 file | Enhancement | Enhanced text fields with enabled and onSubmitted | [Session 004](Session_log.md#session-004---2025-12-28) |
+| 004 | 2025-12-28 | Theme | 1 file | Enhancement | Added border color constant | [Session 004](Session_log.md#session-004---2025-12-28) |
+| 004 | 2025-12-28 | Navigation | 1 file | Enhancement | Added home route | [Session 004](Session_log.md#session-004---2025-12-28) |
+| 004 | 2025-12-28 | Dependencies | 1 file | Configuration | Added google_sign_in and font_awesome_flutter | [Session 004](Session_log.md#session-004---2025-12-28) |
 
 ---
 

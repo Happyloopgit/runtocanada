@@ -217,8 +217,96 @@ Each session entry should include:
 
 ---
 
+### Session 004 - 2025-12-28
+
+**Sprint:** Sprint 2 - Firebase Authentication Logic
+**Duration:** ~2 hours
+**Participants:** Development Team (with Claude Code)
+
+**Objectives:**
+- Implement Firebase Authentication business logic
+- Create User and UserSettings models
+- Connect auth screens to Firebase Authentication
+- Add Google Sign-In authentication
+- Set up Firestore security rules
+- Add error handling and loading states
+
+**Work Completed:**
+- Created User and UserSettings model classes:
+  - UserModel with Firestore integration (fromFirestore, toFirestore)
+  - UserSettings with default settings and preferences
+  - Premium subscription tracking
+  - Profile image URL support
+- Created comprehensive AuthService class:
+  - Email/password sign up with automatic profile creation
+  - Email/password sign in with last login tracking
+  - Google Sign-In integration with profile creation/retrieval
+  - Password reset email functionality
+  - Sign out functionality
+  - User profile and settings management
+  - Comprehensive error handling with user-friendly messages
+- Implemented Riverpod state management:
+  - authServiceProvider for service instance
+  - authStateProvider for Firebase auth state stream
+  - currentUserProvider for user profile stream
+  - authControllerProvider with AuthState for loading/error/success states
+- Connected all auth screens to Firebase:
+  - Login screen with email/password and Google Sign-In
+  - Signup screen with email/password and Google Sign-In
+  - Forgot password screen with email reset
+  - Error and success message display
+  - Loading states on all buttons
+  - Form field enabling/disabling during operations
+- Set up Firestore:
+  - Initialized Firestore database (nam5 region)
+  - Created comprehensive security rules (users can only access their own data)
+  - Created Firestore indexes for runs and goals queries
+  - Deployed security rules to Firebase
+- Added Google Sign-In:
+  - Added google_sign_in package (^6.2.1)
+  - Added font_awesome_flutter package (^10.7.0) for Google icon
+  - Implemented signInWithGoogle in AuthService
+  - Added Google Sign-In buttons to login and signup screens
+  - Automatic profile creation for first-time Google users
+- Created placeholder HomeScreen for post-authentication navigation
+- Updated CustomTextField widgets to support enabled and onSubmitted parameters
+- Fixed all Flutter analyzer issues and deprecation warnings
+- Successfully built and tested app on Android device
+
+**Files Modified:**
+- Created: `app/lib/features/auth/domain/models/user_model.dart` - User and UserSettings models
+- Created: `app/lib/features/auth/data/services/auth_service.dart` - Firebase Auth service
+- Created: `app/lib/features/auth/presentation/providers/auth_providers.dart` - Riverpod providers
+- Created: `app/lib/features/home/presentation/screens/home_screen.dart` - Placeholder home screen
+- Created: `app/firestore.rules` - Firestore security rules
+- Modified: `app/firestore.indexes.json` - Added Firestore indexes
+- Modified: `app/lib/features/auth/presentation/screens/login_screen.dart` - Connected to AuthService with Google Sign-In
+- Modified: `app/lib/features/auth/presentation/screens/signup_screen.dart` - Connected to AuthService with Google Sign-In
+- Modified: `app/lib/features/auth/presentation/screens/forgot_password_screen.dart` - Connected to AuthService
+- Modified: `app/lib/core/widgets/custom_text_field.dart` - Added enabled and onSubmitted parameters
+- Modified: `app/lib/core/navigation/app_router.dart` - Added home route
+- Modified: `app/lib/core/theme/app_colors.dart` - Added border color
+- Modified: `app/pubspec.yaml` - Added google_sign_in and font_awesome_flutter packages
+
+**Issues Encountered:**
+- Google logo asset error - Fixed by using FontAwesome Google icon instead of asset image
+- Border color not defined in AppColors - Added border constant
+- StreamProvider error accessing .stream property - Fixed by directly using authService.authStateChanges
+- updateEmail deprecation - Fixed by using verifyBeforeUpdateEmail instead
+- const BorderSide with non-const color - Fixed by removing const keyword
+- All issues resolved successfully, app fully functional
+
+**Next Steps:**
+- Begin Sprint 3: Local Database Setup (Hive)
+- Initialize Hive and create type adapters
+- Create data models with Hive annotations
+- Set up local data sources and repositories
+- Test data persistence across app restarts
+
+---
+
 **Last Updated:** 2025-12-28
-**Total Sessions:** 3
+**Total Sessions:** 4
 
 ---
 

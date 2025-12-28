@@ -1,24 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:run_to_canada/core/constants/route_constants.dart';
 import 'package:run_to_canada/core/theme/app_colors.dart';
 import 'package:run_to_canada/core/theme/app_text_styles.dart';
 import 'package:run_to_canada/core/widgets/custom_button.dart';
 import 'package:run_to_canada/core/widgets/custom_text_field.dart';
+import 'package:run_to_canada/core/widgets/error_message.dart';
+import '../providers/auth_providers.dart';
 
 /// Signup screen
-class SignupScreen extends StatefulWidget {
+class SignupScreen extends ConsumerStatefulWidget {
   const SignupScreen({super.key});
 
   @override
-  State<SignupScreen> createState() => _SignupScreenState();
+  ConsumerState<SignupScreen> createState() => _SignupScreenState();
 }
 
-class _SignupScreenState extends State<SignupScreen> {
+class _SignupScreenState extends ConsumerState<SignupScreen> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
-  bool _isLoading = false;
   bool _acceptedTerms = false;
 
   @override
@@ -42,14 +46,29 @@ class _SignupScreenState extends State<SignupScreen> {
     }
 
     if (_formKey.currentState!.validate()) {
-      setState(() => _isLoading = true);
+      final authController = ref.read(authControllerProvider.notifier);
 
-      // TODO: Implement actual signup logic in Sprint 2
-      await Future.delayed(const Duration(seconds: 2));
+      final success = await authController.signUp(
+        email: _emailController.text.trim(),
+        password: _passwordController.text,
+        fullName: _nameController.text.trim(),
+      );
 
-      setState(() => _isLoading = false);
+      if (success && mounted) {
+        // Navigate to home screen after successful signup
+        Navigator.pushReplacementNamed(context, RouteConstants.home);
+      }
+    }
+  }
 
-      // TODO: Navigate to home screen or email verification
+  Future<void> _handleGoogleSignIn() async {
+    final authController = ref.read(authControllerProvider.notifier);
+
+    final success = await authController.signInWithGoogle();
+
+    if (success && mounted) {
+      // Navigate to home screen after successful signup
+      Navigator.pushReplacementNamed(context, RouteConstants.home);
     }
   }
 
@@ -59,6 +78,8 @@ class _SignupScreenState extends State<SignupScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final authState = ref.watch(authControllerProvider);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Create Account'),
@@ -92,6 +113,18 @@ class _SignupScreenState extends State<SignupScreen> {
 
                 const SizedBox(height: 32),
 
+                // Error message
+                if (authState.errorMessage != null) ...[
+                  ErrorMessage(message: authState.errorMessage!),
+                  const SizedBox(height: 16),
+                ],
+
+                // Success message
+                if (authState.successMessage != null) ...[
+                  SuccessMessage(message: authState.successMessage!),
+                  const SizedBox(height: 16),
+                ],
+
                 // Name field
                 CustomTextField(
                   label: 'Full Name',
@@ -99,6 +132,7 @@ class _SignupScreenState extends State<SignupScreen> {
                   controller: _nameController,
                   prefixIcon: Icons.person_outline,
                   textInputAction: TextInputAction.next,
+                  enabled: !authState.isLoading,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Please enter your name';
@@ -116,6 +150,7 @@ class _SignupScreenState extends State<SignupScreen> {
                 EmailTextField(
                   controller: _emailController,
                   textInputAction: TextInputAction.next,
+                  enabled: !authState.isLoading,
                 ),
 
                 const SizedBox(height: 16),
@@ -126,6 +161,7 @@ class _SignupScreenState extends State<SignupScreen> {
                   label: 'Password',
                   requireStrength: true,
                   textInputAction: TextInputAction.next,
+                  enabled: !authState.isLoading,
                 ),
 
                 const SizedBox(height: 16),
@@ -138,6 +174,8 @@ class _SignupScreenState extends State<SignupScreen> {
                   obscureText: true,
                   prefixIcon: Icons.lock_outline,
                   textInputAction: TextInputAction.done,
+                  enabled: !authState.isLoading,
+                  onSubmitted: (_) => _handleSignup(),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Please confirm your password';
@@ -210,7 +248,7 @@ class _SignupScreenState extends State<SignupScreen> {
                 CustomButton(
                   text: 'Create Account',
                   onPressed: _handleSignup,
-                  isLoading: _isLoading,
+                  isLoading: authState.isLoading,
                 ),
 
                 const SizedBox(height: 24),
@@ -228,6 +266,22 @@ class _SignupScreenState extends State<SignupScreen> {
                     ),
                     const Expanded(child: Divider()),
                   ],
+                ),
+
+                const SizedBox(height: 24),
+
+                // Google Sign-In button
+                OutlinedButton.icon(
+                  onPressed: authState.isLoading ? null : _handleGoogleSignIn,
+                  icon: const FaIcon(FontAwesomeIcons.google, size: 20),
+                  label: Text(
+                    'Continue with Google',
+                    style: AppTextStyles.labelLarge,
+                  ),
+                  style: OutlinedButton.styleFrom(
+                    minimumSize: const Size(double.infinity, 56),
+                    side: BorderSide(color: AppColors.border),
+                  ),
                 ),
 
                 const SizedBox(height: 24),

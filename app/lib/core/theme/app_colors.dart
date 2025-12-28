@@ -43,6 +43,7 @@ class AppColors {
 
   // Additional UI Colors
   static const Color divider = Color(0xFFE0E0E0);
+  static const Color border = Color(0xFFE0E0E0);
   static const Color shadow = Color(0x1F000000);
   static const Color overlay = Color(0x80000000);
 

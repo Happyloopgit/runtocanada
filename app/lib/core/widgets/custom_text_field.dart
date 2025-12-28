@@ -10,6 +10,7 @@ class CustomTextField extends StatefulWidget {
   final bool obscureText;
   final String? Function(String?)? validator;
   final void Function(String)? onChanged;
+  final void Function(String)? onSubmitted;
   final IconData? prefixIcon;
   final Widget? suffixIcon;
   final int maxLines;
@@ -26,6 +27,7 @@ class CustomTextField extends StatefulWidget {
     this.obscureText = false,
     this.validator,
     this.onChanged,
+    this.onSubmitted,
     this.prefixIcon,
     this.suffixIcon,
     this.maxLines = 1,
@@ -55,6 +57,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
       obscureText: _obscureText,
       validator: widget.validator,
       onChanged: widget.onChanged,
+      onFieldSubmitted: widget.onSubmitted,
       maxLines: widget.maxLines,
       enabled: widget.enabled,
       autofocus: widget.autofocus,
@@ -87,6 +90,8 @@ class _CustomTextFieldState extends State<CustomTextField> {
 class EmailTextField extends StatelessWidget {
   final TextEditingController? controller;
   final void Function(String)? onChanged;
+  final void Function(String)? onSubmitted;
+  final bool enabled;
   final bool autofocus;
   final TextInputAction? textInputAction;
 
@@ -94,6 +99,8 @@ class EmailTextField extends StatelessWidget {
     super.key,
     this.controller,
     this.onChanged,
+    this.onSubmitted,
+    this.enabled = true,
     this.autofocus = false,
     this.textInputAction,
   });
@@ -107,6 +114,8 @@ class EmailTextField extends StatelessWidget {
       keyboardType: TextInputType.emailAddress,
       prefixIcon: Icons.email_outlined,
       onChanged: onChanged,
+      onSubmitted: onSubmitted,
+      enabled: enabled,
       autofocus: autofocus,
       textInputAction: textInputAction,
       validator: (value) {
@@ -129,6 +138,8 @@ class PasswordTextField extends StatelessWidget {
   final TextEditingController? controller;
   final String label;
   final void Function(String)? onChanged;
+  final void Function(String)? onSubmitted;
+  final bool enabled;
   final bool requireStrength;
   final TextInputAction? textInputAction;
 
@@ -137,6 +148,8 @@ class PasswordTextField extends StatelessWidget {
     this.controller,
     this.label = 'Password',
     this.onChanged,
+    this.onSubmitted,
+    this.enabled = true,
     this.requireStrength = false,
     this.textInputAction,
   });
@@ -150,6 +163,8 @@ class PasswordTextField extends StatelessWidget {
       obscureText: true,
       prefixIcon: Icons.lock_outline,
       onChanged: onChanged,
+      onSubmitted: onSubmitted,
+      enabled: enabled,
       textInputAction: textInputAction,
       validator: (value) {
         if (value == null || value.isEmpty) {
