@@ -7,6 +7,7 @@ import 'package:run_to_canada/core/widgets/loading_indicator.dart';
 import 'package:run_to_canada/features/auth/presentation/providers/auth_providers.dart';
 import 'package:run_to_canada/features/runs/data/services/run_tracking_service.dart';
 import 'package:run_to_canada/features/runs/presentation/providers/run_tracking_provider.dart';
+import 'package:run_to_canada/features/runs/presentation/screens/run_summary_screen.dart';
 
 class RunTrackingScreen extends ConsumerStatefulWidget {
   const RunTrackingScreen({super.key});
@@ -96,12 +97,11 @@ class _RunTrackingScreenState extends ConsumerState<RunTrackingScreen> {
         final run = await trackingService.stopRun();
 
         if (mounted && run != null) {
-          // Navigate to run summary screen (to be created in Sprint 6)
-          Navigator.pop(context);
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Run saved successfully!'),
-              backgroundColor: AppColors.success,
+          // Navigate to run summary screen
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => RunSummaryScreen(run: run),
             ),
           );
         }

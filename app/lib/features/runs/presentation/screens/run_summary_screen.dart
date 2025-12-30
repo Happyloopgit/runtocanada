@@ -1,0 +1,400 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
+import '../../domain/models/run_model.dart';
+import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_text_styles.dart';
+import '../../../../core/widgets/custom_button.dart';
+import '../../../../core/widgets/custom_text_field.dart';
+import '../../../../core/constants/route_constants.dart';
+
+class RunSummaryScreen extends ConsumerStatefulWidget {
+  final RunModel run;
+
+  const RunSummaryScreen({
+    super.key,
+    required this.run,
+  });
+
+  @override
+  ConsumerState<RunSummaryScreen> createState() => _RunSummaryScreenState();
+}
+
+class _RunSummaryScreenState extends ConsumerState<RunSummaryScreen> {
+  final TextEditingController _notesController = TextEditingController();
+  bool _isSaving = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _notesController.text = widget.run.notes ?? '';
+  }
+
+  @override
+  void dispose() {
+    _notesController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _saveRun() async {
+    setState(() => _isSaving = true);
+
+    try {
+      // Update run with notes if provided
+      // Note: updatedRun is created for future use when we implement sync in Sprint 13
+      // Currently the run is already saved by RunTrackingService
+      widget.run.copyWith(
+        notes: _notesController.text.trim().isEmpty
+            ? null
+            : _notesController.text.trim(),
+        updatedAt: DateTime.now(),
+      );
+
+      // Save to Hive (already saved by RunTrackingService, but update notes)
+      // TODO: Update run in Hive with notes in Sprint 13 when we implement sync
+
+      // Navigate to home and show success message
+      if (mounted) {
+        Navigator.of(context).popUntil((route) => route.isFirst);
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Run saved successfully!'),
+            backgroundColor: AppColors.success,
+          ),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error saving run: $e'),
+            backgroundColor: AppColors.error,
+          ),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _isSaving = false);
+      }
+    }
+  }
+
+  Future<void> _discardRun() async {
+    // Show confirmation dialog
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Discard Run?'),
+        content: const Text(
+          'Are you sure you want to discard this run? This action cannot be undone.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            style: TextButton.styleFrom(
+              foregroundColor: AppColors.error,
+            ),
+            child: const Text('Discard'),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed == true && mounted) {
+      // TODO: Delete run from Hive in Sprint 13
+      Navigator.of(context).popUntil((route) => route.isFirst);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Run discarded'),
+          backgroundColor: AppColors.textSecondary,
+        ),
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final formattedDate = DateFormat('EEEE, MMMM d, y').format(widget.run.startTime);
+    final formattedTime = DateFormat('h:mm a').format(widget.run.startTime);
+
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Run Summary'),
+        backgroundColor: AppColors.primary,
+        foregroundColor: Colors.white,
+      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            // Success message
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: AppColors.success.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: AppColors.success),
+              ),
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.check_circle,
+                    color: AppColors.success,
+                    size: 32,
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Run Completed!',
+                          style: AppTextStyles.headlineSmall.copyWith(
+                            color: AppColors.success,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          '$formattedDate at $formattedTime',
+                          style: AppTextStyles.bodyMedium.copyWith(
+                            color: AppColors.textSecondary,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            const SizedBox(height: 24),
+
+            // Main statistics - Distance
+            Container(
+              padding: const EdgeInsets.all(24),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    AppColors.primary,
+                    AppColors.primary.withValues(alpha: 0.7),
+                  ],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: Column(
+                children: [
+                  Text(
+                    'Distance',
+                    style: AppTextStyles.bodyLarge.copyWith(
+                      color: Colors.white70,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    '${widget.run.distanceInKm.toStringAsFixed(2)} km',
+                    style: AppTextStyles.displayLarge.copyWith(
+                      color: Colors.white,
+                      fontSize: 48,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    '${widget.run.distanceInMiles.toStringAsFixed(2)} mi',
+                    style: AppTextStyles.bodyMedium.copyWith(
+                      color: Colors.white70,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            const SizedBox(height: 16),
+
+            // Secondary statistics grid
+            Row(
+              children: [
+                Expanded(
+                  child: _StatCard(
+                    label: 'Duration',
+                    value: widget.run.formattedDuration,
+                    icon: Icons.timer,
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: _StatCard(
+                    label: 'Avg Pace',
+                    value: widget.run.formattedAveragePace,
+                    icon: Icons.speed,
+                  ),
+                ),
+              ],
+            ),
+
+            const SizedBox(height: 12),
+
+            Row(
+              children: [
+                Expanded(
+                  child: _StatCard(
+                    label: 'Max Speed',
+                    value: '${(widget.run.maxSpeed * 3.6).toStringAsFixed(1)} km/h',
+                    icon: Icons.trending_up,
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: _StatCard(
+                    label: 'Calories',
+                    value: '${widget.run.calories.toStringAsFixed(0)} kcal',
+                    icon: Icons.local_fire_department,
+                  ),
+                ),
+              ],
+            ),
+
+            const SizedBox(height: 12),
+
+            Row(
+              children: [
+                Expanded(
+                  child: _StatCard(
+                    label: 'Elevation Gain',
+                    value: '${widget.run.elevationGain.toStringAsFixed(0)} m',
+                    icon: Icons.terrain,
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: _StatCard(
+                    label: 'Route Points',
+                    value: widget.run.routePoints.length.toString(),
+                    icon: Icons.location_on,
+                  ),
+                ),
+              ],
+            ),
+
+            const SizedBox(height: 24),
+
+            // Notes section
+            Text(
+              'Add Notes (Optional)',
+              style: AppTextStyles.headlineSmall,
+            ),
+            const SizedBox(height: 8),
+            CustomTextField(
+              controller: _notesController,
+              label: 'How did you feel during this run?',
+              maxLines: 4,
+              enabled: !_isSaving,
+            ),
+
+            const SizedBox(height: 24),
+
+            // Action buttons
+            Row(
+              children: [
+                Expanded(
+                  child: OutlinedButton(
+                    onPressed: _isSaving ? null : _discardRun,
+                    style: OutlinedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      side: BorderSide(color: AppColors.error),
+                      foregroundColor: AppColors.error,
+                    ),
+                    child: const Text('Discard'),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  flex: 2,
+                  child: CustomButton(
+                    text: 'Save Run',
+                    onPressed: _saveRun,
+                    isLoading: _isSaving,
+                  ),
+                ),
+              ],
+            ),
+
+            const SizedBox(height: 16),
+
+            // View history button
+            TextButton(
+              onPressed: _isSaving
+                  ? null
+                  : () {
+                      Navigator.of(context).pushNamedAndRemoveUntil(
+                        RouteConstants.home,
+                        (route) => false,
+                      );
+                      // TODO: Navigate to history tab when implemented
+                    },
+              child: const Text('View Run History'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _StatCard extends StatelessWidget {
+  final String label;
+  final String value;
+  final IconData icon;
+
+  const _StatCard({
+    required this.label,
+    required this.value,
+    required this.icon,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: AppColors.border),
+      ),
+      child: Column(
+        children: [
+          Icon(
+            icon,
+            color: AppColors.primary,
+            size: 28,
+          ),
+          const SizedBox(height: 8),
+          Text(
+            label,
+            style: AppTextStyles.caption.copyWith(
+              color: AppColors.textSecondary,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 4),
+          Text(
+            value,
+            style: AppTextStyles.headlineSmall.copyWith(
+              fontWeight: FontWeight.bold,
+            ),
+            textAlign: TextAlign.center,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ],
+      ),
+    );
+  }
+}

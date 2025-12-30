@@ -48,6 +48,13 @@ This document tracks all changes made to the Run to Canada project, organized by
 | 006 | 2025-12-30 | Sprint 5 | app/lib/features/runs/presentation/providers/* | Feature | Created run tracking Riverpod providers (status, stats) | [Session 006](Session_log.md#session-006---2025-12-30) |
 | 006 | 2025-12-30 | Sprint 5 | app/lib/features/home/presentation/screens/* | Enhancement | Added Start Run button to home screen | [Session 006](Session_log.md#session-006---2025-12-30) |
 | 006 | 2025-12-30 | Sprint 5 | app/lib/core/navigation/* | Enhancement | Added run tracking route | [Session 006](Session_log.md#session-006---2025-12-30) |
+| 007 | 2025-12-30 | Sprint 6 | app/lib/features/runs/presentation/screens/* | Feature | Created Run Summary screen with stats and notes | [Session 007](Session_log.md#session-007---2025-12-30) |
+| 007 | 2025-12-30 | Sprint 6 | app/lib/features/runs/presentation/screens/* | Feature | Created Run History screen with overall stats and list | [Session 007](Session_log.md#session-007---2025-12-30) |
+| 007 | 2025-12-30 | Sprint 6 | app/lib/features/runs/presentation/screens/* | Feature | Created Run Detail screen with editing and deletion | [Session 007](Session_log.md#session-007---2025-12-30) |
+| 007 | 2025-12-30 | Sprint 6 | app/lib/features/runs/presentation/screens/* | Enhancement | Updated Run Tracking screen to navigate to summary | [Session 007](Session_log.md#session-007---2025-12-30) |
+| 007 | 2025-12-30 | Sprint 6 | app/lib/features/home/presentation/screens/* | Enhancement | Added View Run History button | [Session 007](Session_log.md#session-007---2025-12-30) |
+| 007 | 2025-12-30 | Sprint 6 | app/lib/features/runs/presentation/screens/* | Bug Fix | Fixed AppTextStyles references and CustomTextField parameters | [Session 007](Session_log.md#session-007---2025-12-30) |
+| 007 | 2025-12-30 | Sprint 6 | docs/03-sprint-plan.md | Documentation | Marked Sprint 6 as completed | [Session 007](Session_log.md#session-007---2025-12-30) |
 
 ---
 
@@ -124,6 +131,18 @@ This document tracks all changes made to the Run to Canada project, organized by
 | 006 | 2025-12-30 | Navigation | 1 file | Enhancement | Added run tracking route to AppRouter | [Session 006](Session_log.md#session-006---2025-12-30) |
 | 006 | 2025-12-30 | Documentation | 1 file | Documentation | Updated Sprint Plan with Sprint 5 completion | [Session 006](Session_log.md#session-006---2025-12-30) |
 
+### Sprint 6 - Run Summary & History
+
+| Session | Date | Component | Files Changed | Type | Description | Reference |
+|---------|------|-----------|---------------|------|-------------|-----------|
+| 007 | 2025-12-30 | Run Summary Screen | 1 file | Feature | Complete run summary with stats, notes, save/discard | [Session 007](Session_log.md#session-007---2025-12-30) |
+| 007 | 2025-12-30 | Run History Screen | 1 file | Feature | Run list with overall stats, pull-to-refresh, empty state | [Session 007](Session_log.md#session-007---2025-12-30) |
+| 007 | 2025-12-30 | Run Detail Screen | 1 file | Feature | Detailed run view with inline notes editing and deletion | [Session 007](Session_log.md#session-007---2025-12-30) |
+| 007 | 2025-12-30 | Run Tracking Screen | 1 file | Enhancement | Added navigation to Run Summary after stopping run | [Session 007](Session_log.md#session-007---2025-12-30) |
+| 007 | 2025-12-30 | Home Screen | 1 file | Enhancement | Added View Run History button | [Session 007](Session_log.md#session-007---2025-12-30) |
+| 007 | 2025-12-30 | Screen Styles | 3 files | Bug Fix | Fixed AppTextStyles and CustomTextField parameter issues | [Session 007](Session_log.md#session-007---2025-12-30) |
+| 007 | 2025-12-30 | Documentation | 1 file | Documentation | Marked Sprint 6 as completed in Sprint Plan | [Session 007](Session_log.md#session-007---2025-12-30) |
+
 ---
 
 ## Changes by Type
@@ -175,6 +194,9 @@ This document tracks all changes made to the Run to Canada project, organized by
 | 005 | 2025-12-30 | Sprint 4 | Riverpod providers for run tracking state management | 1 file | [Session 005 (continued)](Session_log.md#session-005-continued---2025-12-30) |
 | 006 | 2025-12-30 | Sprint 5 | RunTrackingScreen with real-time UI and controls | 1 file | [Session 006](Session_log.md#session-006---2025-12-30) |
 | 006 | 2025-12-30 | Sprint 5 | Riverpod stream providers for run status and stats | 1 file | [Session 006](Session_log.md#session-006---2025-12-30) |
+| 007 | 2025-12-30 | Sprint 6 | Run Summary screen with stats, notes, save/discard functionality | 1 file | [Session 007](Session_log.md#session-007---2025-12-30) |
+| 007 | 2025-12-30 | Sprint 6 | Run History screen with list, overall stats, pull-to-refresh | 1 file | [Session 007](Session_log.md#session-007---2025-12-30) |
+| 007 | 2025-12-30 | Sprint 6 | Run Detail screen with inline editing and deletion | 1 file | [Session 007](Session_log.md#session-007---2025-12-30) |
 
 ### Bug Fix
 
@@ -183,6 +205,9 @@ This document tracks all changes made to the Run to Canada project, organized by
 | 003 | 2025-12-28 | Sprint 1 | Fixed Kotlin 2.2.20 incompatibility, downgraded to 1.9.24 | 4 files | [Session 003](Session_log.md#session-003---2025-12-28) |
 | 003 | 2025-12-28 | Sprint 1 | Fixed MainActivity package mismatch (run_to_canada → app) | 1 file | [Session 003](Session_log.md#session-003---2025-12-28) |
 | 003 | 2025-12-28 | Sprint 1 | Fixed Kotlin language version and JVM target settings | 3 files | [Session 003](Session_log.md#session-003---2025-12-28) |
+| 007 | 2025-12-30 | Sprint 6 | Fixed AppTextStyles references (h1/h2/h3 → displayLarge/displayMedium/headlineSmall) | 3 files | [Session 007](Session_log.md#session-007---2025-12-30) |
+| 007 | 2025-12-30 | Sprint 6 | Fixed CustomTextField parameters (hintText → label) | 2 files | [Session 007](Session_log.md#session-007---2025-12-30) |
+| 007 | 2025-12-30 | Sprint 6 | Fixed RouteConstants import and unnecessary await | 2 files | [Session 007](Session_log.md#session-007---2025-12-30) |
 
 ### Refactor
 
@@ -726,5 +751,5 @@ Add a change log entry when:
 ---
 
 **Last Updated:** 2025-12-30
-**Total Changes:** 51
-**Last Session:** 006 (Sprint 5 completed)
+**Total Changes:** 58
+**Last Session:** 007 (Sprint 6 completed)

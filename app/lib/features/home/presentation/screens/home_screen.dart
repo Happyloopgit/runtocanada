@@ -6,6 +6,7 @@ import 'package:run_to_canada/core/theme/app_colors.dart';
 import 'package:run_to_canada/core/theme/app_text_styles.dart';
 import 'package:run_to_canada/core/widgets/custom_button.dart';
 import 'package:run_to_canada/features/auth/presentation/providers/auth_providers.dart';
+import 'package:run_to_canada/features/runs/presentation/screens/run_history_screen.dart';
 
 /// Home screen - main dashboard
 class HomeScreen extends ConsumerWidget {
@@ -72,6 +73,31 @@ class HomeScreen extends ConsumerWidget {
                   ),
                 ),
 
+                const SizedBox(height: 24),
+
+                // View History Button
+                Center(
+                  child: Container(
+                    constraints: const BoxConstraints(maxWidth: 400),
+                    child: OutlinedButton.icon(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const RunHistoryScreen(),
+                          ),
+                        );
+                      },
+                      icon: const Icon(Icons.history),
+                      label: const Text('View Run History'),
+                      style: OutlinedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        minimumSize: const Size(double.infinity, 0),
+                      ),
+                    ),
+                  ),
+                ),
+
                 const SizedBox(height: 32),
 
                 // Quick Stats Placeholder
@@ -83,7 +109,7 @@ class HomeScreen extends ConsumerWidget {
                 const Expanded(
                   child: Center(
                     child: Text(
-                      'Your recent runs will appear here\n(Sprint 6)',
+                      'Your recent runs will appear here',
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         color: AppColors.textSecondary,

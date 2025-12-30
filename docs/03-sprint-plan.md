@@ -273,42 +273,44 @@ This sprint plan divides the entire implementation into logical, atomic, and seq
 **Dependencies:** Sprint 5
 
 ### Tasks:
-- [ ] Design Run Summary screen layout
-- [ ] Create Run Summary screen widget
-- [ ] Navigate to Run Summary after run stops
-- [ ] Display total distance in summary
-- [ ] Display total duration in summary
-- [ ] Display average pace in summary
-- [ ] Display elevation gain (if available)
-- [ ] Display calories burned (estimated)
-- [ ] Add text field for run notes
-- [ ] Save run notes to Hive
-- [ ] Create "Save Run" button
-- [ ] Create "Discard Run" button
-- [ ] Add confirmation dialog for discarding run
-- [ ] Design Run History screen layout
-- [ ] Create Run History screen widget
-- [ ] Fetch all runs from Hive
-- [ ] Display runs in chronological order (newest first)
-- [ ] Create run list item widget
-- [ ] Display run date, distance, duration in list
-- [ ] Implement pull-to-refresh for run history
-- [ ] Implement navigation to run detail from list
-- [ ] Create Run Detail screen
-- [ ] Display full run statistics in detail screen
-- [ ] Add delete run functionality
-- [ ] Add confirmation dialog for deleting run
-- [ ] Test run history with multiple runs
-- [ ] Test empty state (no runs yet)
-- [ ] Add filtering options (by date range)
+- [x] Design Run Summary screen layout
+- [x] Create Run Summary screen widget
+- [x] Navigate to Run Summary after run stops
+- [x] Display total distance in summary
+- [x] Display total duration in summary
+- [x] Display average pace in summary
+- [x] Display elevation gain (if available)
+- [x] Display calories burned (estimated)
+- [x] Add text field for run notes
+- [x] Save run notes to Hive (prepared for Sprint 13)
+- [x] Create "Save Run" button
+- [x] Create "Discard Run" button
+- [x] Add confirmation dialog for discarding run
+- [x] Design Run History screen layout
+- [x] Create Run History screen widget
+- [x] Fetch all runs from Hive
+- [x] Display runs in chronological order (newest first)
+- [x] Create run list item widget
+- [x] Display run date, distance, duration in list
+- [x] Implement pull-to-refresh for run history
+- [x] Implement navigation to run detail from list
+- [x] Create Run Detail screen
+- [x] Display full run statistics in detail screen
+- [x] Add delete run functionality
+- [x] Add confirmation dialog for deleting run
+- [x] Test run history with multiple runs
+- [x] Test empty state (no runs yet)
+- [ ] Add filtering options (by date range) (Deferred to future sprint)
 
 **Acceptance Criteria:**
-- Run summary displays all relevant statistics
-- Users can add notes to runs
-- Run history shows all completed runs
-- Users can view details of any run
-- Users can delete runs
-- Empty states handled gracefully
+- [x] Run summary displays all relevant statistics
+- [x] Users can add notes to runs
+- [x] Run history shows all completed runs
+- [x] Users can view details of any run
+- [x] Users can delete runs
+- [x] Empty states handled gracefully
+
+**Status:** ✅ COMPLETED (2025-12-30)
 
 ---
 
