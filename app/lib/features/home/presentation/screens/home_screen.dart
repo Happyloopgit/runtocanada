@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:run_to_canada/core/constants/route_constants.dart';
+import 'package:run_to_canada/core/navigation/app_router.dart';
+import 'package:run_to_canada/core/theme/app_colors.dart';
 import 'package:run_to_canada/core/theme/app_text_styles.dart';
+import 'package:run_to_canada/core/widgets/custom_button.dart';
 import 'package:run_to_canada/features/auth/presentation/providers/auth_providers.dart';
 
 /// Home screen - main dashboard
@@ -51,11 +55,40 @@ class HomeScreen extends ConsumerWidget {
                   'Premium: ${user.hasActivePremium ? "Yes" : "No"}',
                   style: AppTextStyles.bodyMedium,
                 ),
+                const SizedBox(height: 48),
+
+                // Start Run Button
+                Center(
+                  child: Container(
+                    constraints: const BoxConstraints(maxWidth: 400),
+                    child: CustomButton(
+                      text: 'Start Run',
+                      onPressed: () {
+                        AppRouter.navigateTo(context, RouteConstants.runTracking);
+                      },
+                      icon: Icons.play_arrow,
+                      backgroundColor: AppColors.primary,
+                    ),
+                  ),
+                ),
+
                 const SizedBox(height: 32),
-                const Center(
-                  child: Text(
-                    'Home screen coming soon in Sprint 3+',
-                    textAlign: TextAlign.center,
+
+                // Quick Stats Placeholder
+                Text(
+                  'Recent Activity',
+                  style: AppTextStyles.headlineSmall,
+                ),
+                const SizedBox(height: 16),
+                const Expanded(
+                  child: Center(
+                    child: Text(
+                      'Your recent runs will appear here\n(Sprint 6)',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: AppColors.textSecondary,
+                      ),
+                    ),
                   ),
                 ),
               ],

@@ -4,6 +4,7 @@ import 'package:run_to_canada/features/auth/presentation/screens/forgot_password
 import 'package:run_to_canada/features/auth/presentation/screens/login_screen.dart';
 import 'package:run_to_canada/features/auth/presentation/screens/signup_screen.dart';
 import 'package:run_to_canada/features/home/presentation/screens/home_screen.dart';
+import 'package:run_to_canada/features/runs/presentation/screens/run_tracking_screen.dart';
 
 /// App router configuration
 class AppRouter {
@@ -31,6 +32,12 @@ class AppRouter {
       case RouteConstants.home:
         return MaterialPageRoute(
           builder: (_) => const HomeScreen(),
+          settings: settings,
+        );
+
+      case RouteConstants.runTracking:
+        return MaterialPageRoute(
+          builder: (_) => const RunTrackingScreen(),
           settings: settings,
         );
 

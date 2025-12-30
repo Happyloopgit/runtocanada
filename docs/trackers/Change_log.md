@@ -44,6 +44,10 @@ This document tracks all changes made to the Run to Canada project, organized by
 | 005 | 2025-12-30 | Sprint 4 | app/lib/core/services/* | Feature | Created LocationService for GPS tracking | [Session 005 (continued)](Session_log.md#session-005-continued---2025-12-30) |
 | 005 | 2025-12-30 | Sprint 4 | app/lib/features/runs/data/services/* | Feature | Created RunTrackingService with real-time statistics | [Session 005 (continued)](Session_log.md#session-005-continued---2025-12-30) |
 | 005 | 2025-12-30 | Sprint 4 | app/lib/features/runs/presentation/providers/* | Feature | Created Riverpod providers for run tracking state | [Session 005 (continued)](Session_log.md#session-005-continued---2025-12-30) |
+| 006 | 2025-12-30 | Sprint 5 | app/lib/features/runs/presentation/screens/* | Feature | Created RunTrackingScreen with real-time UI | [Session 006](Session_log.md#session-006---2025-12-30) |
+| 006 | 2025-12-30 | Sprint 5 | app/lib/features/runs/presentation/providers/* | Feature | Created run tracking Riverpod providers (status, stats) | [Session 006](Session_log.md#session-006---2025-12-30) |
+| 006 | 2025-12-30 | Sprint 5 | app/lib/features/home/presentation/screens/* | Enhancement | Added Start Run button to home screen | [Session 006](Session_log.md#session-006---2025-12-30) |
+| 006 | 2025-12-30 | Sprint 5 | app/lib/core/navigation/* | Enhancement | Added run tracking route | [Session 006](Session_log.md#session-006---2025-12-30) |
 
 ---
 
@@ -110,6 +114,16 @@ This document tracks all changes made to the Run to Canada project, organized by
 | 005 | 2025-12-30 | Run Tracking | 1 file | Feature | RunTrackingService with real-time stats and lifecycle management | [Session 005 (continued)](Session_log.md#session-005-continued---2025-12-30) |
 | 005 | 2025-12-30 | State Management | 1 file | Feature | Riverpod providers for run tracking | [Session 005 (continued)](Session_log.md#session-005-continued---2025-12-30) |
 
+### Sprint 5 - Run Tracking UI
+
+| Session | Date | Component | Files Changed | Type | Description | Reference |
+|---------|------|-----------|---------------|------|-------------|-----------|
+| 006 | 2025-12-30 | Run Tracking Screen | 1 file | Feature | RunTrackingScreen with real-time metrics display | [Session 006](Session_log.md#session-006---2025-12-30) |
+| 006 | 2025-12-30 | State Providers | 1 file | Feature | Riverpod providers for run status and stats streams | [Session 006](Session_log.md#session-006---2025-12-30) |
+| 006 | 2025-12-30 | Home Screen | 1 file | Enhancement | Added Start Run button and improved layout | [Session 006](Session_log.md#session-006---2025-12-30) |
+| 006 | 2025-12-30 | Navigation | 1 file | Enhancement | Added run tracking route to AppRouter | [Session 006](Session_log.md#session-006---2025-12-30) |
+| 006 | 2025-12-30 | Documentation | 1 file | Documentation | Updated Sprint Plan with Sprint 5 completion | [Session 006](Session_log.md#session-006---2025-12-30) |
+
 ---
 
 ## Changes by Type
@@ -159,6 +173,8 @@ This document tracks all changes made to the Run to Canada project, organized by
 | 005 | 2025-12-30 | Sprint 4 | LocationService for GPS tracking and permission management | 1 file | [Session 005 (continued)](Session_log.md#session-005-continued---2025-12-30) |
 | 005 | 2025-12-30 | Sprint 4 | RunTrackingService with real-time stats and run lifecycle | 1 file | [Session 005 (continued)](Session_log.md#session-005-continued---2025-12-30) |
 | 005 | 2025-12-30 | Sprint 4 | Riverpod providers for run tracking state management | 1 file | [Session 005 (continued)](Session_log.md#session-005-continued---2025-12-30) |
+| 006 | 2025-12-30 | Sprint 5 | RunTrackingScreen with real-time UI and controls | 1 file | [Session 006](Session_log.md#session-006---2025-12-30) |
+| 006 | 2025-12-30 | Sprint 5 | Riverpod stream providers for run status and stats | 1 file | [Session 006](Session_log.md#session-006---2025-12-30) |
 
 ### Bug Fix
 
@@ -710,5 +726,5 @@ Add a change log entry when:
 ---
 
 **Last Updated:** 2025-12-30
-**Total Changes:** 32
-**Last Session:** 005 (Sprint 3 & 4 completed)
+**Total Changes:** 51
+**Last Session:** 006 (Sprint 5 completed)

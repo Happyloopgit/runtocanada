@@ -467,8 +467,86 @@ Each session entry should include:
 
 ---
 
+### Session 006 - 2025-12-30
+
+**Sprint:** Sprint 5 - Run Tracking UI
+**Duration:** ~1.5 hours
+**Participants:** Development Team (with Claude Code)
+
+**Objectives:**
+- Create user interface for tracking runs in real-time
+- Display live metrics (distance, duration, pace, speed)
+- Implement pause/resume and stop controls
+- Connect UI to RunTrackingService via Riverpod
+- Add proper error handling and user feedback
+
+**Work Completed:**
+- Created comprehensive Run Tracking Screen (run_tracking_screen.dart):
+  - Real-time duration display with large, prominent timer (HH:MM:SS format)
+  - Grid layout showing 4 stat cards: Distance, Pace, Speed, Max Speed
+  - Status indicator showing "Running" or "Paused" with color coding
+  - Route points counter replacing GPS accuracy indicator
+  - Pause/Resume button (outlined style when paused, filled when running)
+  - Stop button with confirmation dialog
+  - Cancel run functionality with confirmation
+  - Loading state during GPS initialization
+  - Error handling with user-friendly snackbar messages
+  - Modern PopScope with onPopInvokedWithResult for back button prevention
+  - Proper formatting for metric/imperial units
+- Created Riverpod providers (run_tracking_provider.dart):
+  - runTrackingServiceProvider - Singleton service instance
+  - runStatusProvider - StreamProvider for run status
+  - runStatsProvider - StreamProvider for run statistics
+  - Proper dependency injection (LocationService + RunLocalDataSource)
+- Updated Home Screen:
+  - Added prominent "Start Run" button with icon
+  - Improved layout with proper spacing
+  - Added "Recent Activity" section placeholder for Sprint 6
+  - Centered button with max width constraint
+- Updated Navigation:
+  - Added run tracking route to AppRouter
+  - Imported RunTrackingScreen
+  - Route configuration complete
+- Fixed all deprecations and analyzer issues:
+  - Replaced WillPopScope with PopScope
+  - Used withValues(alpha:) instead of deprecated withOpacity
+  - Fixed undefined property errors (used correct RunStats properties)
+  - Removed unused _formatDistance method
+  - Fixed user.id → user.uid
+  - Fixed RunLocalDataSource constructor (no parameters)
+- Quality assurance:
+  - flutter analyze - 0 issues found!
+  - flutter build apk --debug - Build successful!
+  - All code properly formatted and linted
+
+**Files Modified:**
+- Created: `app/lib/features/runs/presentation/screens/run_tracking_screen.dart` - Complete run tracking UI
+- Created: `app/lib/features/runs/presentation/providers/run_tracking_provider.dart` - Riverpod state providers
+- Modified: `app/lib/features/home/presentation/screens/home_screen.dart` - Added Start Run button
+- Modified: `app/lib/core/navigation/app_router.dart` - Added run tracking route
+- Modified: `docs/03-sprint-plan.md` - Marked Sprint 5 as complete
+
+**Issues Encountered:**
+- Initial provider implementation used wrong constructor for RunLocalDataSource - Fixed by using parameterless constructor
+- Used deprecated WillPopScope - Fixed by migrating to PopScope with onPopInvokedWithResult
+- RunStats property names didn't match (used durationInSeconds instead of duration) - Fixed by using correct property names
+- Used user.id instead of user.uid - Fixed property access
+- Multiple instances of RunTrackingService created - Fixed by using Riverpod providers
+- withOpacity deprecation warnings - Fixed by using withValues(alpha:)
+- All issues resolved successfully
+
+**Next Steps:**
+- Begin Sprint 6: Run Summary & History
+- Create Run Summary screen to display after run completion
+- Implement Run History list showing all completed runs
+- Add Run Detail screen for viewing individual run details
+- Implement add notes to runs functionality
+- Add delete run functionality
+
+---
+
 **Last Updated:** 2025-12-30
-**Total Sessions:** 5 (Sprint 3 & 4 completed in same session)
+**Total Sessions:** 6 (Sprint 3 & 4 in Session 005, Sprint 5 in Session 006)
 
 ---
 
