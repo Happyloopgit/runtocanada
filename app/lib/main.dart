@@ -7,6 +7,7 @@ import 'package:run_to_canada/core/constants/route_constants.dart';
 import 'package:run_to_canada/core/navigation/app_router.dart';
 import 'package:run_to_canada/core/theme/app_theme.dart';
 import 'package:run_to_canada/firebase_options.dart';
+import 'package:run_to_canada/core/data/services/hive_service.dart';
 
 void main() async {
   // Ensure Flutter bindings are initialized
@@ -16,6 +17,9 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  // Initialize Hive local database
+  await HiveService.init();
 
   // Set preferred orientations (portrait only for now)
   await SystemChrome.setPreferredOrientations([

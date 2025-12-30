@@ -29,6 +29,21 @@ This document tracks all changes made to the Run to Canada project, organized by
 | 004 | 2025-12-28 | Sprint 2 | app/lib/core/widgets/* | Enhancement | Added enabled and onSubmitted to text fields | [Session 004](Session_log.md#session-004---2025-12-28) |
 | 004 | 2025-12-28 | Sprint 2 | app/lib/core/theme/app_colors.dart | Enhancement | Added border color constant | [Session 004](Session_log.md#session-004---2025-12-28) |
 | 004 | 2025-12-28 | Sprint 2 | app/pubspec.yaml | Configuration | Added google_sign_in and font_awesome_flutter packages | [Session 004](Session_log.md#session-004---2025-12-28) |
+| 005 | 2025-12-30 | Sprint 3 | app/lib/features/runs/domain/models/* | Feature | Created Run and RoutePoint models with Hive annotations | [Session 005](Session_log.md#session-005---2025-12-30) |
+| 005 | 2025-12-30 | Sprint 3 | app/lib/features/goals/domain/models/* | Feature | Created Goal, Location, and Milestone models with Hive | [Session 005](Session_log.md#session-005---2025-12-30) |
+| 005 | 2025-12-30 | Sprint 3 | app/lib/features/settings/domain/models/* | Feature | Created UserSettingsHive model for local settings | [Session 005](Session_log.md#session-005---2025-12-30) |
+| 005 | 2025-12-30 | Sprint 3 | app/lib/core/data/models/* | Feature | Created SyncQueueItem for sync management | [Session 005](Session_log.md#session-005---2025-12-30) |
+| 005 | 2025-12-30 | Sprint 3 | app/lib/core/data/services/* | Setup | Created HiveService for database initialization | [Session 005](Session_log.md#session-005---2025-12-30) |
+| 005 | 2025-12-30 | Sprint 3 | app/lib/features/*/data/datasources/* | Feature | Created local data sources for Run, Goal, UserSettings | [Session 005](Session_log.md#session-005---2025-12-30) |
+| 005 | 2025-12-30 | Sprint 3 | app/lib/features/*/domain/repositories/* | Feature | Created repository interfaces and implementations | [Session 005](Session_log.md#session-005---2025-12-30) |
+| 005 | 2025-12-30 | Sprint 3 | app/lib/main.dart | Setup | Integrated Hive initialization | [Session 005](Session_log.md#session-005---2025-12-30) |
+| 005 | 2025-12-30 | Sprint 3 | app/pubspec.yaml | Configuration | Temporarily removed retrofit packages (SDK compatibility) | [Session 005](Session_log.md#session-005---2025-12-30) |
+| 005 | 2025-12-30 | Sprint 3 | Generated *.g.dart files | Setup | Generated Hive type adapters with build_runner | [Session 005](Session_log.md#session-005---2025-12-30) |
+| 005 | 2025-12-30 | Sprint 4 | app/ios/Runner/Info.plist | Configuration | Added location permissions and background modes | [Session 005 (continued)](Session_log.md#session-005-continued---2025-12-30) |
+| 005 | 2025-12-30 | Sprint 4 | app/android/app/src/main/AndroidManifest.xml | Configuration | Added location permissions (fine, coarse, background, foreground service) | [Session 005 (continued)](Session_log.md#session-005-continued---2025-12-30) |
+| 005 | 2025-12-30 | Sprint 4 | app/lib/core/services/* | Feature | Created LocationService for GPS tracking | [Session 005 (continued)](Session_log.md#session-005-continued---2025-12-30) |
+| 005 | 2025-12-30 | Sprint 4 | app/lib/features/runs/data/services/* | Feature | Created RunTrackingService with real-time statistics | [Session 005 (continued)](Session_log.md#session-005-continued---2025-12-30) |
+| 005 | 2025-12-30 | Sprint 4 | app/lib/features/runs/presentation/providers/* | Feature | Created Riverpod providers for run tracking state | [Session 005 (continued)](Session_log.md#session-005-continued---2025-12-30) |
 
 ---
 
@@ -72,6 +87,29 @@ This document tracks all changes made to the Run to Canada project, organized by
 | 004 | 2025-12-28 | Navigation | 1 file | Enhancement | Added home route | [Session 004](Session_log.md#session-004---2025-12-28) |
 | 004 | 2025-12-28 | Dependencies | 1 file | Configuration | Added google_sign_in and font_awesome_flutter | [Session 004](Session_log.md#session-004---2025-12-28) |
 
+### Sprint 3 - Local Database Setup (Hive)
+
+| Session | Date | Component | Files Changed | Type | Description | Reference |
+|---------|------|-----------|---------------|------|-------------|-----------|
+| 005 | 2025-12-30 | Data Models | 8 files | Feature | Run, RoutePoint, Goal, Location, Milestone, UserSettingsHive, SyncQueueItem models | [Session 005](Session_log.md#session-005---2025-12-30) |
+| 005 | 2025-12-30 | Type Adapters | 8 .g.dart files | Setup | Generated Hive type adapters with build_runner | [Session 005](Session_log.md#session-005---2025-12-30) |
+| 005 | 2025-12-30 | Database Service | 1 file | Setup | HiveService for box initialization and management | [Session 005](Session_log.md#session-005---2025-12-30) |
+| 005 | 2025-12-30 | Data Sources | 3 files | Feature | RunLocalDataSource, GoalLocalDataSource, UserLocalDataSource | [Session 005](Session_log.md#session-005---2025-12-30) |
+| 005 | 2025-12-30 | Repositories | 4 files | Feature | Repository interfaces and implementations for Run and Goal | [Session 005](Session_log.md#session-005---2025-12-30) |
+| 005 | 2025-12-30 | Main App | 1 file | Setup | Integrated Hive initialization in main.dart | [Session 005](Session_log.md#session-005---2025-12-30) |
+| 005 | 2025-12-30 | Dependencies | 1 file | Configuration | Temporarily removed retrofit packages (SDK compatibility) | [Session 005](Session_log.md#session-005---2025-12-30) |
+| 005 | 2025-12-30 | Documentation | 2 files | Documentation | Updated sprint plan and session log | [Session 005](Session_log.md#session-005---2025-12-30) |
+
+### Sprint 4 - GPS Tracking Core Functionality
+
+| Session | Date | Component | Files Changed | Type | Description | Reference |
+|---------|------|-----------|---------------|------|-------------|-----------|
+| 005 | 2025-12-30 | iOS Permissions | 1 file | Configuration | Location permissions and background modes in Info.plist | [Session 005 (continued)](Session_log.md#session-005-continued---2025-12-30) |
+| 005 | 2025-12-30 | Android Permissions | 1 file | Configuration | Location permissions in AndroidManifest.xml | [Session 005 (continued)](Session_log.md#session-005-continued---2025-12-30) |
+| 005 | 2025-12-30 | Location Service | 1 file | Feature | LocationService with GPS tracking and permissions | [Session 005 (continued)](Session_log.md#session-005-continued---2025-12-30) |
+| 005 | 2025-12-30 | Run Tracking | 1 file | Feature | RunTrackingService with real-time stats and lifecycle management | [Session 005 (continued)](Session_log.md#session-005-continued---2025-12-30) |
+| 005 | 2025-12-30 | State Management | 1 file | Feature | Riverpod providers for run tracking | [Session 005 (continued)](Session_log.md#session-005-continued---2025-12-30) |
+
 ---
 
 ## Changes by Type
@@ -82,6 +120,7 @@ This document tracks all changes made to the Run to Canada project, organized by
 |---------|------|--------|-------------|-------|-----------|
 | 001 | 2025-12-28 | Sprint 0 | Created comprehensive project documentation | 5 markdown files | [Session 001](Session_log.md#session-001---2025-12-28) |
 | 002 | 2025-12-28 | Sprint 0 | Updated session log and sprint plan | 2 markdown files | [Session 002](Session_log.md#session-002---2025-12-28) |
+| 005 | 2025-12-30 | Sprint 3 | Updated sprint plan and session log for Sprint 3 completion | 2 markdown files | [Session 005](Session_log.md#session-005---2025-12-30) |
 
 ### Setup
 
@@ -94,6 +133,9 @@ This document tracks all changes made to the Run to Canada project, organized by
 | 003 | 2025-12-28 | Sprint 1 | Reusable UI components (buttons, text fields, loaders) | 4 files | [Session 003](Session_log.md#session-003---2025-12-28) |
 | 003 | 2025-12-28 | Sprint 1 | Navigation router and app initialization | 3 files | [Session 003](Session_log.md#session-003---2025-12-28) |
 | 003 | 2025-12-28 | Sprint 1 | App logo asset | 1 file | [Session 003](Session_log.md#session-003---2025-12-28) |
+| 005 | 2025-12-30 | Sprint 3 | HiveService for database initialization and management | 1 file | [Session 005](Session_log.md#session-005---2025-12-30) |
+| 005 | 2025-12-30 | Sprint 3 | Generated Hive type adapters with build_runner | 8 .g.dart files | [Session 005](Session_log.md#session-005---2025-12-30) |
+| 005 | 2025-12-30 | Sprint 3 | Integrated Hive initialization in main.dart | 1 file | [Session 005](Session_log.md#session-005---2025-12-30) |
 
 ### Configuration
 
@@ -102,12 +144,21 @@ This document tracks all changes made to the Run to Canada project, organized by
 | 002 | 2025-12-28 | Sprint 0 | Added all project dependencies | pubspec.yaml | [Session 002](Session_log.md#session-002---2025-12-28) |
 | 002 | 2025-12-28 | Sprint 0 | Environment config for dev/staging/production | env.dart | [Session 002](Session_log.md#session-002---2025-12-28) |
 | 003 | 2025-12-28 | Sprint 1 | Firebase project setup for iOS/Android | 4 files | [Session 003](Session_log.md#session-003---2025-12-28) |
+| 005 | 2025-12-30 | Sprint 3 | Temporarily removed retrofit packages (SDK compatibility) | pubspec.yaml | [Session 005](Session_log.md#session-005---2025-12-30) |
+| 005 | 2025-12-30 | Sprint 4 | iOS location permissions and background modes | Info.plist | [Session 005 (continued)](Session_log.md#session-005-continued---2025-12-30) |
+| 005 | 2025-12-30 | Sprint 4 | Android location permissions (fine, coarse, background, foreground) | AndroidManifest.xml | [Session 005 (continued)](Session_log.md#session-005-continued---2025-12-30) |
 
 ### Feature
 
 | Session | Date | Sprint | Description | Files | Reference |
 |---------|------|--------|-------------|-------|-----------|
 | 003 | 2025-12-28 | Sprint 1 | Authentication screens (Login, Signup, Forgot Password) | 3 files | [Session 003](Session_log.md#session-003---2025-12-28) |
+| 005 | 2025-12-30 | Sprint 3 | Hive data models (Run, RoutePoint, Goal, Location, Milestone, UserSettings, SyncQueue) | 8 files | [Session 005](Session_log.md#session-005---2025-12-30) |
+| 005 | 2025-12-30 | Sprint 3 | Local data sources (Run, Goal, UserSettings) with CRUD operations | 3 files | [Session 005](Session_log.md#session-005---2025-12-30) |
+| 005 | 2025-12-30 | Sprint 3 | Repository pattern (interfaces and implementations for Run and Goal) | 4 files | [Session 005](Session_log.md#session-005---2025-12-30) |
+| 005 | 2025-12-30 | Sprint 4 | LocationService for GPS tracking and permission management | 1 file | [Session 005 (continued)](Session_log.md#session-005-continued---2025-12-30) |
+| 005 | 2025-12-30 | Sprint 4 | RunTrackingService with real-time stats and run lifecycle | 1 file | [Session 005 (continued)](Session_log.md#session-005-continued---2025-12-30) |
+| 005 | 2025-12-30 | Sprint 4 | Riverpod providers for run tracking state management | 1 file | [Session 005 (continued)](Session_log.md#session-005-continued---2025-12-30) |
 
 ### Bug Fix
 
@@ -493,6 +544,171 @@ Add a change log entry when:
 
 ---
 
-**Last Updated:** 2025-12-28
-**Total Changes:** 16
-**Last Session:** 003
+### Session 005 - Hive Local Database Setup
+
+**Date:** 2025-12-30
+**Sprint:** Sprint 3
+
+#### Data Models Created (8 files + 8 generated .g.dart files)
+
+1. **app/lib/features/runs/domain/models/route_point.dart**
+   - Hive typeId: 1
+   - GPS point model with latitude, longitude, altitude, timestamp, speed, accuracy
+   - JSON serialization methods
+   - Used for storing GPS tracking data during runs
+
+2. **app/lib/features/runs/domain/models/run_model.dart**
+   - Hive typeId: 0
+   - Complete run data model with all statistics
+   - Fields: id, userId, startTime, endTime, totalDistance, duration, averagePace, maxSpeed, calories, elevationGain, routePoints, notes, isSynced
+   - Computed getters: distanceInKm, distanceInMiles, formattedDuration, formattedAveragePace
+   - Firestore integration (fromFirestore, toFirestore)
+   - copyWith method for immutable updates
+
+3. **app/lib/features/goals/domain/models/location_model.dart**
+   - Hive typeId: 2
+   - Location model with coordinates and place information
+   - Fields: latitude, longitude, placeName, address, city, country
+   - Used for start/destination locations and milestones
+
+4. **app/lib/features/goals/domain/models/milestone_model.dart**
+   - Hive typeId: 3
+   - Milestone model for journey progress tracking
+   - Fields: id, location, distanceFromStart, photoUrl, description, funFact, isReached, reachedAt
+   - Computed getters: distanceInKm, distanceInMiles, cityName
+   - copyWith method for marking milestones as reached
+
+5. **app/lib/features/goals/domain/models/goal_model.dart**
+   - Hive typeId: 4
+   - Comprehensive goal model with progress tracking
+   - Fields: id, userId, name, startLocation, destinationLocation, totalDistance, currentProgress, milestones, routePolyline, isActive, isCompleted, completedAt
+   - Computed getters: progressPercentage, milestonesReached, currentVirtualLocation, nextMilestone
+   - Firestore integration
+   - copyWith method for updating progress
+
+6. **app/lib/features/settings/domain/models/user_settings_hive.dart**
+   - Hive typeId: 5
+   - Local user settings model
+   - Fields: userId, useMetric, mapStyle, notificationsEnabled, milestoneNotifications, runReminders, isPremium, premiumExpiresAt
+   - Default factory constructor
+   - JSON serialization
+
+7. **app/lib/core/data/models/sync_queue_item.dart**
+   - Hive typeId: 6 (SyncItemType enum)
+   - Hive typeId: 7 (SyncQueueItem class)
+   - Sync queue management for offline support
+   - Fields: id, type (run/goal/userSettings), itemId, createdAt, retryCount, lastRetryAt
+   - copyWith method for retry tracking
+
+#### Database Service Created (1 file)
+
+1. **app/lib/core/data/services/hive_service.dart**
+   - Centralized Hive management
+   - Type adapter registration for all models
+   - Box initialization: runs, goals, userSettings, syncQueue, cache
+   - Utility methods:
+     - openBoxes() - Open all boxes
+     - getBox<T>() - Get specific box
+     - compactAllBoxes() - Optimize storage
+     - closeAll() - Close all boxes
+     - clearAllData() - Clear for logout
+     - deleteAllBoxes() - For account deletion
+
+#### Local Data Sources Created (3 files)
+
+1. **app/lib/features/runs/data/datasources/run_local_datasource.dart**
+   - Comprehensive CRUD operations for runs
+   - Methods:
+     - saveRun(), getRunById(), getAllRuns()
+     - getRunsByUserId(), getRunsSortedByDate()
+     - getRunsInDateRange()
+     - getTotalDistanceByUser(), getTotalRunCountByUser()
+     - updateRun(), deleteRun()
+     - getUnsyncedRuns(), markRunAsSynced()
+     - getLatestRun()
+
+2. **app/lib/features/goals/data/datasources/goal_local_datasource.dart**
+   - Goal management with active goal handling
+   - Methods:
+     - saveGoal(), getGoalById(), getAllGoals()
+     - getGoalsByUserId(), getActiveGoal(), getCompletedGoals()
+     - updateGoal(), updateGoalProgress()
+     - deleteGoal(), deactivateAllGoals(), setGoalActive()
+     - getUnsyncedGoals(), markGoalAsSynced()
+     - hasGoals(), hasActiveGoal()
+
+3. **app/lib/features/settings/data/datasources/user_local_datasource.dart**
+   - User settings management
+   - Methods:
+     - saveUserSettings(), getUserSettings()
+     - getUserSettingsOrDefault()
+     - updateSetting() - Generic update method
+     - Specific updates: updateMetricPreference(), updateMapStyle(), updateNotificationsEnabled(), etc.
+     - isPremiumUser() - Check premium status with expiration
+     - deleteUserSettings(), clearAllUserSettings()
+
+#### Repository Pattern Implemented (4 files)
+
+1. **app/lib/features/runs/domain/repositories/run_repository.dart**
+   - Repository interface defining run operations
+   - Methods for CRUD, filtering, stats, and sync
+
+2. **app/lib/features/goals/domain/repositories/goal_repository.dart**
+   - Repository interface defining goal operations
+   - Methods for CRUD, active goal management, and sync
+
+3. **app/lib/features/runs/data/repositories/run_repository_impl.dart**
+   - Concrete implementation of RunRepository
+   - Uses RunLocalDataSource
+   - Sync method placeholder for Sprint 13
+
+4. **app/lib/features/goals/data/repositories/goal_repository_impl.dart**
+   - Concrete implementation of GoalRepository
+   - Uses GoalLocalDataSource
+   - Sync method placeholder for Sprint 13
+
+#### App Integration (1 file)
+
+1. **app/lib/main.dart**
+   - Added HiveService initialization before Firebase
+   - Import statement for HiveService
+   - Ensures Hive boxes are open before app starts
+
+#### Dependencies (1 file)
+
+1. **app/pubspec.yaml**
+   - Temporarily commented out retrofit and retrofit_generator
+   - Reason: SDK compatibility issue with Dart 3.10.0
+   - Will be re-added in later sprints when needed for API calls
+
+**Quality Checks:**
+- Generated all Hive type adapters with build_runner
+- `flutter analyze` - All checks passed (0 issues)
+- Fixed linting warning (unnecessary braces in string interpolation)
+- `flutter build apk --debug` - Build successful
+
+**Architecture Notes:**
+- Clean architecture maintained with separation of concerns
+- Domain models in domain/models
+- Data sources in data/datasources
+- Repositories in domain/repositories (interfaces) and data/repositories (implementations)
+- All models have proper Hive typeIds (0-7)
+- Comprehensive CRUD operations
+- Repository pattern for clean architecture
+- Support for sync queue management (future Sprint 13)
+
+**Sprint 3 Status:**
+- ✓ All data models created with Hive annotations
+- ✓ Type adapters generated successfully
+- ✓ HiveService for centralized management
+- ✓ Local data sources with comprehensive CRUD
+- ✓ Repository pattern established
+- ✓ Hive initialized in app
+- ✓ All tests passed
+- Next: Sprint 4 - GPS Tracking Core Functionality
+
+---
+
+**Last Updated:** 2025-12-30
+**Total Changes:** 32
+**Last Session:** 005 (Sprint 3 & 4 completed)

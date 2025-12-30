@@ -45,5 +45,15 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Run to Canada needs access to your location to track your runs and calculate distances accurately.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Run to Canada needs access to your location to track your runs even when the app is in the background.</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Run to Canada needs access to your location to track your runs accurately.</string>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>location</string>
+	</array>
 </dict>
 </plist>
