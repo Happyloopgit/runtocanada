@@ -6,6 +6,7 @@ import 'package:run_to_canada/features/auth/presentation/screens/signup_screen.d
 import 'package:run_to_canada/features/home/presentation/screens/home_screen.dart';
 import 'package:run_to_canada/features/runs/presentation/screens/run_tracking_screen.dart';
 import 'package:run_to_canada/features/maps/presentation/screens/map_demo_screen.dart';
+import 'package:run_to_canada/features/goals/presentation/screens/goal_creation_screen.dart';
 
 /// App router configuration
 class AppRouter {
@@ -45,6 +46,12 @@ class AppRouter {
       case RouteConstants.mapDemo:
         return MaterialPageRoute(
           builder: (_) => const MapDemoScreen(),
+          settings: settings,
+        );
+
+      case RouteConstants.goalCreation:
+        return MaterialPageRoute(
+          builder: (_) => const GoalCreationScreen(),
           settings: settings,
         );
 

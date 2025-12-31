@@ -100,6 +100,26 @@ class HomeScreen extends ConsumerWidget {
 
                 const SizedBox(height: 16),
 
+                // Create Goal Button
+                Center(
+                  child: Container(
+                    constraints: const BoxConstraints(maxWidth: 400),
+                    child: OutlinedButton.icon(
+                      onPressed: () {
+                        AppRouter.navigateTo(context, RouteConstants.goalCreation);
+                      },
+                      icon: const Icon(Icons.flag),
+                      label: const Text('Create New Goal'),
+                      style: OutlinedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        minimumSize: const Size(double.infinity, 0),
+                      ),
+                    ),
+                  ),
+                ),
+
+                const SizedBox(height: 16),
+
                 // Map Demo Button
                 Center(
                   child: Container(

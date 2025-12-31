@@ -6,11 +6,11 @@ This document tracks all bugs discovered and their resolution status.
 
 | Status | Count |
 |--------|-------|
-| Open | 0 |
+| Open | 1 |
 | In Progress | 0 |
 | Fixed | 0 |
 | Closed | 0 |
-| **Total** | **0** |
+| **Total** | **1** |
 
 ---
 
@@ -18,7 +18,7 @@ This document tracks all bugs discovered and their resolution status.
 
 | Bug ID | Priority | Sprint | Component | Description | Discovered | Assigned | Reference |
 |--------|----------|--------|-----------|-------------|------------|----------|-----------|
-| - | - | - | - | No open bugs | - | - | - |
+| BUG-001 | Medium | Sprint 9 | iOS/CocoaPods | CocoaPods dependency conflicts preventing iOS build: GoogleUtilities version mismatch (Firebase needs ~7.8, GoogleSignIn needs ~8.0), AppAuth version conflict, nanopb version conflict | 2025-12-31 Session 011 | Unassigned | [Session 011](Session_log.md#session-011---2025-12-31) |
 
 ---
 
@@ -303,7 +303,89 @@ When reporting bugs via feedback:
 
 ---
 
-**Last Updated:** 2025-12-28
-**Total Bugs Logged:** 0
+## Detailed Bug Reports
+
+### BUG-001: iOS CocoaPods Dependency Conflicts Preventing Build
+
+**Priority:** Medium
+
+**Status:** Open
+
+**Sprint:** Sprint 9 - Goal Creation Part 1
+
+**Component:** iOS Build / CocoaPods Dependencies
+
+**Description:**
+
+- **What happened:** Running `flutter run` on iOS fails during pod install with dependency version conflicts
+
+- **Expected behavior:** Pod install should complete successfully and app should build for iOS
+
+- **Error Details:**
+  ```
+  CocoaPods could not find compatible versions for pod "AppAuth":
+  - google_sign_in_ios requires AppAuth (>= 1.7.4)
+  - GoogleSignIn (~> 8.0) requires AppAuth (< 2.0, >= 1.7.3)
+
+  CocoaPods could not find compatible versions for pod "GoogleUtilities/Environment":
+  - firebase_auth (Firebase 10.22.0) requires GoogleUtilities/Environment (~> 7.8)
+  - firebase_core (Firebase 10.22.0) requires GoogleUtilities/Environment (~> 7.12)
+  - GoogleUtilities/Logger (7.13.3) requires GoogleUtilities/Environment (= 7.13.3)
+  - google_sign_in_ios (GoogleSignIn 8.0.0) requires GoogleUtilities/Environment (~> 8.0)
+
+  CocoaPods could not find compatible versions for pod "nanopb":
+  - cloud_firestore requires nanopb (< 2.30910.0, >= 2.30908.0)
+  - firebase_analytics requires nanopb (< 2.30911.0, >= 2.30908.0)
+  ```
+
+- **Root Cause:** Version incompatibility between Firebase packages (10.22.0) and GoogleSignIn (8.0.0)
+  - Firebase 10.22.0 depends on GoogleUtilities ~> 7.x
+  - GoogleSignIn 8.0.0 (via google_sign_in_ios) depends on GoogleUtilities ~> 8.0
+  - This creates an unresolvable dependency conflict
+
+- **Steps to reproduce:**
+  1. Run `flutter run` on iOS device
+  2. Observe pod install failure during build process
+  3. Check CocoaPods error logs
+
+- **Environment:**
+  - Platform: iOS
+  - Xcode: Latest
+  - iOS Deployment Target: 14.0
+  - CocoaPods: 1.16.2
+  - Flutter SDK: 3.38.4
+  - Device: iPhone (iOS 18.6.2)
+
+- **Impact:**
+  - iOS builds are currently blocked
+  - App can only be tested on Android
+  - Sprint 9 functionality (Goal Creation) cannot be tested on iOS
+
+- **Possible Solutions:**
+  1. Upgrade Firebase packages to latest versions (may require newer GoogleUtilities)
+  2. Downgrade google_sign_in package to older version compatible with Firebase 10.22.0
+  3. Wait for package maintainers to release compatible versions
+  4. Use dependency overrides in Podfile (risky, may cause runtime issues)
+
+- **Workaround:**
+  - Test on Android device instead of iOS
+  - Sprint 9 code is platform-agnostic and will work on iOS once dependencies are resolved
+
+**Discovered:** 2025-12-31 (Session 011)
+
+**Assigned:** Unassigned
+
+**Reference:** [Session 011](Session_log.md#session-011---2025-12-31)
+
+**Notes:**
+- This issue does not affect the quality or completeness of Sprint 9 code
+- The Goal Creation feature implementation is complete and passes all static analysis (flutter analyze: 0 issues)
+- Android builds work successfully
+- Issue is purely related to iOS native dependency management
+
+---
+
+**Last Updated:** 2025-12-31
+**Total Bugs Logged:** 1
 **Bugs Fixed:** 0
-**Open Bugs:** 0
+**Open Bugs:** 1

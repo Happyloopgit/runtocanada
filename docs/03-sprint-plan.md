@@ -395,38 +395,40 @@ This sprint plan divides the entire implementation into logical, atomic, and seq
 **Dependencies:** Sprint 7
 
 ### Tasks:
-- [ ] Design Goal Creation screen layout
-- [ ] Create Goal Creation screen widget
-- [ ] Add "Create Goal" button to home screen
-- [ ] Implement navigation to Goal Creation screen
-- [ ] Create step-by-step wizard UI (Step 1: Start, Step 2: Destination)
-- [ ] Create location search text field
-- [ ] Integrate Mapbox Geocoding API
-- [ ] Create `GeocodingService` class
-- [ ] Implement location search functionality
-- [ ] Display search results in dropdown/list
-- [ ] Handle no results scenario
-- [ ] Display search results on map
-- [ ] Allow user to select from search results
-- [ ] Implement "Use Current Location" button for start point
-- [ ] Get user's current GPS location
-- [ ] Display selected start location on map
-- [ ] Create location selection confirmation UI
-- [ ] Move to Step 2: Destination selection
-- [ ] Implement same search flow for destination
-- [ ] Display both start and destination on map
-- [ ] Test location search with various queries
-- [ ] Test search with international locations
-- [ ] Handle API errors gracefully
-- [ ] Add debouncing to search input (avoid too many API calls)
-- [ ] Cache search results locally
+- [x] Design Goal Creation screen layout
+- [x] Create Goal Creation screen widget
+- [x] Add "Create Goal" button to home screen
+- [x] Implement navigation to Goal Creation screen
+- [x] Create step-by-step wizard UI (Step 1: Start, Step 2: Destination, Step 3: Review)
+- [x] Create location search text field
+- [x] Integrate Mapbox Geocoding API
+- [x] Create `GeocodingService` class
+- [x] Implement location search functionality
+- [x] Display search results in dropdown/list
+- [x] Handle no results scenario
+- [x] Display search results on map
+- [x] Allow user to select from search results
+- [x] Implement "Use Current Location" button for start point
+- [x] Get user's current GPS location
+- [x] Display selected start location on map
+- [x] Create location selection confirmation UI
+- [x] Move to Step 2: Destination selection
+- [x] Implement same search flow for destination
+- [x] Display both start and destination on map
+- [x] Test location search with various queries
+- [x] Test search with international locations
+- [x] Handle API errors gracefully
+- [x] Add debouncing to search input (avoid too many API calls)
+- [ ] Cache search results locally (optional enhancement for future)
 
 **Acceptance Criteria:**
-- Users can search for any location in the world
-- Search results are accurate and relevant
-- Selected locations displayed clearly on map
-- "Use Current Location" works correctly
-- UI guides user through selection process smoothly
+- [x] Users can search for any location in the world
+- [x] Search results are accurate and relevant
+- [x] Selected locations displayed clearly on map
+- [x] "Use Current Location" works correctly
+- [x] UI guides user through selection process smoothly
+
+**Status:** ✅ COMPLETED (2025-12-31)
 
 ---
 

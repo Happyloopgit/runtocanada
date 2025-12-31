@@ -78,6 +78,14 @@ This document tracks all changes made to the Run to Canada project, organized by
 | 010 | 2025-12-31 | Sprint 7/8 Fix | app/lib/app/env.dart | Bug Fix | Updated Mapbox token to new valid token | [Session 010](Session_log.md#session-010---2025-12-31) |
 | 010 | 2025-12-31 | Sprint 7/8 Fix | app/android/app/src/main/AndroidManifest.xml | Bug Fix | Updated MAPBOX_ACCESS_TOKEN meta-data value | [Session 010](Session_log.md#session-010---2025-12-31) |
 | 010 | 2025-12-31 | Sprint 7/8 Fix | docs/trackers/* | Documentation | Updated session log and change log | [Session 010](Session_log.md#session-010---2025-12-31) |
+| 011 | 2025-12-31 | Sprint 9 | app/lib/core/services/geocoding_service.dart | Feature | Created GeocodingService for Mapbox Geocoding API with search and reverse geocoding | [Session 011](Session_log.md#session-011---2025-12-31) |
+| 011 | 2025-12-31 | Sprint 9 | app/lib/features/goals/presentation/screens/goal_creation_screen.dart | Feature | Created Goal Creation screen with step wizard UI | [Session 011](Session_log.md#session-011---2025-12-31) |
+| 011 | 2025-12-31 | Sprint 9 | app/lib/features/home/presentation/screens/home_screen.dart | Enhancement | Added Create New Goal button | [Session 011](Session_log.md#session-011---2025-12-31) |
+| 011 | 2025-12-31 | Sprint 9 | app/lib/core/navigation/app_router.dart | Enhancement | Added goalCreation route | [Session 011](Session_log.md#session-011---2025-12-31) |
+| 011 | 2025-12-31 | Sprint 9 | app/ios/Podfile | Configuration | Updated iOS deployment target to 14.0 for Mapbox compatibility | [Session 011](Session_log.md#session-011---2025-12-31) |
+| 011 | 2025-12-31 | Sprint 9 | app/ios/Runner.xcodeproj/project.pbxproj | Configuration | Updated IPHONEOS_DEPLOYMENT_TARGET to 14.0 | [Session 011](Session_log.md#session-011---2025-12-31) |
+| 011 | 2025-12-31 | Sprint 9 | All changed files | Bug Fix | Fixed 17 Flutter analyzer issues (Env property, Position conflict, CustomButton/TextField params, etc.) | [Session 011](Session_log.md#session-011---2025-12-31) |
+| 011 | 2025-12-31 | Sprint 9 | docs/trackers/* | Documentation | Updated session log, change log, sprint plan, bug tracker | [Session 011](Session_log.md#session-011---2025-12-31) |
 
 ---
 
