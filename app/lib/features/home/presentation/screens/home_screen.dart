@@ -120,6 +120,26 @@ class HomeScreen extends ConsumerWidget {
 
                 const SizedBox(height: 16),
 
+                // View Journey Button
+                Center(
+                  child: Container(
+                    constraints: const BoxConstraints(maxWidth: 400),
+                    child: OutlinedButton.icon(
+                      onPressed: () {
+                        AppRouter.navigateTo(context, RouteConstants.journeyMap);
+                      },
+                      icon: const Icon(Icons.explore),
+                      label: const Text('View Journey Progress'),
+                      style: OutlinedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        minimumSize: const Size(double.infinity, 0),
+                      ),
+                    ),
+                  ),
+                ),
+
+                const SizedBox(height: 16),
+
                 // Map Demo Button
                 Center(
                   child: Container(

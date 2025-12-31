@@ -96,6 +96,20 @@ This document tracks all changes made to the Run to Canada project, organized by
 | 012 | 2025-12-31 | Sprint 10 | app/lib/features/goals/presentation/screens/goal_creation_screen.dart | Enhancement | Integrated GoalCreationProvider throughout all steps | [Session 012 (continued)](Session_log.md#session-012-continued---2025-12-31) |
 | 012 | 2025-12-31 | Sprint 10 | docs/03-sprint-plan.md | Documentation | Marked Sprint 10 as completed | [Session 012 (continued)](Session_log.md#session-012-continued---2025-12-31) |
 | 012 | 2025-12-31 | Sprint 10 | docs/trackers/* | Documentation | Updated session log, change log, and sprint plan for Session 012 completion | [Session 012 (continued)](Session_log.md#session-012-continued---2025-12-31) |
+| 013 | 2025-12-31 | Sprint 11 | app/lib/features/goals/presentation/screens/journey_map_screen.dart | Feature | Created comprehensive Journey Map screen with route visualization and progress tracking | [Session 013](Session_log.md#session-013---2025-12-31) |
+| 013 | 2025-12-31 | Sprint 11 | app/lib/features/goals/presentation/screens/journey_map_screen.dart | Feature | Added activeGoalProvider with Firebase Auth integration | [Session 013](Session_log.md#session-013---2025-12-31) |
+| 013 | 2025-12-31 | Sprint 11 | app/lib/features/goals/presentation/screens/journey_map_screen.dart | Feature | Implemented map with route polyline, start/end markers, milestone markers, virtual position marker | [Session 013](Session_log.md#session-013---2025-12-31) |
+| 013 | 2025-12-31 | Sprint 11 | app/lib/features/goals/presentation/screens/journey_map_screen.dart | Feature | Created progress panel with progress bar, statistics grid, and next milestone card | [Session 013](Session_log.md#session-013---2025-12-31) |
+| 013 | 2025-12-31 | Sprint 11 | app/lib/features/goals/presentation/screens/journey_map_screen.dart | Feature | Added map legend overlay and empty state UI | [Session 013](Session_log.md#session-013---2025-12-31) |
+| 013 | 2025-12-31 | Sprint 11 | app/lib/core/navigation/app_router.dart | Enhancement | Added journeyMap route to navigation system | [Session 013](Session_log.md#session-013---2025-12-31) |
+| 013 | 2025-12-31 | Sprint 11 | app/lib/features/home/presentation/screens/home_screen.dart | Enhancement | Added View Journey Progress button | [Session 013](Session_log.md#session-013---2025-12-31) |
+| 013 | 2025-12-31 | Sprint 11 | app/lib/features/goals/presentation/screens/journey_map_screen.dart | Bug Fix | Fixed activeGoalProvider to use userId from currentUserProvider | [Session 013](Session_log.md#session-013---2025-12-31) |
+| 013 | 2025-12-31 | Sprint 11 | app/lib/features/goals/presentation/screens/journey_map_screen.dart | Bug Fix | Fixed MapboxService usage (factory constructor instead of .instance) | [Session 013](Session_log.md#session-013---2025-12-31) |
+| 013 | 2025-12-31 | Sprint 11 | app/lib/features/goals/presentation/screens/journey_map_screen.dart | Bug Fix | Fixed LineString to use List<Position> instead of List<Point> | [Session 013](Session_log.md#session-013---2025-12-31) |
+| 013 | 2025-12-31 | Sprint 11 | app/lib/features/goals/presentation/screens/journey_map_screen.dart | Bug Fix | Replaced deprecated Color.value with Color.toARGB32() (8 instances) | [Session 013](Session_log.md#session-013---2025-12-31) |
+| 013 | 2025-12-31 | Sprint 11 | app/lib/features/goals/presentation/screens/journey_map_screen.dart | Bug Fix | Removed unused _mapboxMap field - achieved 0 analyzer issues | [Session 013](Session_log.md#session-013---2025-12-31) |
+| 013 | 2025-12-31 | Sprint 11 | docs/03-sprint-plan.md | Documentation | Marked Sprint 11 as completed | [Session 013](Session_log.md#session-013---2025-12-31) |
+| 013 | 2025-12-31 | Sprint 11 | docs/trackers/* | Documentation | Updated session log and change log for Session 013 | [Session 013](Session_log.md#session-013---2025-12-31) |
 
 ---
 
@@ -846,6 +860,88 @@ Add a change log entry when:
 
 ---
 
+### Sprint 11 - Journey Visualization & Progress Tracking
+
+| Session | Date | Component | Files Changed | Type | Description | Reference |
+|---------|------|-----------|---------------|------|-------------|-----------|
+| 013 | 2025-12-31 | Journey Map Screen | 1 file | Feature | Created comprehensive Journey Map with route, markers, and progress UI | [Session 013](Session_log.md#session-013---2025-12-31) |
+| 013 | 2025-12-31 | Navigation | 1 file | Enhancement | Added journeyMap route to AppRouter | [Session 013](Session_log.md#session-013---2025-12-31) |
+| 013 | 2025-12-31 | Home Screen | 1 file | Enhancement | Added View Journey Progress button | [Session 013](Session_log.md#session-013---2025-12-31) |
+| 013 | 2025-12-31 | Journey Map | 1 file | Bug Fix | Fixed 15 analyzer issues (auth integration, Mapbox API, Color deprecation) | [Session 013](Session_log.md#session-013---2025-12-31) |
+| 013 | 2025-12-31 | Documentation | 2 files | Documentation | Updated sprint plan, session log, and change log | [Session 013](Session_log.md#session-013---2025-12-31) |
+
+**Summary:**
+- Created comprehensive Journey Map screen showing goal progress visualization
+- Map displays entire route with auto-fit camera to show all milestones
+- Different markers for start (green), end (red), milestones (red/gray), and current position (blue)
+- Interactive map legend showing all marker types
+- Progress panel with progress bar showing percentage and distance completed
+- Statistics grid showing milestones reached and remaining distance
+- Next milestone card with city name and distance to reach
+- Empty state UI when no active goal exists ("Create Your First Goal" CTA)
+- Integrated activeGoalProvider with Firebase Auth for user-specific goals
+- Fixed all 15 Flutter analyzer issues (0 issues remaining)
+
+**Key Features:**
+- **Map Visualization:**
+  - Route polyline drawn in Canadian red
+  - Start marker (green circle with white border)
+  - End marker (red circle with white border)
+  - Milestone markers (red if reached, gray if unreached)
+  - Current virtual position marker (blue, larger size)
+  - Interactive legend overlay
+
+- **Progress Information:**
+  - Goal name display
+  - Visual progress bar with percentage
+  - Distance completed / total distance (km)
+  - Milestones reached count
+  - Remaining distance to destination
+  - Next milestone card with ETA
+
+- **State Management:**
+  - activeGoalProvider fetches user's active goal from Hive
+  - Uses Firebase Auth for user identification
+  - Handles loading, error, and empty states
+  - Real-time progress calculation from goal model
+
+**Bug Fixes Applied:**
+1. Fixed activeGoalProvider to use userId from currentUserProvider
+2. Fixed MapboxService usage (factory constructor instead of .instance)
+3. Fixed MapStyle access (used .styleUri directly instead of getStyleUri())
+4. Fixed LineString geometry (List<Position> instead of List<Point>)
+5. Replaced deprecated Color.value with Color.toARGB32() (8 instances)
+6. Removed unused _mapboxMap field
+
+**Files Created:**
+- `app/lib/features/goals/presentation/screens/journey_map_screen.dart` - Complete journey visualization
+
+**Files Modified:**
+- `app/lib/core/navigation/app_router.dart` - Added journeyMap route
+- `app/lib/features/home/presentation/screens/home_screen.dart` - Added journey button
+- `docs/03-sprint-plan.md` - Marked Sprint 11 as completed
+
+**Architecture Notes:**
+- Clean separation between map rendering and progress information
+- Uses Riverpod FutureProvider for asynchronous goal fetching
+- Follows existing MapboxService patterns from Sprint 8
+- Proper state management for loading, error, and data states
+- Reusable marker creation methods
+- Auto-fit camera calculation for route visualization
+
+**Sprint 11 Status:**
+- ✓ Journey Map screen with full route visualization
+- ✓ Start, end, milestone, and current position markers
+- ✓ Progress panel with statistics and next milestone
+- ✓ Map legend for marker identification
+- ✓ Empty state handling
+- ✓ Firebase Auth integration
+- ✓ All analyzer issues fixed (0 issues)
+- ✓ Navigation integration complete
+- Next: Sprint 12 - Goal Progress Update Logic
+
+---
+
 **Last Updated:** 2025-12-31
-**Total Changes:** 76
-**Last Session:** 010 (Mapbox Integration Bug Fix)
+**Total Changes:** 91
+**Last Session:** 013 (Journey Visualization & Progress Tracking)
