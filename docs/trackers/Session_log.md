@@ -813,8 +813,65 @@ Each session entry should include:
 
 ---
 
+### Session 010 - 2025-12-31
+
+**Sprint:** Sprint 7 & 8 - Mapbox Integration (Bug Fix)
+**Duration:** ~1 hour
+**Participants:** Development Team (with Claude Code)
+
+**Objectives:**
+- Fix Mapbox map tiles not loading on Android device
+- Debug and identify root cause of blank map issue
+- Update Mapbox access token across all configuration files
+- Verify map functionality on Android device
+
+**Work Completed:**
+- Investigated Mapbox integration issue (map controls working but tiles not loading)
+- Added Dart-side Mapbox initialization in main.dart using `MapboxOptions.setAccessToken()`
+- Created Android strings.xml resource file with mapbox_access_token
+- Debugged invalid Mapbox token issue using curl to test API endpoint
+- Identified HTTP 401 Unauthorized error indicating invalid/expired token
+- Updated Mapbox access token in all three required locations:
+  - lib/app/env.dart (defaultValue)
+  - android/app/src/main/res/values/strings.xml (new file)
+  - android/app/src/main/AndroidManifest.xml (meta-data value)
+- Replaced old token: `pk.eyJ1IjoiaGFwcHlsb29wIiwiYSI6ImNtanNqaXhwdTJnc2Uya3Nkd2ZuaWdmcHYifQ.GRxjzAh8Fwc9--MvJvjLSg`
+- With new valid token: `sk.eyJ1IjoiaGFwcHlsb29wIiwiYSI6ImNtanRxNzB2ZDAwbm4zZHM5cGt4ZGJhYmkifQ.TN7Ase6AdUI1wOvWz59oPA`
+
+**Files Modified:**
+- Modified: `app/lib/main.dart` - Added MapboxOptions.setAccessToken() initialization
+- Created: `app/android/app/src/main/res/values/strings.xml` - Android string resource with mapbox_access_token
+- Modified: `app/lib/app/env.dart` - Updated Mapbox token to new valid token
+- Modified: `app/android/app/src/main/AndroidManifest.xml` - Updated MAPBOX_ACCESS_TOKEN meta-data value
+- Modified: `docs/trackers/Session_log.md` - This file
+- Modified: `docs/trackers/Change_log.md` - Added Session 010 entries
+
+**Issues Encountered:**
+- **Issue 1:** Map initialized but tiles not loading on Android
+  - **Root Cause:** Missing Dart-side MapboxOptions.setAccessToken() call
+  - **Solution:** Added initialization in main.dart before app starts
+- **Issue 2:** After adding initialization, still getting MapboxConfigurationException
+  - **Root Cause:** Android requires mapbox_access_token string resource
+  - **Solution:** Created strings.xml with proper token resource
+- **Issue 3:** Still blank map after creating strings.xml
+  - **Root Cause:** Invalid/expired Mapbox access token (HTTP 401 from API)
+  - **Diagnosis:** Used curl to test token: `curl -I "https://api.mapbox.com/styles/v1/mapbox/streets-v12?access_token=..."`
+  - **Solution:** User provided new valid token from Mapbox account
+- **Issue 4:** Token from Session 008 was invalid
+  - **Root Cause:** Original token was either placeholder, revoked, or expired
+  - **Solution:** Updated token in all three locations with new valid token
+
+**Next Steps:**
+- Rebuild and test app on Android device with new token
+- Verify map tiles load correctly
+- Test map style switching functionality
+- Test live route tracking during runs
+- Continue with Sprint 9: Goal Creation - Part 1 (if map works)
+
+---
+
 **Last Updated:** 2025-12-31
-**Total Sessions:** 9
+**Total Sessions:** 10
 **Completed Sprints:** 0-8 (Sprint 8 completed in Session 009)
 
 ---

@@ -73,6 +73,11 @@ This document tracks all changes made to the Run to Canada project, organized by
 | 009 | 2025-12-31 | Sprint 8 | app/lib/features/runs/presentation/screens/* | Enhancement | Added route maps to Run Summary, Detail, and Tracking screens | [Session 009](Session_log.md#session-009---2025-12-31) |
 | 009 | 2025-12-31 | Sprint 8 | app/lib/features/runs/data/services/* | Enhancement | Added routePoints getter to RunTrackingService | [Session 009](Session_log.md#session-009---2025-12-31) |
 | 009 | 2025-12-31 | Sprint 8 | docs/03-sprint-plan.md | Documentation | Marked Sprint 8 as completed | [Session 009](Session_log.md#session-009---2025-12-31) |
+| 010 | 2025-12-31 | Sprint 7/8 Fix | app/lib/main.dart | Bug Fix | Added MapboxOptions.setAccessToken() initialization | [Session 010](Session_log.md#session-010---2025-12-31) |
+| 010 | 2025-12-31 | Sprint 7/8 Fix | app/android/app/src/main/res/values/strings.xml | Configuration | Created Android string resource with mapbox_access_token | [Session 010](Session_log.md#session-010---2025-12-31) |
+| 010 | 2025-12-31 | Sprint 7/8 Fix | app/lib/app/env.dart | Bug Fix | Updated Mapbox token to new valid token | [Session 010](Session_log.md#session-010---2025-12-31) |
+| 010 | 2025-12-31 | Sprint 7/8 Fix | app/android/app/src/main/AndroidManifest.xml | Bug Fix | Updated MAPBOX_ACCESS_TOKEN meta-data value | [Session 010](Session_log.md#session-010---2025-12-31) |
+| 010 | 2025-12-31 | Sprint 7/8 Fix | docs/trackers/* | Documentation | Updated session log and change log | [Session 010](Session_log.md#session-010---2025-12-31) |
 
 ---
 
@@ -823,6 +828,6 @@ Add a change log entry when:
 
 ---
 
-**Last Updated:** 2025-12-30
-**Total Changes:** 71
-**Last Session:** 008 (Sprint 7 completed)
+**Last Updated:** 2025-12-31
+**Total Changes:** 76
+**Last Session:** 010 (Mapbox Integration Bug Fix)
