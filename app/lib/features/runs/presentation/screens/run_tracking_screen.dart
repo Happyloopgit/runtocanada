@@ -4,6 +4,7 @@ import 'package:run_to_canada/core/theme/app_colors.dart';
 import 'package:run_to_canada/core/theme/app_text_styles.dart';
 import 'package:run_to_canada/core/widgets/custom_button.dart';
 import 'package:run_to_canada/core/widgets/loading_indicator.dart';
+import 'package:run_to_canada/core/widgets/live_route_map_widget.dart';
 import 'package:run_to_canada/features/auth/presentation/providers/auth_providers.dart';
 import 'package:run_to_canada/features/runs/data/services/run_tracking_service.dart';
 import 'package:run_to_canada/features/runs/presentation/providers/run_tracking_provider.dart';
@@ -275,7 +276,7 @@ class _RunTrackingScreenState extends ConsumerState<RunTrackingScreen> {
           ),
         ),
         body: SafeArea(
-          child: Padding(
+          child: SingleChildScrollView(
             padding: const EdgeInsets.all(16.0),
             child: Column(
               children: [
@@ -317,7 +318,16 @@ class _RunTrackingScreenState extends ConsumerState<RunTrackingScreen> {
                   ),
                 ),
 
-                const SizedBox(height: 32),
+                const SizedBox(height: 16),
+
+                // Live route map
+                LiveRouteMapWidget(
+                  routePoints: ref.read(runTrackingServiceProvider).routePoints,
+                  height: 250,
+                  followCurrentPosition: true,
+                ),
+
+                const SizedBox(height: 24),
 
                 // Main Display - Duration
                 Text(
@@ -335,44 +345,44 @@ class _RunTrackingScreenState extends ConsumerState<RunTrackingScreen> {
                   ),
                 ),
 
-                const SizedBox(height: 32),
+                const SizedBox(height: 24),
 
                 // Stats Grid
-                Expanded(
-                  child: GridView.count(
-                    crossAxisCount: 2,
-                    crossAxisSpacing: 16,
-                    mainAxisSpacing: 16,
-                    childAspectRatio: 1.1,
-                    children: [
-                      _buildStatCard(
-                        label: 'Distance',
-                        value: useMetric
-                            ? stats.distanceInKm.toStringAsFixed(2)
-                            : stats.distanceInMiles.toStringAsFixed(2),
-                        unit: useMetric ? 'km' : 'mi',
-                        icon: Icons.directions_run,
-                      ),
-                      _buildStatCard(
-                        label: 'Pace',
-                        value: _formatPace(stats.pace, useMetric),
-                        unit: useMetric ? 'min/km' : 'min/mi',
-                        icon: Icons.speed,
-                      ),
-                      _buildStatCard(
-                        label: 'Speed',
-                        value: _formatSpeed(stats.speed, useMetric),
-                        unit: useMetric ? 'km/h' : 'mph',
-                        icon: Icons.flash_on,
-                      ),
-                      _buildStatCard(
-                        label: 'Max Speed',
-                        value: _formatSpeed(stats.maxSpeed, useMetric),
-                        unit: useMetric ? 'km/h' : 'mph',
-                        icon: Icons.flash_on_outlined,
-                      ),
-                    ],
-                  ),
+                GridView.count(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  crossAxisCount: 2,
+                  crossAxisSpacing: 16,
+                  mainAxisSpacing: 16,
+                  childAspectRatio: 1.1,
+                  children: [
+                    _buildStatCard(
+                      label: 'Distance',
+                      value: useMetric
+                          ? stats.distanceInKm.toStringAsFixed(2)
+                          : stats.distanceInMiles.toStringAsFixed(2),
+                      unit: useMetric ? 'km' : 'mi',
+                      icon: Icons.directions_run,
+                    ),
+                    _buildStatCard(
+                      label: 'Pace',
+                      value: _formatPace(stats.pace, useMetric),
+                      unit: useMetric ? 'min/km' : 'min/mi',
+                      icon: Icons.speed,
+                    ),
+                    _buildStatCard(
+                      label: 'Speed',
+                      value: _formatSpeed(stats.speed, useMetric),
+                      unit: useMetric ? 'km/h' : 'mph',
+                      icon: Icons.flash_on,
+                    ),
+                    _buildStatCard(
+                      label: 'Max Speed',
+                      value: _formatSpeed(stats.maxSpeed, useMetric),
+                      unit: useMetric ? 'km/h' : 'mph',
+                      icon: Icons.flash_on_outlined,
+                    ),
+                  ],
                 ),
 
                 const SizedBox(height: 16),

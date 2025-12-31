@@ -2,6 +2,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
+import 'package:run_to_canada/app/env.dart';
 import 'package:run_to_canada/core/constants/app_constants.dart';
 import 'package:run_to_canada/core/constants/route_constants.dart';
 import 'package:run_to_canada/core/navigation/app_router.dart';
@@ -20,6 +22,9 @@ void main() async {
 
   // Initialize Hive local database
   await HiveService.init();
+
+  // Initialize Mapbox with access token
+  MapboxOptions.setAccessToken(Env.mapboxToken);
 
   // Set preferred orientations (portrait only for now)
   await SystemChrome.setPreferredOrientations([

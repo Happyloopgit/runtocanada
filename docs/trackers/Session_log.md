@@ -727,9 +727,95 @@ Each session entry should include:
 
 ---
 
-**Last Updated:** 2025-12-30
-**Total Sessions:** 8
-**Completed Sprints:** 0-7 (Sprint 7 completed in Session 008)
+### Session 009 - 2025-12-31
+
+**Sprint:** Sprint 8 - Route Visualization on Map
+**Duration:** ~2 hours
+**Participants:** Development Team (with Claude Code)
+
+**Objectives:**
+- Integrate maps into Run Summary and Run Detail screens
+- Draw polylines for completed run routes on maps
+- Implement real-time route tracking during runs
+- Add start/end markers to routes
+- Auto-fit map camera to show entire route
+- Optimize route rendering performance
+
+**Work Completed:**
+- Enhanced MapboxService class with route visualization utilities:
+  - Added `createStartMarker()` for green start markers with white borders
+  - Added `createEndMarker()` for red end markers with white borders
+  - Added `getRouteCameraOptions()` to auto-fit camera to route bounds with padding
+  - Improved zoom level calculation based on route extent
+- Created RouteMapWidget (reusable component):
+  - Displays completed run routes with polylines
+  - Shows start marker (green) and end marker (red)
+  - Auto-fits camera to show entire route with 15% padding
+  - Empty state handling when no route data available
+  - Configurable height, map style, and route appearance
+- Created LiveRouteMapWidget (real-time tracking component):
+  - Live route tracking during active runs
+  - Updates polyline in real-time as GPS points come in
+  - Current position marker (blue) that moves along the route
+  - Camera follows current position option
+  - Waiting for GPS state when no points yet
+  - Optimized annotation updates (delete and recreate for Mapbox v2 API)
+- Integrated RouteMapWidget into Run Summary screen:
+  - Added route map section with 300px height
+  - Conditional rendering based on route points availability
+  - Positioned after success message, before distance display
+- Integrated RouteMapWidget into Run Detail screen:
+  - Added route map section with 300px height
+  - Positioned after date/time card, before distance display
+  - Updates when run notes are saved
+- Integrated LiveRouteMapWidget into Run Tracking screen:
+  - Added live map with 250px height
+  - Positioned after status indicator, before duration display
+  - Changed layout from Column with Expanded GridView to SingleChildScrollView
+  - Set GridView to shrinkWrap with NeverScrollableScrollPhysics
+  - Real-time updates as GPS points are collected
+- Added routePoints getter to RunTrackingService:
+  - Exposes route points as unmodifiable list
+  - Allows LiveRouteMapWidget to access current route data
+- Fixed all analyzer issues:
+  - Replaced copyWith (unsupported in Mapbox v2) with delete + create pattern
+  - Fixed undefined getter for routePoints
+  - Achieved 0 analyzer issues
+- Successfully ran flutter analyze: **0 issues found** ✅
+- Updated sprint plan to mark Sprint 8 as complete
+
+**Files Modified:**
+- Modified: `app/lib/core/services/mapbox_service.dart` - Added start/end marker creators and route camera options
+- Created: `app/lib/core/widgets/route_map_widget.dart` - Reusable completed route visualization widget
+- Created: `app/lib/core/widgets/live_route_map_widget.dart` - Real-time route tracking widget
+- Modified: `app/lib/features/runs/presentation/screens/run_summary_screen.dart` - Added route map visualization
+- Modified: `app/lib/features/runs/presentation/screens/run_detail_screen.dart` - Added route map visualization
+- Modified: `app/lib/features/runs/presentation/screens/run_tracking_screen.dart` - Added live route tracking map
+- Modified: `app/lib/features/runs/data/services/run_tracking_service.dart` - Added routePoints getter
+- Modified: `docs/03-sprint-plan.md` - Marked Sprint 8 as complete
+
+**Issues Encountered:**
+- Initial analyzer errors with Mapbox Maps Flutter v2 API:
+  - copyWith() method not available on PolylineAnnotation and CircleAnnotation
+  - **Solution:** Changed to delete + create pattern for annotation updates
+- routePoints not accessible from RunTrackingService:
+  - Property was private (_routePoints)
+  - **Solution:** Added public getter returning unmodifiable list
+- GridView inside Expanded widget conflict with SingleChildScrollView:
+  - **Solution:** Changed GridView to use shrinkWrap: true and NeverScrollableScrollPhysics
+- All issues resolved successfully with 0 analyzer errors
+
+**Next Steps:**
+- Begin Sprint 9: Goal Creation - Part 1 (Search & Selection)
+- Create Goal Creation screen
+- Integrate Mapbox Geocoding API for location search
+- Implement location selection flow
+
+---
+
+**Last Updated:** 2025-12-31
+**Total Sessions:** 9
+**Completed Sprints:** 0-8 (Sprint 8 completed in Session 009)
 
 ---
 

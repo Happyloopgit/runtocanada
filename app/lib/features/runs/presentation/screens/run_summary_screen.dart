@@ -6,6 +6,7 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_text_styles.dart';
 import '../../../../core/widgets/custom_button.dart';
 import '../../../../core/widgets/custom_text_field.dart';
+import '../../../../core/widgets/route_map_widget.dart';
 import '../../../../core/constants/route_constants.dart';
 
 class RunSummaryScreen extends ConsumerStatefulWidget {
@@ -173,6 +174,20 @@ class _RunSummaryScreenState extends ConsumerState<RunSummaryScreen> {
             ),
 
             const SizedBox(height: 24),
+
+            // Route map visualization
+            if (widget.run.routePoints.isNotEmpty) ...[
+              Text(
+                'Route Map',
+                style: AppTextStyles.headlineSmall,
+              ),
+              const SizedBox(height: 8),
+              RouteMapWidget(
+                routePoints: widget.run.routePoints,
+                height: 300,
+              ),
+              const SizedBox(height: 24),
+            ],
 
             // Main statistics - Distance
             Container(

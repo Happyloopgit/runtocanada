@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">run_to_canada</string>
+    <string name="mapbox_access_token" translatable="false">sk.eyJ1IjoiaGFwcHlsb29wIiwiYSI6ImNtanRxNzB2ZDAwbm4zZHM5cGt4ZGJhYmkifQ.TN7Ase6AdUI1wOvWz59oPA</string>
+</resources>

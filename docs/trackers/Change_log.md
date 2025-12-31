@@ -67,6 +67,12 @@ This document tracks all changes made to the Run to Canada project, organized by
 | 008 | 2025-12-30 | Sprint 7 | app/lib/core/navigation/app_router.dart | Enhancement | Added MapDemoScreen route handler | [Session 008](Session_log.md#session-008---2025-12-30) |
 | 008 | 2025-12-30 | Sprint 7 | app/lib/features/home/presentation/screens/* | Enhancement | Added View Map Demo button | [Session 008](Session_log.md#session-008---2025-12-30) |
 | 008 | 2025-12-30 | Sprint 7 | docs/03-sprint-plan.md | Documentation | Marked Sprint 7 as completed | [Session 008](Session_log.md#session-008---2025-12-30) |
+| 009 | 2025-12-31 | Sprint 8 | app/lib/core/services/mapbox_service.dart | Enhancement | Added createStartMarker, createEndMarker, getRouteCameraOptions | [Session 009](Session_log.md#session-009---2025-12-31) |
+| 009 | 2025-12-31 | Sprint 8 | app/lib/core/widgets/route_map_widget.dart | Feature | Created RouteMapWidget for completed run routes | [Session 009](Session_log.md#session-009---2025-12-31) |
+| 009 | 2025-12-31 | Sprint 8 | app/lib/core/widgets/live_route_map_widget.dart | Feature | Created LiveRouteMapWidget for real-time tracking | [Session 009](Session_log.md#session-009---2025-12-31) |
+| 009 | 2025-12-31 | Sprint 8 | app/lib/features/runs/presentation/screens/* | Enhancement | Added route maps to Run Summary, Detail, and Tracking screens | [Session 009](Session_log.md#session-009---2025-12-31) |
+| 009 | 2025-12-31 | Sprint 8 | app/lib/features/runs/data/services/* | Enhancement | Added routePoints getter to RunTrackingService | [Session 009](Session_log.md#session-009---2025-12-31) |
+| 009 | 2025-12-31 | Sprint 8 | docs/03-sprint-plan.md | Documentation | Marked Sprint 8 as completed | [Session 009](Session_log.md#session-009---2025-12-31) |
 
 ---
 

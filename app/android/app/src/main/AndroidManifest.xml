@@ -42,7 +42,7 @@
         <!-- Mapbox access token -->
         <meta-data
             android:name="MAPBOX_ACCESS_TOKEN"
-            android:value="pk.eyJ1IjoiaGFwcHlsb29wIiwiYSI6ImNtanNqaXhwdTJnc2Uya3Nkd2ZuaWdmcHYifQ.GRxjzAh8Fwc9--MvJvjLSg" />
+            android:value="sk.eyJ1IjoiaGFwcHlsb29wIiwiYSI6ImNtanRxNzB2ZDAwbm4zZHM5cGt4ZGJhYmkifQ.TN7Ase6AdUI1wOvWz59oPA" />
     </application>
     <!-- Required to query activities that can process text, see:
          https://developer.android.com/training/package-visibility and

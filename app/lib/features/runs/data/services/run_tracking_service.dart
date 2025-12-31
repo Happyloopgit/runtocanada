@@ -47,6 +47,7 @@ class RunTrackingService {
   // Getters
   RunStatus get status => _status;
   String? get currentRunId => _currentRunId;
+  List<RoutePoint> get routePoints => List.unmodifiable(_routePoints);
   Stream<RunStatus> get statusStream => _statusController.stream;
   Stream<RunStats> get statsStream => _statsController.stream;
 
