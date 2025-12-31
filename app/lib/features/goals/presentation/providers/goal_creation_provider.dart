@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import '../../../../core/services/directions_service.dart';
 import '../../../../core/services/unsplash_service.dart';
 import '../../../../core/services/wikipedia_service.dart';
+import '../../../../core/data/providers/sync_providers.dart';
 import '../../data/datasources/goal_local_datasource.dart';
 import '../../data/services/milestone_generation_service.dart';
 import '../../domain/models/goal_model.dart';
@@ -70,8 +71,10 @@ class GoalCreationNotifier extends StateNotifier<GoalCreationState> {
   final UnsplashService _unsplashService;
   final WikipediaService _wikipediaService;
   final GoalLocalDataSource _goalLocalDataSource;
+  final Ref _ref;
 
-  GoalCreationNotifier({
+  GoalCreationNotifier(
+    this._ref, {
     DirectionsService? directionsService,
     MilestoneGenerationService? milestoneService,
     UnsplashService? unsplashService,
@@ -249,6 +252,10 @@ class GoalCreationNotifier extends StateNotifier<GoalCreationState> {
 
       await _goalLocalDataSource.saveGoal(goal);
 
+      // Queue goal for cloud sync
+      final syncService = _ref.read(syncServiceProvider);
+      await syncService.queueGoalForSync(goal);
+
       state = state.copyWith(isSaving: false);
       return true;
     } catch (e) {
@@ -268,5 +275,5 @@ class GoalCreationNotifier extends StateNotifier<GoalCreationState> {
 
 /// Provider for goal creation state
 final goalCreationProvider = StateNotifierProvider<GoalCreationNotifier, GoalCreationState>((ref) {
-  return GoalCreationNotifier();
+  return GoalCreationNotifier(ref);
 });

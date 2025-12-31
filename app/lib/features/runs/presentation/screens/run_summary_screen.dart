@@ -12,6 +12,8 @@ import '../../../auth/presentation/providers/auth_providers.dart';
 import '../../../goals/presentation/providers/goal_service_provider.dart';
 import '../../../goals/presentation/screens/milestone_reached_screen.dart';
 import '../../../goals/data/services/goal_service.dart';
+import '../../data/datasources/run_local_datasource.dart';
+import '../../../../core/data/providers/sync_providers.dart';
 
 class RunSummaryScreen extends ConsumerStatefulWidget {
   final RunModel run;
@@ -46,17 +48,20 @@ class _RunSummaryScreenState extends ConsumerState<RunSummaryScreen> {
 
     try {
       // Update run with notes if provided
-      // Note: updatedRun is created for future use when we implement sync in Sprint 13
-      // Currently the run is already saved by RunTrackingService
-      widget.run.copyWith(
+      final updatedRun = widget.run.copyWith(
         notes: _notesController.text.trim().isEmpty
             ? null
             : _notesController.text.trim(),
         updatedAt: DateTime.now(),
       );
 
-      // Save to Hive (already saved by RunTrackingService, but update notes)
-      // TODO: Update run in Hive with notes in Sprint 13 when we implement sync
+      // Save to Hive with updated notes
+      final runLocalDataSource = RunLocalDataSource();
+      await runLocalDataSource.saveRun(updatedRun);
+
+      // Queue run for cloud sync
+      final syncService = ref.read(syncServiceProvider);
+      await syncService.queueRunForSync(updatedRun);
 
       // Update goal progress if user has an active goal
       GoalProgressResult? progressResult;

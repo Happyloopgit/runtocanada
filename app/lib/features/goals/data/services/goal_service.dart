@@ -1,6 +1,7 @@
 import '../../domain/models/goal_model.dart';
 import '../../domain/models/milestone_model.dart';
 import '../datasources/goal_local_datasource.dart';
+import '../../../../core/data/services/sync_service.dart';
 
 /// Result of updating goal progress
 class GoalProgressResult {
@@ -28,10 +29,13 @@ class GoalProgressResult {
 /// Service class for managing goal progress and milestone detection
 class GoalService {
   final GoalLocalDataSource _goalLocalDataSource;
+  final SyncService? _syncService;
 
   GoalService({
     required GoalLocalDataSource goalLocalDataSource,
-  }) : _goalLocalDataSource = goalLocalDataSource;
+    SyncService? syncService,
+  })  : _goalLocalDataSource = goalLocalDataSource,
+        _syncService = syncService;
 
   /// Update goal progress after a run completes
   /// Returns null if no active goal exists
@@ -84,6 +88,11 @@ class GoalService {
 
     // Save updated goal to Hive
     await _goalLocalDataSource.updateGoal(updatedGoal);
+
+    // Queue goal for cloud sync if sync service is available
+    if (_syncService != null) {
+      await _syncService.queueGoalForSync(updatedGoal);
+    }
 
     return GoalProgressResult(
       updatedGoal: updatedGoal,

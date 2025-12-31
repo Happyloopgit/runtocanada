@@ -1210,8 +1210,95 @@ Each session entry should include:
 ---
 
 **Last Updated:** 2025-12-31
-**Total Sessions:** 14
-**Completed Sprints:** 0-12 (Sprint 12 completed in Session 014)
+**Total Sessions:** 15
+**Completed Sprints:** 0-13 (Sprint 13 completed in Session 015)
+
+---
+
+### Session 015 - 2025-12-31
+
+**Sprint:** Sprint 13 - Firebase Sync & Cloud Backup
+**Duration:** ~2 hours
+**Participants:** Development Team (with Claude Code)
+
+**Objectives:**
+- Create SyncService class for data synchronization
+- Implement saveRun() to sync runs to Firestore
+- Implement saveGoal() to sync goals to Firestore
+- Implement fetchRuns() and fetchGoals() from Firestore
+- Create sync queue for offline support
+- Integrate sync into run and goal save flows
+- Test sync functionality
+
+**Work Completed:**
+- Created comprehensive FirestoreDataSource class:
+  - saveRun() and saveGoal() methods for cloud storage
+  - fetchRuns() and fetchGoals() with ordering
+  - fetchActiveGoal() for user's active goal
+  - deleteRun() and deleteGoal() for cleanup
+  - updateRunNotes() and updateGoalProgress() for updates
+  - Batch operations for efficiency (batchSaveRuns, batchSaveGoals)
+  - User sync metadata tracking (lastSyncTime)
+- Created comprehensive SyncService class:
+  - Queue-based sync architecture using Hive syncQueue box
+  - Connectivity monitoring using connectivity_plus package
+  - Automatic sync when network becomes available
+  - Periodic sync every 30 seconds
+  - queueRunForSync() and queueGoalForSync() methods
+  - processSyncQueue() with error handling and retry logic
+  - Exponential backoff for failed syncs (max 5 retries)
+  - Manual sync methods: syncRunNow() and syncGoalNow()
+  - Full sync: performFullSync() for bidirectional sync
+  - SyncQueueStatus for monitoring pending and failed items
+- Created Riverpod providers for sync:
+  - firestoreDataSourceProvider
+  - syncServiceProvider with auto-initialization and disposal
+  - syncQueueStatusProvider for UI status
+  - isOnlineProvider for connectivity checks
+- Integrated sync into run save flow:
+  - Updated RunSummaryScreen to save updated run to Hive
+  - Queue run for cloud sync after save
+  - Runs sync automatically in background
+- Integrated sync into goal creation flow:
+  - Modified GoalCreationNotifier to accept Ref parameter
+  - Queue goal for cloud sync after creation
+  - Goals sync automatically in background
+- Integrated sync into goal progress updates:
+  - Modified GoalService to accept SyncService
+  - Queue goal for sync after progress updates
+  - Milestone achievements sync to cloud
+- Fixed all Flutter analyzer issues:
+  - Fixed connectivity API changes (ConnectivityResult vs List)
+  - Fixed SyncQueueItem field names (type, not itemType)
+  - Removed userId and lastError fields (not in model)
+  - Fixed await on non-Future types
+  - Fixed unnecessary non-null assertion
+  - Successfully achieved 0 analyzer issues! ✅
+- Updated sprint plan to mark Sprint 13 as completed
+
+**Files Modified:**
+- Created: `app/lib/core/data/datasources/firestore_datasource.dart` - Firestore operations for runs and goals
+- Created: `app/lib/core/data/services/sync_service.dart` - Sync queue and background sync management
+- Created: `app/lib/core/data/providers/sync_providers.dart` - Riverpod providers for sync services
+- Modified: `app/lib/features/runs/presentation/screens/run_summary_screen.dart` - Integrated sync for runs
+- Modified: `app/lib/features/goals/presentation/providers/goal_creation_provider.dart` - Integrated sync for goals
+- Modified: `app/lib/features/goals/data/services/goal_service.dart` - Integrated sync for goal progress
+- Modified: `app/lib/features/goals/presentation/providers/goal_service_provider.dart` - Added sync service dependency
+- Modified: `docs/03-sprint-plan.md` - Marked Sprint 13 as completed
+- Modified: `docs/trackers/Session_log.md` - This file
+
+**Issues Encountered:**
+- Initial analyzer errors with connectivity_plus API changes - Fixed by using ConnectivityResult instead of List
+- SyncQueueItem field name mismatches - Fixed by using correct field names (type, itemId, not itemType, userId)
+- Unnecessary await on non-Future RunModel/GoalModel - Fixed by removing await
+- Unnecessary non-null assertion in GoalService - Fixed by removing ! operator
+- All issues resolved successfully with 0 analyzer errors ✅
+
+**Next Steps:**
+- Test sync functionality on physical device
+- Verify offline queuing and online syncing
+- Continue with Sprint 14: User Profile & Settings
+- Or work on other requested features
 
 ---
 

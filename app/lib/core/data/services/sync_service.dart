@@ -1,0 +1,281 @@
+import 'dart:async';
+import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import '../../../features/runs/domain/models/run_model.dart';
+import '../../../features/goals/domain/models/goal_model.dart';
+import '../datasources/firestore_datasource.dart';
+import '../models/sync_queue_item.dart';
+import '../../../features/runs/data/datasources/run_local_datasource.dart';
+import '../../../features/goals/data/datasources/goal_local_datasource.dart';
+
+/// Service for synchronizing data between local (Hive) and cloud (Firestore)
+class SyncService {
+  final FirestoreDataSource _firestoreDataSource;
+  final RunLocalDataSource _runLocalDataSource;
+  final GoalLocalDataSource _goalLocalDataSource;
+  final Connectivity _connectivity;
+
+  late Box<SyncQueueItem> _syncQueueBox;
+  Timer? _syncTimer;
+  StreamSubscription<ConnectivityResult>? _connectivitySubscription;
+  bool _isSyncing = false;
+
+  SyncService({
+    required FirestoreDataSource firestoreDataSource,
+    required RunLocalDataSource runLocalDataSource,
+    required GoalLocalDataSource goalLocalDataSource,
+    Connectivity? connectivity,
+  })  : _firestoreDataSource = firestoreDataSource,
+        _runLocalDataSource = runLocalDataSource,
+        _goalLocalDataSource = goalLocalDataSource,
+        _connectivity = connectivity ?? Connectivity();
+
+  /// Initialize the sync service
+  Future<void> initialize() async {
+    _syncQueueBox = await Hive.openBox<SyncQueueItem>('syncQueue');
+
+    // Listen to connectivity changes
+    _connectivitySubscription = _connectivity.onConnectivityChanged.listen((result) {
+      if (_hasInternetConnection([result])) {
+        // Trigger sync when network becomes available
+        processSyncQueue();
+      }
+    });
+
+    // Start periodic sync (every 30 seconds)
+    _syncTimer = Timer.periodic(const Duration(seconds: 30), (_) {
+      processSyncQueue();
+    });
+
+    // Process queue on initialization
+    processSyncQueue();
+  }
+
+  /// Check if there's an internet connection
+  bool _hasInternetConnection(List<ConnectivityResult> results) {
+    return results.any((result) =>
+        result == ConnectivityResult.mobile ||
+        result == ConnectivityResult.wifi ||
+        result == ConnectivityResult.ethernet);
+  }
+
+  /// Check current connectivity
+  Future<bool> isOnline() async {
+    final result = await _connectivity.checkConnectivity();
+    return _hasInternetConnection([result]);
+  }
+
+  /// Add a run to the sync queue
+  Future<void> queueRunForSync(RunModel run) async {
+    final item = SyncQueueItem(
+      id: run.id,
+      type: SyncItemType.run,
+      itemId: run.id,
+      createdAt: DateTime.now(),
+      retryCount: 0,
+    );
+
+    await _syncQueueBox.put(item.id, item);
+  }
+
+  /// Add a goal to the sync queue
+  Future<void> queueGoalForSync(GoalModel goal) async {
+    final item = SyncQueueItem(
+      id: goal.id,
+      type: SyncItemType.goal,
+      itemId: goal.id,
+      createdAt: DateTime.now(),
+      retryCount: 0,
+    );
+
+    await _syncQueueBox.put(item.id, item);
+  }
+
+  /// Process the sync queue
+  Future<void> processSyncQueue() async {
+    if (_isSyncing) return; // Prevent concurrent syncs
+    if (!await isOnline()) return; // Skip if offline
+
+    _isSyncing = true;
+
+    try {
+      final items = _syncQueueBox.values.toList();
+      if (items.isEmpty) {
+        _isSyncing = false;
+        return;
+      }
+
+      for (final item in items) {
+        try {
+          await _syncItem(item);
+          // Remove from queue after successful sync
+          await _syncQueueBox.delete(item.id);
+        } catch (e) {
+          // Increment retry count using copyWith
+          final updatedItem = item.copyWith(
+            retryCount: item.retryCount + 1,
+            lastRetryAt: DateTime.now(),
+          );
+
+          // Keep in queue with updated retry count
+          await _syncQueueBox.put(item.id, updatedItem);
+
+          // If retry count exceeds threshold, log error
+          if (updatedItem.retryCount > 5) {
+            // Could log to analytics or show user notification
+          }
+        }
+      }
+    } finally {
+      _isSyncing = false;
+    }
+  }
+
+  /// Sync a single item
+  Future<void> _syncItem(SyncQueueItem item) async {
+    switch (item.type) {
+      case SyncItemType.run:
+        await _syncRun(item.itemId);
+        break;
+      case SyncItemType.goal:
+        await _syncGoal(item.itemId);
+        break;
+      case SyncItemType.userSettings:
+        // Will implement in Sprint 14
+        break;
+    }
+  }
+
+  /// Sync a run to Firestore
+  Future<void> _syncRun(String runId) async {
+    final run = _runLocalDataSource.getRunById(runId);
+    if (run == null) {
+      throw Exception('Run not found in local database: $runId');
+    }
+
+    await _firestoreDataSource.saveRun(run);
+  }
+
+  /// Sync a goal to Firestore
+  Future<void> _syncGoal(String goalId) async {
+    final goal = _goalLocalDataSource.getGoalById(goalId);
+    if (goal == null) {
+      throw Exception('Goal not found in local database: $goalId');
+    }
+
+    await _firestoreDataSource.saveGoal(goal);
+  }
+
+  /// Manually sync a run (bypass queue)
+  Future<void> syncRunNow(RunModel run) async {
+    if (!await isOnline()) {
+      await queueRunForSync(run);
+      return;
+    }
+
+    try {
+      await _firestoreDataSource.saveRun(run);
+    } catch (e) {
+      // Queue for later if sync fails
+      await queueRunForSync(run);
+      rethrow;
+    }
+  }
+
+  /// Manually sync a goal (bypass queue)
+  Future<void> syncGoalNow(GoalModel goal) async {
+    if (!await isOnline()) {
+      await queueGoalForSync(goal);
+      return;
+    }
+
+    try {
+      await _firestoreDataSource.saveGoal(goal);
+    } catch (e) {
+      // Queue for later if sync fails
+      await queueGoalForSync(goal);
+      rethrow;
+    }
+  }
+
+  /// Fetch all runs from Firestore and save to local
+  Future<void> fetchRunsFromCloud(String userId) async {
+    if (!await isOnline()) {
+      throw Exception('Cannot fetch runs while offline');
+    }
+
+    final runs = await _firestoreDataSource.fetchRuns(userId);
+
+    for (final run in runs) {
+      await _runLocalDataSource.saveRun(run);
+    }
+  }
+
+  /// Fetch all goals from Firestore and save to local
+  Future<void> fetchGoalsFromCloud(String userId) async {
+    if (!await isOnline()) {
+      throw Exception('Cannot fetch goals while offline');
+    }
+
+    final goals = await _firestoreDataSource.fetchGoals(userId);
+
+    for (final goal in goals) {
+      await _goalLocalDataSource.saveGoal(goal);
+    }
+  }
+
+  /// Full sync: Upload local data and download cloud data
+  Future<void> performFullSync(String userId) async {
+    if (!await isOnline()) {
+      throw Exception('Cannot perform full sync while offline');
+    }
+
+    // First, process any pending queue items
+    await processSyncQueue();
+
+    // Then fetch from cloud (this will merge with local data)
+    await fetchRunsFromCloud(userId);
+    await fetchGoalsFromCloud(userId);
+  }
+
+  /// Get sync queue status
+  SyncQueueStatus getSyncQueueStatus() {
+    final items = _syncQueueBox.values.toList();
+    final pendingCount = items.length;
+    final failedCount = items.where((item) => item.retryCount > 0).length;
+
+    return SyncQueueStatus(
+      pendingCount: pendingCount,
+      failedCount: failedCount,
+      isSyncing: _isSyncing,
+    );
+  }
+
+  /// Clear the sync queue (use with caution)
+  Future<void> clearSyncQueue() async {
+    await _syncQueueBox.clear();
+  }
+
+  /// Dispose resources
+  void dispose() {
+    _syncTimer?.cancel();
+    _connectivitySubscription?.cancel();
+  }
+}
+
+/// Sync queue status information
+class SyncQueueStatus {
+  final int pendingCount;
+  final int failedCount;
+  final bool isSyncing;
+
+  SyncQueueStatus({
+    required this.pendingCount,
+    required this.failedCount,
+    required this.isSyncing,
+  });
+
+  bool get hasPendingItems => pendingCount > 0;
+  bool get hasFailedItems => failedCount > 0;
+  bool get isIdle => !isSyncing && pendingCount == 0;
+}

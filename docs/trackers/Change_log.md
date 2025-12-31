@@ -117,6 +117,26 @@ This document tracks all changes made to the Run to Canada project, organized by
 | 014 | 2025-12-31 | Sprint 12 | app/lib/features/runs/presentation/screens/run_summary_screen.dart | Enhancement | Integrated goal progress update on run save with milestone detection and navigation to celebration screen | [Session 014](Session_log.md#session-014---2025-12-31) |
 | 014 | 2025-12-31 | Sprint 12 | docs/03-sprint-plan.md | Documentation | Marked Sprint 12 as completed | [Session 014](Session_log.md#session-014---2025-12-31) |
 | 014 | 2025-12-31 | Sprint 12 | docs/trackers/* | Documentation | Updated session log and change log for Session 014 | [Session 014](Session_log.md#session-014---2025-12-31) |
+| 015 | 2025-12-31 | Sprint 13 | app/lib/core/data/datasources/firestore_datasource.dart | Feature | Created FirestoreDataSource with CRUD operations for runs and goals in Firestore | [Session 015](Session_log.md#session-015---2025-12-31) |
+| 015 | 2025-12-31 | Sprint 13 | app/lib/core/data/datasources/firestore_datasource.dart | Feature | Implemented batch operations (batchSaveRuns, batchSaveGoals) for efficient syncing | [Session 015](Session_log.md#session-015---2025-12-31) |
+| 015 | 2025-12-31 | Sprint 13 | app/lib/core/data/datasources/firestore_datasource.dart | Feature | Added user sync metadata tracking (getLastSyncTime, updateLastSyncTime) | [Session 015](Session_log.md#session-015---2025-12-31) |
+| 015 | 2025-12-31 | Sprint 13 | app/lib/core/data/services/sync_service.dart | Feature | Created SyncService with queue-based sync architecture using Hive syncQueue box | [Session 015](Session_log.md#session-015---2025-12-31) |
+| 015 | 2025-12-31 | Sprint 13 | app/lib/core/data/services/sync_service.dart | Feature | Implemented connectivity monitoring with connectivity_plus package | [Session 015](Session_log.md#session-015---2025-12-31) |
+| 015 | 2025-12-31 | Sprint 13 | app/lib/core/data/services/sync_service.dart | Feature | Added automatic sync triggers (periodic 30s, network available) | [Session 015](Session_log.md#session-015---2025-12-31) |
+| 015 | 2025-12-31 | Sprint 13 | app/lib/core/data/services/sync_service.dart | Feature | Implemented error handling with retry logic and exponential backoff (max 5 retries) | [Session 015](Session_log.md#session-015---2025-12-31) |
+| 015 | 2025-12-31 | Sprint 13 | app/lib/core/data/services/sync_service.dart | Feature | Created manual sync methods (syncRunNow, syncGoalNow) and full bidirectional sync (performFullSync) | [Session 015](Session_log.md#session-015---2025-12-31) |
+| 015 | 2025-12-31 | Sprint 13 | app/lib/core/data/services/sync_service.dart | Feature | Added SyncQueueStatus for monitoring pending and failed sync items | [Session 015](Session_log.md#session-015---2025-12-31) |
+| 015 | 2025-12-31 | Sprint 13 | app/lib/core/data/providers/sync_providers.dart | Feature | Created Riverpod providers (firestoreDataSourceProvider, syncServiceProvider, syncQueueStatusProvider, isOnlineProvider) | [Session 015](Session_log.md#session-015---2025-12-31) |
+| 015 | 2025-12-31 | Sprint 13 | app/lib/features/runs/presentation/screens/run_summary_screen.dart | Enhancement | Integrated sync into run save flow - runs queued for cloud sync after save | [Session 015](Session_log.md#session-015---2025-12-31) |
+| 015 | 2025-12-31 | Sprint 13 | app/lib/features/goals/presentation/providers/goal_creation_provider.dart | Enhancement | Modified GoalCreationNotifier to accept Ref and queue goals for sync after creation | [Session 015](Session_log.md#session-015---2025-12-31) |
+| 015 | 2025-12-31 | Sprint 13 | app/lib/features/goals/data/services/goal_service.dart | Enhancement | Modified GoalService to accept SyncService and queue goals for sync after progress updates | [Session 015](Session_log.md#session-015---2025-12-31) |
+| 015 | 2025-12-31 | Sprint 13 | app/lib/features/goals/presentation/providers/goal_service_provider.dart | Enhancement | Added sync service dependency to GoalService provider | [Session 015](Session_log.md#session-015---2025-12-31) |
+| 015 | 2025-12-31 | Sprint 13 | app/lib/core/data/services/sync_service.dart | Bug Fix | Fixed connectivity API changes (ConnectivityResult vs List<ConnectivityResult>) | [Session 015](Session_log.md#session-015---2025-12-31) |
+| 015 | 2025-12-31 | Sprint 13 | app/lib/core/data/services/sync_service.dart | Bug Fix | Fixed SyncQueueItem field names (type, itemId instead of itemType, userId) | [Session 015](Session_log.md#session-015---2025-12-31) |
+| 015 | 2025-12-31 | Sprint 13 | app/lib/core/data/services/sync_service.dart | Bug Fix | Removed await on non-Future types (RunModel, GoalModel) | [Session 015](Session_log.md#session-015---2025-12-31) |
+| 015 | 2025-12-31 | Sprint 13 | app/lib/features/goals/data/services/goal_service.dart | Bug Fix | Removed unnecessary non-null assertion operator - achieved 0 analyzer issues | [Session 015](Session_log.md#session-015---2025-12-31) |
+| 015 | 2025-12-31 | Sprint 13 | docs/03-sprint-plan.md | Documentation | Marked Sprint 13 as completed | [Session 015](Session_log.md#session-015---2025-12-31) |
+| 015 | 2025-12-31 | Sprint 13 | docs/trackers/* | Documentation | Updated session log and change log for Session 015 | [Session 015](Session_log.md#session-015---2025-12-31) |
 
 ---
 

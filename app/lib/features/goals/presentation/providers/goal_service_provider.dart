@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../data/datasources/goal_local_datasource.dart';
 import '../../data/services/goal_service.dart';
+import '../../../../core/data/providers/sync_providers.dart';
 
 /// Provider for GoalLocalDataSource
 final goalLocalDataSourceProvider = Provider<GoalLocalDataSource>((ref) {
@@ -10,7 +11,11 @@ final goalLocalDataSourceProvider = Provider<GoalLocalDataSource>((ref) {
 /// Provider for GoalService
 final goalServiceProvider = Provider<GoalService>((ref) {
   final goalLocalDataSource = ref.watch(goalLocalDataSourceProvider);
-  return GoalService(goalLocalDataSource: goalLocalDataSource);
+  final syncService = ref.watch(syncServiceProvider);
+  return GoalService(
+    goalLocalDataSource: goalLocalDataSource,
+    syncService: syncService,
+  );
 });
 
 /// Provider to check if user has an active goal
