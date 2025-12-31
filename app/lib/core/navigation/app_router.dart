@@ -8,6 +8,8 @@ import 'package:run_to_canada/features/runs/presentation/screens/run_tracking_sc
 import 'package:run_to_canada/features/maps/presentation/screens/map_demo_screen.dart';
 import 'package:run_to_canada/features/goals/presentation/screens/goal_creation_screen.dart';
 import 'package:run_to_canada/features/goals/presentation/screens/journey_map_screen.dart';
+import 'package:run_to_canada/features/profile/presentation/screens/profile_screen.dart';
+import 'package:run_to_canada/features/settings/presentation/screens/settings_screen.dart';
 
 /// App router configuration
 class AppRouter {
@@ -59,6 +61,18 @@ class AppRouter {
       case RouteConstants.journeyMap:
         return MaterialPageRoute(
           builder: (_) => const JourneyMapScreen(),
+          settings: settings,
+        );
+
+      case RouteConstants.profile:
+        return MaterialPageRoute(
+          builder: (_) => const ProfileScreen(),
+          settings: settings,
+        );
+
+      case RouteConstants.settings:
+        return MaterialPageRoute(
+          builder: (_) => const SettingsScreen(),
           settings: settings,
         );
 

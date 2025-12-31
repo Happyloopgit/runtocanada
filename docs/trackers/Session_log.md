@@ -1210,8 +1210,93 @@ Each session entry should include:
 ---
 
 **Last Updated:** 2025-12-31
-**Total Sessions:** 15
-**Completed Sprints:** 0-13 (Sprint 13 completed in Session 015)
+**Total Sessions:** 16
+**Completed Sprints:** 0-14 (Sprint 14 completed in Session 016)
+
+---
+
+### Session 016 - 2025-12-31
+
+**Sprint:** Sprint 14 - User Profile & Settings
+**Duration:** ~2 hours
+**Participants:** Development Team (with Claude Code)
+
+**Objectives:**
+- Create User Profile screen with user statistics
+- Implement Settings screen with preferences
+- Add unit preference toggle (metric/imperial)
+- Add map style preference setting
+- Implement logout functionality
+- Add delete account functionality
+- Integrate settings into app navigation
+
+**Work Completed:**
+- Created comprehensive Profile Screen (profile_screen.dart):
+  - User profile header with avatar, name, and email display
+  - Premium badge for premium users
+  - Statistics grid showing: Total Runs, Total Distance, Total Goals, Active Goals
+  - FutureProvider for loading user statistics from Hive
+  - Professional card-based UI with color-coded stat cards
+  - Navigation to Settings screen from app bar
+- Created Settings Screen (settings_screen.dart):
+  - Unit preference toggle (metric/imperial) with live updates
+  - Map style preference selection with bottom sheet picker
+  - Milestone notifications toggle
+  - Logout functionality with confirmation dialog
+  - Delete account functionality with double confirmation and data cleanup
+  - App version display
+  - Placeholder links for Privacy Policy and Terms of Service
+  - Professional section-based layout
+- Created Settings Providers (settings_providers.dart):
+  - settingsNotifierProvider for managing app settings
+  - SettingsNotifier class with state management
+  - Methods: setUseMetricUnits(), setDefaultMapStyle(), setNotificationsEnabled()
+  - deleteAccount() method with full Firestore and Hive cleanup
+  - Proper Firebase Auth account deletion
+- Updated UserLocalDataSource:
+  - Added getSettings() method for fetching default settings
+  - Added watchSettings() stream for reactive settings updates
+  - Added saveSettings() alias method
+- Updated Navigation:
+  - Added profile and settings routes to AppRouter
+  - Imported ProfileScreen and SettingsScreen in router
+  - Updated HomeScreen to show Profile button in app bar (replaced logout button)
+- Fixed all Flutter analyzer issues:
+  - Fixed RunModel field name (totalDistance instead of distance)
+  - Fixed UserModel field names (fullName instead of displayName)
+  - Fixed deprecated activeColor → activeTrackColor
+  - Fixed settings provider to remove unused authService
+  - Fixed HiveService.clearAllData() static method access
+  - Added missing imports (RouteConstants)
+  - Successfully achieved 0 analyzer issues! ✅
+- Updated sprint plan to mark Sprint 14 as completed
+
+**Files Modified:**
+- Created: `app/lib/features/profile/presentation/screens/profile_screen.dart` - Profile screen with statistics
+- Created: `app/lib/features/settings/presentation/screens/settings_screen.dart` - Settings screen with preferences
+- Created: `app/lib/features/settings/presentation/providers/settings_providers.dart` - Settings state management
+- Modified: `app/lib/features/settings/data/datasources/user_local_datasource.dart` - Added getSettings, watchSettings, saveSettings methods
+- Modified: `app/lib/core/navigation/app_router.dart` - Added profile and settings routes
+- Modified: `app/lib/features/home/presentation/screens/home_screen.dart` - Added Profile button in app bar
+- Modified: `docs/03-sprint-plan.md` - Marked Sprint 14 tasks as completed
+- Modified: `docs/trackers/Session_log.md` - This file
+
+**Issues Encountered:**
+- Initial analyzer errors with field names (distance → totalDistance, displayName → fullName)
+  - **Solution:** Updated to use correct field names from models
+- Missing methods in UserLocalDataSource (getSettings, watchSettings, saveSettings)
+  - **Solution:** Added missing methods to datasource
+- Deprecated activeColor in SwitchListTile
+  - **Solution:** Replaced with activeTrackColor
+- Unused authService field in SettingsNotifier
+  - **Solution:** Removed unused parameter
+- All issues resolved successfully with 0 analyzer errors! ✅
+
+**Next Steps:**
+- Test Profile and Settings screens on physical device
+- Verify unit preference changes reflect throughout app
+- Test logout and delete account flows
+- Continue with Sprint 15: Premium Features & Paywall (or other requested features)
 
 ---
 

@@ -120,4 +120,27 @@ class UserLocalDataSource {
   List<UserSettingsHive> getAllUserSettings() {
     return _box.values.toList();
   }
+
+  /// Get default settings (first user or create new)
+  Future<UserSettingsHive> getSettings() async {
+    if (_box.isEmpty) {
+      final defaultSettings = UserSettingsHive.defaultSettings('local');
+      await saveUserSettings(defaultSettings);
+      return defaultSettings;
+    }
+    return _box.values.first;
+  }
+
+  /// Watch settings changes (stream)
+  Stream<UserSettingsHive?> watchSettings() {
+    return _box.watch().map((event) {
+      if (_box.isEmpty) return null;
+      return _box.values.first;
+    });
+  }
+
+  /// Save settings (alias for saveUserSettings)
+  Future<void> saveSettings(UserSettingsHive settings) async {
+    await saveUserSettings(settings);
+  }
 }

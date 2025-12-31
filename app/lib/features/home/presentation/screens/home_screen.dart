@@ -21,11 +21,11 @@ class HomeScreen extends ConsumerWidget {
         title: const Text('Run to Canada'),
         actions: [
           IconButton(
-            icon: const Icon(Icons.logout),
-            onPressed: () async {
-              final authController = ref.read(authControllerProvider.notifier);
-              await authController.signOut();
+            icon: const Icon(Icons.person),
+            onPressed: () {
+              AppRouter.navigateTo(context, RouteConstants.profile);
             },
+            tooltip: 'Profile',
           ),
         ],
       ),
