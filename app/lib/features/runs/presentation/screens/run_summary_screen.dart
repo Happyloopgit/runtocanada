@@ -8,6 +8,10 @@ import '../../../../core/widgets/custom_button.dart';
 import '../../../../core/widgets/custom_text_field.dart';
 import '../../../../core/widgets/route_map_widget.dart';
 import '../../../../core/constants/route_constants.dart';
+import '../../../auth/presentation/providers/auth_providers.dart';
+import '../../../goals/presentation/providers/goal_service_provider.dart';
+import '../../../goals/presentation/screens/milestone_reached_screen.dart';
+import '../../../goals/data/services/goal_service.dart';
 
 class RunSummaryScreen extends ConsumerStatefulWidget {
   final RunModel run;
@@ -54,12 +58,67 @@ class _RunSummaryScreenState extends ConsumerState<RunSummaryScreen> {
       // Save to Hive (already saved by RunTrackingService, but update notes)
       // TODO: Update run in Hive with notes in Sprint 13 when we implement sync
 
-      // Navigate to home and show success message
-      if (mounted) {
+      // Update goal progress if user has an active goal
+      GoalProgressResult? progressResult;
+      final user = ref.read(authStateProvider).value;
+      if (user != null) {
+        final goalService = ref.read(goalServiceProvider);
+        progressResult = await goalService.updateGoalProgress(
+          userId: user.uid,
+          runDistance: widget.run.totalDistance,
+        );
+      }
+
+      if (!mounted) return;
+
+      // Check if any new milestones were reached
+      if (progressResult != null && progressResult.hasNewMilestones) {
+        // Show milestone celebration screen for the first newly reached milestone
+        final firstMilestone = progressResult.newlyReachedMilestones.first;
+
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(
+            builder: (context) => MilestoneReachedScreen(
+              milestone: firstMilestone,
+              goal: progressResult!.updatedGoal,
+              onContinue: () {
+                Navigator.of(context).pushNamedAndRemoveUntil(
+                  RouteConstants.home,
+                  (route) => false,
+                );
+              },
+              onViewJourney: () {
+                Navigator.of(context).pushNamedAndRemoveUntil(
+                  RouteConstants.journeyMap,
+                  (route) => false,
+                );
+              },
+            ),
+          ),
+        );
+      } else if (progressResult != null && progressResult.goalCompleted) {
+        // Goal completed - show special message
         Navigator.of(context).popUntil((route) => route.isFirst);
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('Run saved successfully!'),
+            content: Text('Congratulations! You completed your goal!'),
+            backgroundColor: AppColors.success,
+            duration: Duration(seconds: 5),
+          ),
+        );
+      } else {
+        // No milestone reached - navigate to home with success message
+        Navigator.of(context).popUntil((route) => route.isFirst);
+
+        String message = 'Run saved successfully!';
+        if (progressResult != null) {
+          final kmAdded = progressResult.progressAdded / 1000;
+          message = 'Run saved! +${kmAdded.toStringAsFixed(2)} km to your journey.';
+        }
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(message),
             backgroundColor: AppColors.success,
           ),
         );

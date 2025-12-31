@@ -1147,9 +1147,71 @@ Each session entry should include:
 
 ---
 
+### Session 014 - 2025-12-31
+
+**Sprint:** Sprint 12 - Goal Progress Update Logic
+**Duration:** ~1.5 hours
+**Participants:** Development Team (with Claude Code)
+
+**Objectives:**
+- Create GoalService class for managing goal progress
+- Implement updateGoalProgress() method to add run distance to goal
+- Implement milestone detection logic (check if milestones crossed)
+- Create Milestone Reached celebration screen with animations
+- Integrate progress update into run completion flow
+- Add navigation to Journey Map with refresh after run
+
+**Work Completed:**
+- Created comprehensive GoalService class:
+  - `updateGoalProgress()` method that adds run distance to active goal
+  - `GoalProgressResult` class to return update results (newly reached milestones, goal completed status)
+  - `_detectNewlyReachedMilestones()` method to find milestones crossed between previous and new progress
+  - Helper methods: `getActiveGoal()`, `hasActiveGoal()`, `getNextMilestone()`, `getProgressStats()`
+  - Utility methods: `markMilestoneReached()`, `resetGoalProgress()`, `completeGoal()`
+- Created GoalService Riverpod providers:
+  - `goalLocalDataSourceProvider` for datasource access
+  - `goalServiceProvider` for service instance
+  - `hasActiveGoalProvider` and `goalProgressStatsProvider` for UI access
+- Created Milestone Reached celebration screen:
+  - Beautiful gradient background with Canadian red theme
+  - Custom confetti animation using CustomPainter
+  - Scale and slide animations for content entrance
+  - Trophy icon with glow effect
+  - Milestone city name and photo display
+  - City description and fun fact sections
+  - Journey progress stats (distance completed, milestones reached, remaining distance)
+  - "View Journey Progress" and "Continue" action buttons
+- Integrated progress update into Run Summary screen:
+  - After run is saved, calls GoalService to update progress
+  - Detects if any new milestones were reached
+  - Navigates to MilestoneReachedScreen if milestone achieved
+  - Shows special message if goal completed
+  - Shows progress update message on normal save (+X km to your journey)
+- Successfully ran flutter analyze: **0 issues found** ✅
+
+**Files Modified:**
+- Created: `app/lib/features/goals/data/services/goal_service.dart` - Goal progress management service with milestone detection
+- Created: `app/lib/features/goals/presentation/providers/goal_service_provider.dart` - Riverpod providers for GoalService
+- Created: `app/lib/features/goals/presentation/screens/milestone_reached_screen.dart` - Milestone celebration screen with animations
+- Created: `app/assets/animations/` - Directory for future Lottie animations
+- Modified: `app/lib/features/runs/presentation/screens/run_summary_screen.dart` - Integrated goal progress update on run save
+
+**Issues Encountered:**
+- No issues encountered - all code passed flutter analyze on first attempt ✅
+
+**Next Steps:**
+- Begin Sprint 13: Firebase Sync & Cloud Backup
+- Create SyncService class for data synchronization
+- Implement saveRun() and saveGoal() to Firestore
+- Implement fetchRuns() and fetchGoals() from Firestore
+- Create sync queue for offline support
+- Test sync functionality
+
+---
+
 **Last Updated:** 2025-12-31
-**Total Sessions:** 13
-**Completed Sprints:** 0-11 (Sprint 11 completed in Session 013)
+**Total Sessions:** 14
+**Completed Sprints:** 0-12 (Sprint 12 completed in Session 014)
 
 ---
 

@@ -110,6 +110,13 @@ This document tracks all changes made to the Run to Canada project, organized by
 | 013 | 2025-12-31 | Sprint 11 | app/lib/features/goals/presentation/screens/journey_map_screen.dart | Bug Fix | Removed unused _mapboxMap field - achieved 0 analyzer issues | [Session 013](Session_log.md#session-013---2025-12-31) |
 | 013 | 2025-12-31 | Sprint 11 | docs/03-sprint-plan.md | Documentation | Marked Sprint 11 as completed | [Session 013](Session_log.md#session-013---2025-12-31) |
 | 013 | 2025-12-31 | Sprint 11 | docs/trackers/* | Documentation | Updated session log and change log for Session 013 | [Session 013](Session_log.md#session-013---2025-12-31) |
+| 014 | 2025-12-31 | Sprint 12 | app/lib/features/goals/data/services/goal_service.dart | Feature | Created GoalService class with updateGoalProgress(), milestone detection, and helper methods | [Session 014](Session_log.md#session-014---2025-12-31) |
+| 014 | 2025-12-31 | Sprint 12 | app/lib/features/goals/presentation/providers/goal_service_provider.dart | Feature | Created Riverpod providers for GoalService (goalServiceProvider, hasActiveGoalProvider, goalProgressStatsProvider) | [Session 014](Session_log.md#session-014---2025-12-31) |
+| 014 | 2025-12-31 | Sprint 12 | app/lib/features/goals/presentation/screens/milestone_reached_screen.dart | Feature | Created Milestone Reached celebration screen with confetti animation, trophy icon, city photo/description display, and progress stats | [Session 014](Session_log.md#session-014---2025-12-31) |
+| 014 | 2025-12-31 | Sprint 12 | app/assets/animations/ | Setup | Created animations directory for future Lottie animations | [Session 014](Session_log.md#session-014---2025-12-31) |
+| 014 | 2025-12-31 | Sprint 12 | app/lib/features/runs/presentation/screens/run_summary_screen.dart | Enhancement | Integrated goal progress update on run save with milestone detection and navigation to celebration screen | [Session 014](Session_log.md#session-014---2025-12-31) |
+| 014 | 2025-12-31 | Sprint 12 | docs/03-sprint-plan.md | Documentation | Marked Sprint 12 as completed | [Session 014](Session_log.md#session-014---2025-12-31) |
+| 014 | 2025-12-31 | Sprint 12 | docs/trackers/* | Documentation | Updated session log and change log for Session 014 | [Session 014](Session_log.md#session-014---2025-12-31) |
 
 ---
 

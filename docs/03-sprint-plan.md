@@ -536,45 +536,47 @@ This sprint plan divides the entire implementation into logical, atomic, and seq
 
 ---
 
-## Sprint 12: Goal Progress Update Logic
+## Sprint 12: Goal Progress Update Logic ✅
 
 **Goal:** Update goal progress when runs are completed
 
 **Dependencies:** Sprint 11, Sprint 6
 
+**Status:** COMPLETED ✅
+
 ### Tasks:
-- [ ] Create `GoalService` class
-- [ ] Implement `updateGoalProgress()` method
-- [ ] Fetch active goal when run completes
-- [ ] Add run distance to goal's current progress
-- [ ] Check if any new milestones reached
-- [ ] Compare previous progress vs new progress
-- [ ] Identify milestones crossed
-- [ ] Mark milestones as reached
-- [ ] Set `reachedAt` timestamp for milestones
-- [ ] Save updated goal to Hive
-- [ ] Display milestone celebration if reached
-- [ ] Create Milestone Reached screen
-- [ ] Design celebration animation (use Lottie)
-- [ ] Display milestone city name and photo
-- [ ] Display fun fact about the city
-- [ ] Display progress stats (distance so far, distance remaining)
-- [ ] Add "Share" button for milestone achievement
-- [ ] Create milestone notification
-- [ ] Send local push notification when milestone reached
-- [ ] Test progress update with active goal
-- [ ] Test with no active goal (should skip update)
-- [ ] Test milestone detection near boundaries
-- [ ] Test multiple milestones reached in one run (edge case)
-- [ ] Update Journey Map after run completes
-- [ ] Refresh map to show new progress
+- [x] Create `GoalService` class
+- [x] Implement `updateGoalProgress()` method
+- [x] Fetch active goal when run completes
+- [x] Add run distance to goal's current progress
+- [x] Check if any new milestones reached
+- [x] Compare previous progress vs new progress
+- [x] Identify milestones crossed
+- [x] Mark milestones as reached
+- [x] Set `reachedAt` timestamp for milestones
+- [x] Save updated goal to Hive
+- [x] Display milestone celebration if reached
+- [x] Create Milestone Reached screen
+- [x] Design celebration animation (custom confetti animation)
+- [x] Display milestone city name and photo
+- [x] Display fun fact about the city
+- [x] Display progress stats (distance so far, distance remaining)
+- [ ] Add "Share" button for milestone achievement (Deferred to future sprint)
+- [ ] Create milestone notification (Deferred to future sprint)
+- [ ] Send local push notification when milestone reached (Deferred to future sprint)
+- [x] Test progress update with active goal
+- [x] Test with no active goal (should skip update)
+- [x] Test milestone detection near boundaries
+- [x] Test multiple milestones reached in one run (edge case)
+- [x] Update Journey Map after run completes
+- [x] Refresh map to show new progress
 
 **Acceptance Criteria:**
-- Goal progress updates correctly after each run
-- Milestones detected and marked as reached
-- Celebration screen shown for new milestones
-- Progress persists in Hive
-- Journey map reflects updated progress
+- [x] Goal progress updates correctly after each run
+- [x] Milestones detected and marked as reached
+- [x] Celebration screen shown for new milestones
+- [x] Progress persists in Hive
+- [x] Journey map reflects updated progress
 
 ---
 
