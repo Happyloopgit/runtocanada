@@ -86,6 +86,16 @@ This document tracks all changes made to the Run to Canada project, organized by
 | 011 | 2025-12-31 | Sprint 9 | app/ios/Runner.xcodeproj/project.pbxproj | Configuration | Updated IPHONEOS_DEPLOYMENT_TARGET to 14.0 | [Session 011](Session_log.md#session-011---2025-12-31) |
 | 011 | 2025-12-31 | Sprint 9 | All changed files | Bug Fix | Fixed 17 Flutter analyzer issues (Env property, Position conflict, CustomButton/TextField params, etc.) | [Session 011](Session_log.md#session-011---2025-12-31) |
 | 011 | 2025-12-31 | Sprint 9 | docs/trackers/* | Documentation | Updated session log, change log, sprint plan, bug tracker | [Session 011](Session_log.md#session-011---2025-12-31) |
+| 012 | 2025-12-31 | Sprint 10 | app/lib/core/services/directions_service.dart | Feature | Created DirectionsService for Mapbox Directions API with route calculation | [Session 012](Session_log.md#session-012---2025-12-31) |
+| 012 | 2025-12-31 | Sprint 10 | app/lib/features/goals/data/services/milestone_generation_service.dart | Feature | Created MilestoneGenerationService with intelligent milestone placement | [Session 012](Session_log.md#session-012---2025-12-31) |
+| 012 | 2025-12-31 | Sprint 10 | app/lib/core/services/unsplash_service.dart | Feature | Created UnsplashService for city photo fetching from Unsplash API | [Session 012](Session_log.md#session-012---2025-12-31) |
+| 012 | 2025-12-31 | Sprint 10 | app/lib/core/services/wikipedia_service.dart | Feature | Created WikipediaService for city description fetching | [Session 012](Session_log.md#session-012---2025-12-31) |
+| 012 | 2025-12-31 | Sprint 10 | app/lib/features/goals/presentation/providers/goal_creation_provider.dart | Feature | Created GoalCreationProvider with complete state management for goal creation flow | [Session 012](Session_log.md#session-012---2025-12-31) |
+| 012 | 2025-12-31 | Sprint 10 | All new service files | Bug Fix | Fixed math function imports (dart:math), LocationModel/MilestoneModel/GoalModel constructor parameters | [Session 012](Session_log.md#session-012---2025-12-31) |
+| 012 | 2025-12-31 | Sprint 10 | app/lib/features/goals/presentation/screens/goal_creation_screen.dart | Feature | Extended to 4-step wizard with route calculation and milestone preview UI | [Session 012 (continued)](Session_log.md#session-012-continued---2025-12-31) |
+| 012 | 2025-12-31 | Sprint 10 | app/lib/features/goals/presentation/screens/goal_creation_screen.dart | Enhancement | Integrated GoalCreationProvider throughout all steps | [Session 012 (continued)](Session_log.md#session-012-continued---2025-12-31) |
+| 012 | 2025-12-31 | Sprint 10 | docs/03-sprint-plan.md | Documentation | Marked Sprint 10 as completed | [Session 012 (continued)](Session_log.md#session-012-continued---2025-12-31) |
+| 012 | 2025-12-31 | Sprint 10 | docs/trackers/* | Documentation | Updated session log, change log, and sprint plan for Session 012 completion | [Session 012 (continued)](Session_log.md#session-012-continued---2025-12-31) |
 
 ---
 

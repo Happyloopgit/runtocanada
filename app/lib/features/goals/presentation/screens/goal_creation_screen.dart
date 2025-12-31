@@ -12,6 +12,7 @@ import '../../../../core/widgets/custom_text_field.dart';
 import '../../../../core/widgets/loading_indicator.dart';
 import '../../../../core/widgets/error_message.dart';
 import '../../domain/models/location_model.dart';
+import '../providers/goal_creation_provider.dart';
 
 /// Provider for GeocodingService
 final geocodingServiceProvider = Provider<GeocodingService>((ref) {
@@ -55,8 +56,12 @@ class _GoalCreationScreenState extends ConsumerState<GoalCreationScreen> {
   // Mapbox service instance
   final _mapboxService = MapboxService();
 
+  // Text controllers
+  final _goalNameController = TextEditingController();
+
   @override
   void dispose() {
+    _goalNameController.dispose();
     _circleManager = null;
     _mapController = null;
     super.dispose();
@@ -250,21 +255,56 @@ class _GoalCreationScreenState extends ConsumerState<GoalCreationScreen> {
   }
 
   /// Go to next step
-  void _nextStep() {
+  void _nextStep() async {
     if (_currentStep == 0 && _startLocation != null) {
+      // Update provider with start location
+      ref.read(goalCreationProvider.notifier).setStartLocation(_startLocation!);
       setState(() {
         _currentStep = 1;
         _searchResults = [];
         _searchQuery = '';
       });
     } else if (_currentStep == 1 && _destinationLocation != null) {
-      // TODO: In Sprint 10, navigate to route calculation and milestone generation
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Route calculation will be implemented in Sprint 10'),
-          backgroundColor: AppColors.primary,
-        ),
-      );
+      // Update provider with destination location
+      ref.read(goalCreationProvider.notifier).setDestinationLocation(_destinationLocation!);
+
+      // Move to step 2 and calculate route
+      setState(() {
+        _currentStep = 2;
+        _searchResults = [];
+        _searchQuery = '';
+      });
+
+      // Calculate route and generate milestones
+      await ref.read(goalCreationProvider.notifier).calculateRoute();
+    } else if (_currentStep == 2) {
+      // Move to final confirmation step and populate goal name
+      final goalState = ref.read(goalCreationProvider);
+      if (goalState.goalName.isEmpty) {
+        // Auto-populate goal name
+        final destName = _destinationLocation?.placeName ?? 'Destination';
+        ref.read(goalCreationProvider.notifier).setGoalName('Run to $destName');
+        _goalNameController.text = 'Run to $destName';
+      } else {
+        _goalNameController.text = goalState.goalName;
+      }
+
+      setState(() {
+        _currentStep = 3;
+      });
+    } else if (_currentStep == 3) {
+      // Create the goal
+      final success = await ref.read(goalCreationProvider.notifier).createGoal();
+      if (success && mounted) {
+        // Navigate back to home
+        Navigator.pop(context);
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Goal created successfully!'),
+            backgroundColor: AppColors.success,
+          ),
+        );
+      }
     }
   }
 
@@ -308,15 +348,19 @@ class _GoalCreationScreenState extends ConsumerState<GoalCreationScreen> {
   }
 
   Widget _buildStepIndicator() {
+    final goalState = ref.watch(goalCreationProvider);
+
     return Container(
       padding: const EdgeInsets.all(16),
       child: Row(
         children: [
           _buildStepCircle(0, 'Start', isActive: _currentStep >= 0, isCompleted: _startLocation != null),
           Expanded(child: _buildStepLine(isCompleted: _startLocation != null)),
-          _buildStepCircle(1, 'Destination', isActive: _currentStep >= 1, isCompleted: _destinationLocation != null),
+          _buildStepCircle(1, 'Dest', isActive: _currentStep >= 1, isCompleted: _destinationLocation != null),
           Expanded(child: _buildStepLine(isCompleted: _destinationLocation != null)),
-          _buildStepCircle(2, 'Review', isActive: _currentStep >= 2, isCompleted: false),
+          _buildStepCircle(2, 'Route', isActive: _currentStep >= 2, isCompleted: goalState.route != null),
+          Expanded(child: _buildStepLine(isCompleted: goalState.route != null)),
+          _buildStepCircle(3, 'Confirm', isActive: _currentStep >= 3, isCompleted: false),
         ],
       ),
     );
@@ -388,6 +432,13 @@ class _GoalCreationScreenState extends ConsumerState<GoalCreationScreen> {
   }
 
   Widget _buildContentArea() {
+    if (_currentStep == 2) {
+      return _buildRoutePreviewStep();
+    } else if (_currentStep == 3) {
+      return _buildConfirmationStep();
+    }
+
+    // Steps 0 and 1: Location selection
     return Container(
       decoration: const BoxDecoration(
         color: AppColors.background,
@@ -589,8 +640,10 @@ class _GoalCreationScreenState extends ConsumerState<GoalCreationScreen> {
               text: _currentStep == 0
                   ? 'Next: Destination'
                   : _currentStep == 1
-                      ? 'Create Route'
-                      : 'Finish',
+                      ? 'Calculate Route'
+                      : _currentStep == 2
+                          ? 'Next: Confirm'
+                          : 'Create Goal',
               onPressed: (_currentStep == 0 && _startLocation == null) ||
                       (_currentStep == 1 && _destinationLocation == null)
                   ? null
@@ -599,6 +652,292 @@ class _GoalCreationScreenState extends ConsumerState<GoalCreationScreen> {
           ),
         ],
       ),
+    );
+  }
+
+  /// Build Step 2: Route & Milestones Preview
+  Widget _buildRoutePreviewStep() {
+    final goalState = ref.watch(goalCreationProvider);
+
+    return Container(
+      decoration: const BoxDecoration(
+        color: AppColors.background,
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      child: Column(
+        children: [
+          // Step title
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: Text(
+              'Route & Milestones',
+              style: AppTextStyles.headlineSmall.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+
+          // Error message
+          if (goalState.errorMessage != null)
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: ErrorMessage(message: goalState.errorMessage!),
+            ),
+
+          Expanded(
+            child: goalState.isCalculatingRoute || goalState.isGeneratingMilestones
+                ? const Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        LoadingIndicator(),
+                        SizedBox(height: 16),
+                        Text('Calculating route and generating milestones...'),
+                      ],
+                    ),
+                  )
+                : SingleChildScrollView(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        // Route Info Card
+                        if (goalState.route != null)
+                          Card(
+                            child: Padding(
+                              padding: const EdgeInsets.all(16),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Route Summary',
+                                    style: AppTextStyles.titleMedium.copyWith(
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 12),
+                                  Row(
+                                    children: [
+                                      const Icon(Icons.straighten, size: 20),
+                                      const SizedBox(width: 8),
+                                      Text(
+                                        'Distance: ${goalState.route!.distanceInKm.toStringAsFixed(1)} km',
+                                        style: AppTextStyles.bodyLarge,
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 8),
+                                  Row(
+                                    children: [
+                                      const Icon(Icons.access_time, size: 20),
+                                      const SizedBox(width: 8),
+                                      Text(
+                                        'Est. Duration: ${goalState.route!.durationInHours.toStringAsFixed(1)} hrs (driving)',
+                                        style: AppTextStyles.bodyLarge,
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+
+                        const SizedBox(height: 16),
+
+                        // Milestones
+                        if (goalState.milestones.isNotEmpty) ...[
+                          Text(
+                            'Milestones Along Your Journey',
+                            style: AppTextStyles.titleMedium.copyWith(
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 12),
+                          Text(
+                            '${goalState.milestones.length} milestone cities to discover',
+                            style: AppTextStyles.bodyMedium.copyWith(
+                              color: AppColors.textSecondary,
+                            ),
+                          ),
+                          const SizedBox(height: 16),
+                          ListView.builder(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount: goalState.milestones.length,
+                            itemBuilder: (context, index) {
+                              final milestone = goalState.milestones[index];
+                              return Card(
+                                margin: const EdgeInsets.only(bottom: 12),
+                                child: ListTile(
+                                  leading: CircleAvatar(
+                                    backgroundColor: AppColors.primary,
+                                    child: Text(
+                                      '${index + 1}',
+                                      style: const TextStyle(color: Colors.white),
+                                    ),
+                                  ),
+                                  title: Text(
+                                    milestone.cityName,
+                                    style: AppTextStyles.bodyLarge.copyWith(
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  subtitle: Text(
+                                    '${milestone.distanceInKm.toStringAsFixed(1)} km from start',
+                                    style: AppTextStyles.bodySmall,
+                                  ),
+                                  trailing: const Icon(Icons.location_on, color: AppColors.primary),
+                                ),
+                              );
+                            },
+                          ),
+                        ],
+                      ],
+                    ),
+                  ),
+          ),
+
+          // Navigation buttons
+          _buildNavigationButtons(),
+        ],
+      ),
+    );
+  }
+
+  /// Build Step 3: Confirmation
+  Widget _buildConfirmationStep() {
+    final goalState = ref.watch(goalCreationProvider);
+
+    return Container(
+      decoration: const BoxDecoration(
+        color: AppColors.background,
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      child: Column(
+        children: [
+          // Step title
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: Text(
+              'Confirm Your Goal',
+              style: AppTextStyles.headlineSmall.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+
+          Expanded(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  // Goal name input
+                  Text(
+                    'Goal Name',
+                    style: AppTextStyles.titleMedium.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  CustomTextField(
+                    label: 'Name your goal',
+                    hint: 'Run to ${_destinationLocation?.placeName ?? "Destination"}',
+                    controller: _goalNameController,
+                    onChanged: (value) {
+                      ref.read(goalCreationProvider.notifier).setGoalName(value);
+                    },
+                  ),
+
+                  const SizedBox(height: 24),
+
+                  // Summary
+                  Card(
+                    child: Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Summary',
+                            style: AppTextStyles.titleMedium.copyWith(
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const Divider(height: 24),
+                          _buildSummaryRow('Start:', _startLocation?.placeName ?? '-'),
+                          const SizedBox(height: 8),
+                          _buildSummaryRow('Destination:', _destinationLocation?.placeName ?? '-'),
+                          const SizedBox(height: 8),
+                          _buildSummaryRow(
+                            'Distance:',
+                            goalState.route != null
+                                ? '${goalState.route!.distanceInKm.toStringAsFixed(1)} km'
+                                : '-',
+                          ),
+                          const SizedBox(height: 8),
+                          _buildSummaryRow('Milestones:', '${goalState.milestones.length} cities'),
+                        ],
+                      ),
+                    ),
+                  ),
+
+                  const SizedBox(height: 16),
+
+                  // Info message
+                  Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: AppColors.primary.withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(color: AppColors.primary.withValues(alpha: 0.3)),
+                    ),
+                    child: Row(
+                      children: [
+                        const Icon(Icons.info_outline, color: AppColors.primary, size: 20),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Text(
+                            'Your virtual progress will be tracked as you complete runs!',
+                            style: AppTextStyles.bodySmall,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+
+          // Navigation buttons
+          _buildNavigationButtons(),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSummaryRow(String label, String value) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          label,
+          style: AppTextStyles.bodyMedium.copyWith(
+            color: AppColors.textSecondary,
+          ),
+        ),
+        Expanded(
+          child: Text(
+            value,
+            style: AppTextStyles.bodyMedium.copyWith(
+              fontWeight: FontWeight.bold,
+            ),
+            textAlign: TextAlign.end,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
+      ],
     );
   }
 }
