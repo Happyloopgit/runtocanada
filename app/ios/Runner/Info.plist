@@ -55,5 +55,7 @@
 	<array>
 		<string>location</string>
 	</array>
+	<key>MBXAccessToken</key>
+	<string>pk.eyJ1IjoiaGFwcHlsb29wIiwiYSI6ImNtanNqaXhwdTJnc2Uya3Nkd2ZuaWdmcHYifQ.GRxjzAh8Fwc9--MvJvjLSg</string>
 </dict>
 </plist>

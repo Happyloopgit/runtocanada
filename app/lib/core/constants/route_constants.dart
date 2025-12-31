@@ -10,6 +10,7 @@ class RouteConstants {
   static const String runTracking = '/run-tracking';
   static const String runSummary = '/run-summary';
   static const String runDetail = '/run-detail';
+  static const String mapDemo = '/map-demo';
 
   // Journey Routes
   static const String journeyMap = '/journey-map';

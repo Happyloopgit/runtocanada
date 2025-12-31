@@ -55,6 +55,18 @@ This document tracks all changes made to the Run to Canada project, organized by
 | 007 | 2025-12-30 | Sprint 6 | app/lib/features/home/presentation/screens/* | Enhancement | Added View Run History button | [Session 007](Session_log.md#session-007---2025-12-30) |
 | 007 | 2025-12-30 | Sprint 6 | app/lib/features/runs/presentation/screens/* | Bug Fix | Fixed AppTextStyles references and CustomTextField parameters | [Session 007](Session_log.md#session-007---2025-12-30) |
 | 007 | 2025-12-30 | Sprint 6 | docs/03-sprint-plan.md | Documentation | Marked Sprint 6 as completed | [Session 007](Session_log.md#session-007---2025-12-30) |
+| 008 | 2025-12-30 | Sprint 7 | app/pubspec.yaml | Configuration | Added mapbox_maps_flutter ^2.17.0 | [Session 008](Session_log.md#session-008---2025-12-30) |
+| 008 | 2025-12-30 | Sprint 7 | app/lib/app/env.dart | Configuration | Added Mapbox access token configuration | [Session 008](Session_log.md#session-008---2025-12-30) |
+| 008 | 2025-12-30 | Sprint 7 | app/ios/Runner/Info.plist | Configuration | Added MBXAccessToken for iOS | [Session 008](Session_log.md#session-008---2025-12-30) |
+| 008 | 2025-12-30 | Sprint 7 | app/android/app/src/main/AndroidManifest.xml | Configuration | Added MAPBOX_ACCESS_TOKEN and INTERNET permission | [Session 008](Session_log.md#session-008---2025-12-30) |
+| 008 | 2025-12-30 | Sprint 7 | app/lib/core/services/mapbox_service.dart | Feature | Created MapboxService with 6 map styles and helper methods | [Session 008](Session_log.md#session-008---2025-12-30) |
+| 008 | 2025-12-30 | Sprint 7 | app/lib/core/widgets/custom_map_widget.dart | Feature | Created reusable CustomMapWidget with location puck | [Session 008](Session_log.md#session-008---2025-12-30) |
+| 008 | 2025-12-30 | Sprint 7 | app/lib/core/widgets/map_style_selector.dart | Feature | Created MapStyleSelector UI component | [Session 008](Session_log.md#session-008---2025-12-30) |
+| 008 | 2025-12-30 | Sprint 7 | app/lib/features/maps/presentation/screens/* | Feature | Created MapDemoScreen for testing Mapbox integration | [Session 008](Session_log.md#session-008---2025-12-30) |
+| 008 | 2025-12-30 | Sprint 7 | app/lib/core/constants/route_constants.dart | Enhancement | Added mapDemo route constant | [Session 008](Session_log.md#session-008---2025-12-30) |
+| 008 | 2025-12-30 | Sprint 7 | app/lib/core/navigation/app_router.dart | Enhancement | Added MapDemoScreen route handler | [Session 008](Session_log.md#session-008---2025-12-30) |
+| 008 | 2025-12-30 | Sprint 7 | app/lib/features/home/presentation/screens/* | Enhancement | Added View Map Demo button | [Session 008](Session_log.md#session-008---2025-12-30) |
+| 008 | 2025-12-30 | Sprint 7 | docs/03-sprint-plan.md | Documentation | Marked Sprint 7 as completed | [Session 008](Session_log.md#session-008---2025-12-30) |
 
 ---
 
@@ -750,6 +762,61 @@ Add a change log entry when:
 
 ---
 
+### Sprint 7 - Mapbox Integration & Basic Map Display
+
+| Session | Date | Component | Files Changed | Type | Description | Reference |
+|---------|------|-----------|---------------|------|-------------|-----------|
+| 008 | 2025-12-30 | Dependencies | 1 file | Configuration | Added mapbox_maps_flutter ^2.17.0 | [Session 008](Session_log.md#session-008---2025-12-30) |
+| 008 | 2025-12-30 | Environment | 1 file | Configuration | Added Mapbox access token to env.dart | [Session 008](Session_log.md#session-008---2025-12-30) |
+| 008 | 2025-12-30 | iOS Config | 1 file | Configuration | Added MBXAccessToken to Info.plist | [Session 008](Session_log.md#session-008---2025-12-30) |
+| 008 | 2025-12-30 | Android Config | 1 file | Configuration | Added MAPBOX_ACCESS_TOKEN meta-data and INTERNET permission | [Session 008](Session_log.md#session-008---2025-12-30) |
+| 008 | 2025-12-30 | Mapbox Service | 1 file | Feature | MapboxService with 6 map styles, camera controls, polylines | [Session 008](Session_log.md#session-008---2025-12-30) |
+| 008 | 2025-12-30 | Map Widget | 1 file | Feature | CustomMapWidget - reusable map component with location puck | [Session 008](Session_log.md#session-008---2025-12-30) |
+| 008 | 2025-12-30 | UI Components | 1 file | Feature | MapStyleSelector with bottom sheet UI | [Session 008](Session_log.md#session-008---2025-12-30) |
+| 008 | 2025-12-30 | Demo Screen | 1 file | Feature | MapDemoScreen with full map functionality demo | [Session 008](Session_log.md#session-008---2025-12-30) |
+| 008 | 2025-12-30 | Navigation | 2 files | Enhancement | Added mapDemo route and handler | [Session 008](Session_log.md#session-008---2025-12-30) |
+| 008 | 2025-12-30 | Home Screen | 1 file | Enhancement | Added View Map Demo button | [Session 008](Session_log.md#session-008---2025-12-30) |
+| 008 | 2025-12-30 | Documentation | 1 file | Documentation | Marked Sprint 7 as completed | [Session 008](Session_log.md#session-008---2025-12-30) |
+
+**Summary:**
+- Mapbox Maps Flutter v2.17.0 integrated successfully
+- Created comprehensive MapboxService with helper methods
+- Built reusable CustomMapWidget component
+- Implemented 6 map styles (Streets, Outdoors, Light, Dark, Satellite, Satellite Streets)
+- Created MapStyleSelector UI for easy style switching
+- Built MapDemoScreen showing location tracking, style switching, camera controls
+- Configured Mapbox for both iOS and Android platforms
+- Added proper location permissions and internet access
+- All code passes flutter analyze (0 issues)
+
+**Key Files Created:**
+- `app/lib/core/services/mapbox_service.dart` - Mapbox utilities and helpers
+- `app/lib/core/widgets/custom_map_widget.dart` - Reusable map widget
+- `app/lib/core/widgets/map_style_selector.dart` - Style selection UI
+- `app/lib/features/maps/presentation/screens/map_demo_screen.dart` - Demo screen
+
+**Architecture Notes:**
+- MapStyle enum for type-safe style selection
+- Singleton MapboxService for centralized map operations
+- CustomMapWidget handles location puck, gestures, and initialization
+- Camera options support for positioning and bounds
+- Polyline and circle annotation helpers for future route visualization
+- Clean separation between service layer and UI components
+
+**Sprint 7 Status:**
+- ✓ Mapbox account created and token configured
+- ✓ Package integrated (v2.17.0)
+- ✓ iOS and Android configuration complete
+- ✓ MapboxService with comprehensive utilities
+- ✓ Reusable CustomMapWidget component
+- ✓ Map style selection implemented
+- ✓ Demo screen fully functional
+- ✓ Location puck with pulsing animation
+- ✓ All analyzer checks passed (0 issues)
+- Next: Sprint 8 - Route Visualization on Map
+
+---
+
 **Last Updated:** 2025-12-30
-**Total Changes:** 58
-**Last Session:** 007 (Sprint 6 completed)
+**Total Changes:** 71
+**Last Session:** 008 (Sprint 7 completed)

@@ -40,9 +40,11 @@ class Env {
   }
 
   /// Mapbox access token (load from environment variable)
+  /// For production, set MAPBOX_TOKEN environment variable
+  /// Development default token provided for convenience
   static String get mapboxToken => const String.fromEnvironment(
         'MAPBOX_TOKEN',
-        defaultValue: '',
+        defaultValue: 'pk.eyJ1IjoiaGFwcHlsb29wIiwiYSI6ImNtanNqaXhwdTJnc2Uya3Nkd2ZuaWdmcHYifQ.GRxjzAh8Fwc9--MvJvjLSg',
       );
 
   /// Unsplash API key (load from environment variable)
