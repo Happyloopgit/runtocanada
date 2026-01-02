@@ -696,16 +696,18 @@ This sprint plan divides the entire implementation into logical, atomic, and seq
 
 **Dependencies:** Sprint 11, Sprint 12
 
+**Status:** 🔄 IN PROGRESS (Partially Completed - RevenueCat integration pending)
+
 ### Tasks:
-- [ ] Create premium status check utility
-- [ ] Implement 100km limit check for free users
-- [ ] Check goal progress before allowing new runs
-- [ ] Show paywall when free user hits 100km
-- [ ] Design Paywall screen layout
-- [ ] Create Paywall screen widget
-- [ ] Display benefits of premium
-- [ ] Show pricing: $2.99/month or $19.99/year
-- [ ] Highlight annual savings (44% off)
+- [x] Create premium status check utility
+- [x] Implement 100km limit check for free users
+- [x] Check goal progress before allowing new runs
+- [x] Show paywall when free user hits 100km
+- [x] Design Paywall screen layout
+- [x] Create Paywall screen widget
+- [x] Display benefits of premium
+- [x] Show pricing: $2.99/month or $19.99/year
+- [x] Highlight annual savings (44% off)
 - [ ] Set up RevenueCat account
 - [ ] Configure products in RevenueCat dashboard
 - [ ] Add RevenueCat SDK to Flutter app

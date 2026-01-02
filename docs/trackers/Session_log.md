@@ -1210,8 +1210,89 @@ Each session entry should include:
 ---
 
 **Last Updated:** 2025-12-31
-**Total Sessions:** 16
+**Total Sessions:** 17
 **Completed Sprints:** 0-14 (Sprint 14 completed in Session 016)
+
+---
+
+### Session 017 - 2025-12-31
+
+**Sprint:** Sprint 15 - Premium Features & Paywall
+**Duration:** In Progress
+**Participants:** Development Team (with Claude Code)
+
+**Objectives:**
+- Implement freemium model with 100km journey limit for free users
+- Create premium status check utilities
+- Design and implement Paywall screen
+- Set up RevenueCat for in-app purchases
+- Configure subscription products (monthly and annual)
+- Implement purchase flow and restore purchases
+- Test premium upgrade flow
+- Show paywall when free users hit 100km limit
+
+**Work Completed:**
+- Created PremiumService class for managing premium features and limitations:
+  - isPremiumUser() method to check Firebase premium status
+  - hasReachedFreeLimit() to check if user hit 100km limit
+  - canCreateGoal() and canStartRun() to check if actions are allowed
+  - getRemainingFreeDistance() and getFreeLimitProgress() for UI indicators
+  - updatePremiumStatus() to update premium status in Firestore
+  - Static methods for premium benefits and pricing info
+- Created Riverpod providers for premium state management:
+  - premiumServiceProvider, isPremiumProvider
+  - hasReachedFreeLimitProvider, remainingFreeDistanceProvider
+  - freeLimitProgressProvider, canCreateGoalProvider, canStartRunProvider
+- Designed and implemented Paywall Screen:
+  - Beautiful gradient background with Canadian red theme
+  - Trophy icon and compelling headline
+  - Premium benefits list with checkmarks
+  - Pricing cards (Annual and Monthly) with "Best Value" badge
+  - Subscribe and Restore Purchases buttons
+  - Terms and privacy disclaimer
+  - Placeholder for RevenueCat integration
+- Integrated paywall into app navigation:
+  - Added paywall route to AppRouter
+  - Imported PaywallScreen in router
+- Integrated premium checks into Home Screen:
+  - Start Run button checks canStartRun before navigating
+  - Create Goal button checks canCreateGoal before navigating
+  - Shows paywall if limit reached
+  - Added Free Tier Progress indicator for non-premium users
+  - Visual progress bar showing distance used (green/red based on progress)
+  - Dynamic messages based on progress (80%+, 100%, etc.)
+- Fixed all Flutter analyzer issues:
+  - Fixed constant naming (FREE_TIER_LIMIT_KM → freeTierLimitKm)
+  - Fixed getActiveGoal() calls to use userId parameter and getActiveGoalSafe()
+  - Fixed field name (currentDistance → currentProgress)
+  - Fixed unnecessary underscores in error handlers
+- Successfully ran flutter analyze: **0 issues found** ✅
+
+**Files Modified:**
+- Created: `app/lib/features/premium/data/services/premium_service.dart` - Premium status and limit checking service
+- Created: `app/lib/features/premium/presentation/providers/premium_providers.dart` - Riverpod providers for premium features
+- Created: `app/lib/features/premium/presentation/screens/paywall_screen.dart` - Beautiful paywall UI with pricing
+- Modified: `app/lib/core/navigation/app_router.dart` - Added paywall route
+- Modified: `app/lib/features/home/presentation/screens/home_screen.dart` - Integrated premium checks and progress indicator
+- Modified: `docs/03-sprint-plan.md` - Marked Sprint 15 tasks as partially completed
+- Modified: `docs/trackers/Session_log.md` - This file
+
+**Issues Encountered:**
+- Initial analyzer errors with PremiumService:
+  - Constant naming convention violation (FREE_TIER_LIMIT_KM) → Fixed by using lowerCamelCase
+  - getActiveGoal() requires userId parameter → Fixed by using getActiveGoalSafe() with user.uid
+  - Wrong field name (currentDistance vs currentProgress) → Fixed by using correct field name
+  - Unnecessary await on synchronous methods → Fixed by removing await
+- Home screen unnecessary underscores in error handlers → Fixed by using named parameters
+- All issues resolved successfully with 0 analyzer errors! ✅
+
+**Next Steps:**
+- Set up RevenueCat account and configure products (requires developer accounts)
+- Add RevenueCat SDK and implement purchase flow (requires RevenueCat API keys)
+- Test premium upgrade flow on physical devices (requires App Store/Play Store setup)
+- OR continue with Sprint 16: Ad Integration (AdMob)
+- OR continue with Sprint 17: Onboarding & Tutorial
+- OR work on other requested features
 
 ---
 

@@ -6,11 +6,11 @@ This document tracks all bugs discovered and their resolution status.
 
 | Status | Count |
 |--------|-------|
-| Open | 1 |
+| Open | 3 |
 | In Progress | 0 |
 | Fixed | 0 |
 | Closed | 0 |
-| **Total** | **1** |
+| **Total** | **3** |
 
 ---
 
@@ -19,6 +19,8 @@ This document tracks all bugs discovered and their resolution status.
 | Bug ID | Priority | Sprint | Component | Description | Discovered | Assigned | Reference |
 |--------|----------|--------|-----------|-------------|------------|----------|-----------|
 | BUG-001 | Medium | Sprint 9 | iOS/CocoaPods | CocoaPods dependency conflicts preventing iOS build: GoogleUtilities version mismatch (Firebase needs ~7.8, GoogleSignIn needs ~8.0), AppAuth version conflict, nanopb version conflict | 2025-12-31 Session 011 | Unassigned | [Session 011](Session_log.md#session-011---2025-12-31) |
+| BUG-002 | High | Sprint 9 | Goal Creation / Geocoding | Location search not showing suggestions or accepting input - typing "Bengaluru" shows no results, pressing Enter doesn't select location | 2025-12-31 Session 017 | Unassigned | [Session 017](Session_log.md#session-017---2025-12-31) |
+| BUG-003 | Low | Sprint 14 | Profile / UI | Profile screen stat cards have padding/alignment issues on Android - visual inconsistency in statistics tiles | 2025-12-31 Session 017 | Unassigned | [Session 017](Session_log.md#session-017---2025-12-31) |
 
 ---
 
@@ -62,7 +64,7 @@ High-priority bugs that significantly impact core functionality or user experien
 
 | Bug ID | Status | Sprint | Component | Description | Reference |
 |--------|--------|--------|-----------|-------------|-----------|
-| - | - | - | - | No high priority bugs | - |
+| BUG-002 | Open | Sprint 9 | Goal Creation / Geocoding | Location search not showing suggestions - blocks goal creation feature | [Session 017](Session_log.md#session-017---2025-12-31) |
 
 ### Medium
 
@@ -70,7 +72,7 @@ Medium-priority bugs that affect features but have workarounds available.
 
 | Bug ID | Status | Sprint | Component | Description | Reference |
 |--------|--------|--------|-----------|-------------|-----------|
-| - | - | - | - | No medium priority bugs | - |
+| BUG-001 | Open | Sprint 9 | iOS/CocoaPods | CocoaPods dependency conflicts preventing iOS build | [Session 011](Session_log.md#session-011---2025-12-31) |
 
 ### Low
 
@@ -78,7 +80,7 @@ Low-priority bugs that are cosmetic or affect edge cases.
 
 | Bug ID | Status | Sprint | Component | Description | Reference |
 |--------|--------|--------|-----------|-------------|-----------|
-| - | - | - | - | No low priority bugs | - |
+| BUG-003 | Open | Sprint 14 | Profile / UI | Profile screen stat cards padding issues on Android | [Session 017](Session_log.md#session-017---2025-12-31) |
 
 ---
 
@@ -385,7 +387,138 @@ When reporting bugs via feedback:
 
 ---
 
+---
+
+### BUG-002: Goal Creation Location Search Not Working
+
+**Priority:** High
+
+**Status:** Open
+
+**Sprint:** Sprint 9 - Goal Creation Part 1
+
+**Component:** Goal Creation / Mapbox Geocoding API
+
+**Description:**
+
+- **What happened:** Location search field does not show suggestions when typing. User typed "Bengaluru" but no autocomplete suggestions appeared. Pressing Enter after typing full location name doesn't select or populate the location.
+
+- **Expected behavior:**
+  - As user types, autocomplete suggestions should appear in a dropdown
+  - Selecting a suggestion or pressing Enter should populate the selected location
+  - Map should update to show the selected location
+
+- **Steps to reproduce:**
+  1. Navigate to Goal Creation screen
+  2. Go to Step 1 (Start Location) or Step 2 (Destination)
+  3. Type a city name (e.g., "Bengaluru") in the search field
+  4. Observe: No suggestions appear
+  5. Press Enter
+  6. Observe: Nothing happens, location is not selected
+
+- **Environment:**
+  - Platform: Android
+  - Device: Physical Android device
+  - App Version: Development build (Session 017)
+  - Network: Connected to internet
+
+- **Impact:**
+  - **High Priority** - Blocks core feature (Goal Creation)
+  - Users cannot create goals if they cannot select locations
+  - Major UX issue - feature appears broken
+
+- **Possible Causes:**
+  1. Mapbox Geocoding API key may be invalid or missing
+  2. API rate limits may be exceeded
+  3. Network requests may be blocked or failing
+  4. Search debouncing might be too aggressive
+  5. UI state not updating after API response
+  6. API response parsing may be failing silently
+
+- **Debugging Steps Needed:**
+  1. Check Mapbox access token validity
+  2. Check network logs for API requests/responses
+  3. Verify GeocodingService is being called
+  4. Check for error messages in console
+  5. Test with different location queries
+  6. Check if issue occurs on both Start and Destination steps
+
+**Discovered:** 2025-12-31 (Session 017 - User testing)
+
+**Assigned:** Unassigned
+
+**Reference:** [Session 017](Session_log.md#session-017---2025-12-31)
+
+**Notes:**
+- This is a critical user-facing issue that blocks a core feature
+- Should be investigated and fixed before any further development
+- May be related to API configuration or network permissions
+
+---
+
+### BUG-003: Profile Screen Stat Cards Padding Issues on Android
+
+**Priority:** Low
+
+**Status:** Open
+
+**Sprint:** Sprint 14 - User Profile & Settings
+
+**Component:** Profile Screen / UI Layout
+
+**Description:**
+
+- **What happened:** The statistics cards on the Profile screen have padding/alignment issues on Android. Visual inconsistency in how the stat tiles are displayed.
+
+- **Expected behavior:**
+  - Stat cards should have consistent padding across all cards
+  - Text should be properly aligned within cards
+  - Cards should have uniform spacing between them
+  - UI should match design specifications
+
+- **Steps to reproduce:**
+  1. Navigate to Profile screen (tap Profile icon in app bar)
+  2. Observe the statistics grid (Total Runs, Total Distance, Total Goals, Active Goals)
+  3. Notice padding/alignment inconsistencies
+
+- **Environment:**
+  - Platform: Android
+  - Device: Physical Android device
+  - App Version: Development build (Session 017)
+
+- **Impact:**
+  - **Low Priority** - Cosmetic issue, does not affect functionality
+  - Minor UX degradation
+  - Stats are still readable and usable
+
+- **Possible Causes:**
+  1. Different text rendering on Android vs design
+  2. Missing constraints in GridView layout
+  3. Card padding values may need adjustment for Android
+  4. Font scaling issues on specific device
+  5. Material Design component differences between platforms
+
+- **Possible Solutions:**
+  1. Adjust padding values in `_StatCard` widget
+  2. Review GridView crossAxisSpacing and mainAxisSpacing
+  3. Ensure consistent constraints on all stat cards
+  4. Test on multiple Android devices to see if device-specific
+  5. Consider using Material 3 Card component specifications
+
+**Discovered:** 2025-12-31 (Session 017 - User testing)
+
+**Assigned:** Unassigned
+
+**Reference:** [Session 017](Session_log.md#session-017---2025-12-31)
+
+**Notes:**
+- Low priority cosmetic issue
+- Can be addressed in future polish sprint
+- Does not block any functionality
+
+---
+
 **Last Updated:** 2025-12-31
-**Total Bugs Logged:** 1
+**Total Bugs Logged:** 3
 **Bugs Fixed:** 0
-**Open Bugs:** 1
+**Open Bugs:** 3

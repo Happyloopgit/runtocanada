@@ -10,6 +10,7 @@ import 'package:run_to_canada/features/goals/presentation/screens/goal_creation_
 import 'package:run_to_canada/features/goals/presentation/screens/journey_map_screen.dart';
 import 'package:run_to_canada/features/profile/presentation/screens/profile_screen.dart';
 import 'package:run_to_canada/features/settings/presentation/screens/settings_screen.dart';
+import 'package:run_to_canada/features/premium/presentation/screens/paywall_screen.dart';
 
 /// App router configuration
 class AppRouter {
@@ -73,6 +74,12 @@ class AppRouter {
       case RouteConstants.settings:
         return MaterialPageRoute(
           builder: (_) => const SettingsScreen(),
+          settings: settings,
+        );
+
+      case RouteConstants.paywall:
+        return MaterialPageRoute(
+          builder: (_) => const PaywallScreen(),
           settings: settings,
         );
 
