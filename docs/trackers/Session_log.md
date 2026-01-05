@@ -1565,8 +1565,6 @@ Each session entry should include:
 
 ---
 
-## Template for Future Sessions
-
 ### Session 019 - 2026-01-05
 
 **Sprint:** Sprint 15 - Premium Features & Paywall (Core Implementation)
@@ -1651,6 +1649,96 @@ Each session entry should include:
 - Move to Sprint 16 (Ad Integration with AdMob) or other priorities as directed
 
 ---
+
+### Session 020 - 2026-01-05
+
+**Sprint:** Sprint 16 - Ad Integration (AdMob)
+**Duration:** ~2 hours
+**Participants:** Development Team (with Claude Code)
+
+**Objectives:**
+- Integrate AdMob SDK for displaying ads to free tier users
+- Create AdService class for ad management
+- Display banner ads on home screen for free users
+- Display interstitial ads after run completion (occasionally)
+- Ensure ads never shown to premium users
+- Handle ad loading failures gracefully
+- Configure AdMob for iOS and Android
+
+**Work Completed:**
+- **Added google_mobile_ads package (v5.3.0) to pubspec.yaml**
+- **Created comprehensive AdService class:**
+  - Singleton pattern implementation
+  - Banner ad loading and management
+  - Interstitial ad loading and preloading
+  - Frequency control for interstitial ads (show every 3 runs)
+  - Platform-specific ad unit ID handling (iOS vs Android)
+  - Full error handling with graceful failures
+  - dispose() method for cleanup
+- **Created AdService Riverpod provider:**
+  - adServiceProvider for singleton instance access
+- **Created BannerAdWidget component:**
+  - Reusable banner ad widget for UI
+  - Automatically checks premium status
+  - Hides ad for premium users
+  - Handles ad loading states (loading, loaded, failed)
+  - Auto-disposes when widget is removed
+- **Added AdMob configuration to env.dart:**
+  - Added admobAppIdIos and admobAppIdAndroid getters
+  - Added admobBannerAdUnitIdIos and admobBannerAdUnitIdAndroid
+  - Added admobInterstitialAdUnitIdIos and admobInterstitialAdUnitIdAndroid
+  - Using Google test ad IDs for development
+  - Environment variable support for production ad IDs
+- **Configured iOS (Info.plist):**
+  - Added GADApplicationIdentifier key with test app ID
+  - Added SKAdNetworkItems array for Apple's ad network
+- **Configured Android (AndroidManifest.xml):**
+  - Added com.google.android.gms.ads.APPLICATION_ID meta-data with test app ID
+- **Updated main.dart:**
+  - Added AdService.initialize() in app startup
+  - Preload interstitial ad on app start
+- **Integrated banner ad into Home Screen:**
+  - Added BannerAdWidget at bottom of screen
+  - Only shown to free tier users
+  - Automatically hidden for premium users
+- **Integrated interstitial ad into Run Summary Screen:**
+  - Created _maybeShowInterstitialAd() helper method
+  - Checks premium status before showing ad
+  - Shows ad with frequency control (every 3 runs)
+  - Displays after run save, before navigating home
+  - Doesn't block navigation if ad fails to load
+- **Successfully ran flutter analyze: 0 issues found** ✅
+- **Updated Sprint 16 in sprint plan to COMPLETED status**
+
+**Files Modified:**
+- Modified: `app/pubspec.yaml` - Added google_mobile_ads: ^5.3.0
+- Created: `app/lib/core/services/ad_service.dart` - Complete AdMob service implementation
+- Created: `app/lib/core/services/ad_service_provider.dart` - Riverpod provider for AdService
+- Created: `app/lib/core/widgets/banner_ad_widget.dart` - Reusable banner ad widget component
+- Modified: `app/lib/app/env.dart` - Added AdMob app IDs and ad unit IDs configuration
+- Modified: `app/ios/Runner/Info.plist` - Added GADApplicationIdentifier and SKAdNetworkItems
+- Modified: `app/android/app/src/main/AndroidManifest.xml` - Added AdMob APPLICATION_ID meta-data
+- Modified: `app/lib/main.dart` - Added AdMob initialization and interstitial preloading
+- Modified: `app/lib/features/home/presentation/screens/home_screen.dart` - Integrated BannerAdWidget
+- Modified: `app/lib/features/runs/presentation/screens/run_summary_screen.dart` - Integrated interstitial ad logic
+- Modified: `docs/03-sprint-plan.md` - Marked Sprint 16 as completed and added AdMob tasks to Sprint 19
+- Modified: `docs/trackers/Session_log.md` - This file
+
+**Issues Encountered:**
+- **Unused import warning in banner_ad_widget.dart:**
+  - Issue: Imported ad_service.dart but only used ad_service_provider.dart
+  - Solution: Removed unused import
+- All issues resolved successfully with 0 analyzer errors! ✅
+
+**Next Steps:**
+- Sprint 16 is COMPLETE (code implementation)
+- AdMob account creation and real ad unit setup will happen in Sprint 19 during store submission
+- Physical device testing of ads will occur during Sprint 18 (Polish & Testing) or Sprint 22 (Beta Testing)
+- Move to Sprint 17 (Onboarding & Tutorial) or other priorities as directed
+
+---
+
+## Template for Future Sessions
 
 ### Session XXX - YYYY-MM-DD
 

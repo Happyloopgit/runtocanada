@@ -14,6 +14,8 @@ import '../../../goals/presentation/screens/milestone_reached_screen.dart';
 import '../../../goals/data/services/goal_service.dart';
 import '../../data/datasources/run_local_datasource.dart';
 import '../../../../core/data/providers/sync_providers.dart';
+import '../../../../core/services/ad_service_provider.dart';
+import '../../../premium/presentation/providers/premium_providers.dart';
 
 class RunSummaryScreen extends ConsumerStatefulWidget {
   final RunModel run;
@@ -41,6 +43,22 @@ class _RunSummaryScreenState extends ConsumerState<RunSummaryScreen> {
   void dispose() {
     _notesController.dispose();
     super.dispose();
+  }
+
+  /// Show interstitial ad for free users
+  Future<void> _maybeShowInterstitialAd() async {
+    // Only show ads to non-premium users
+    final isPremium = await ref.read(isPremiumProvider.future);
+    if (isPremium) {
+      return;
+    }
+
+    // Check if we should show ad (based on frequency)
+    final adService = ref.read(adServiceProvider);
+    if (adService.shouldShowInterstitialAd()) {
+      // Show ad if ready (doesn't block if not ready)
+      await adService.showInterstitialAd();
+    }
   }
 
   Future<void> _saveRun() async {
@@ -112,7 +130,10 @@ class _RunSummaryScreenState extends ConsumerState<RunSummaryScreen> {
           ),
         );
       } else {
-        // No milestone reached - navigate to home with success message
+        // No milestone reached - show interstitial ad then navigate to home
+        await _maybeShowInterstitialAd();
+
+        if (!mounted) return;
         Navigator.of(context).popUntil((route) => route.isFirst);
 
         String message = 'Run saved successfully!';

@@ -5,6 +5,7 @@ import 'package:run_to_canada/core/navigation/app_router.dart';
 import 'package:run_to_canada/core/theme/app_colors.dart';
 import 'package:run_to_canada/core/theme/app_text_styles.dart';
 import 'package:run_to_canada/core/widgets/custom_button.dart';
+import 'package:run_to_canada/core/widgets/banner_ad_widget.dart';
 import 'package:run_to_canada/features/auth/presentation/providers/auth_providers.dart';
 import 'package:run_to_canada/features/runs/presentation/screens/run_history_screen.dart';
 import 'package:run_to_canada/features/premium/presentation/providers/premium_providers.dart';
@@ -277,6 +278,9 @@ class HomeScreen extends ConsumerWidget {
                     ),
                   ),
                 ),
+
+                // Banner Ad (only shown to free users)
+                const BannerAdWidget(),
               ],
             ),
           );

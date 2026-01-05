@@ -10,6 +10,7 @@ import 'package:run_to_canada/core/navigation/app_router.dart';
 import 'package:run_to_canada/core/theme/app_theme.dart';
 import 'package:run_to_canada/firebase_options.dart';
 import 'package:run_to_canada/core/data/services/hive_service.dart';
+import 'package:run_to_canada/core/services/ad_service.dart';
 
 void main() async {
   // Ensure Flutter bindings are initialized
@@ -25,6 +26,12 @@ void main() async {
 
   // Initialize Mapbox with access token
   MapboxOptions.setAccessToken(Env.mapboxToken);
+
+  // Initialize AdMob
+  await AdService.initialize();
+
+  // Preload interstitial ad
+  AdService().loadInterstitialAd();
 
   // Set preferred orientations (portrait only for now)
   await SystemChrome.setPreferredOrientations([

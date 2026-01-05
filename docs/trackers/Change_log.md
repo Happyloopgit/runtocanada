@@ -1039,3 +1039,57 @@ Add a change log entry when:
 **Last Updated:** 2026-01-05
 **Total Changes:** 100
 **Last Session:** 019 (Premium Features & Paywall - Core Implementation)
+
+## Session 020 - 2026-01-05
+**Sprint 16: Ad Integration (AdMob)**
+
+### Summary
+Completed AdMob SDK integration for displaying ads to free tier users. Implemented banner ads on home screen and interstitial ads after run completion with frequency control. All code ready for production; AdMob account setup deferred to Sprint 19.
+
+### Features Added
+- AdMob SDK integration with google_mobile_ads package (v5.3.0)
+- AdService class for centralized ad management
+- BannerAdWidget component for displaying banner ads
+- Interstitial ad integration with frequency control (every 3 runs)
+- Premium user detection (ads never shown to premium users)
+- Graceful error handling (ads never block app functionality)
+
+**Files Modified:**
+- `app/pubspec.yaml` - Added google_mobile_ads: ^5.3.0
+- `app/lib/core/services/ad_service.dart` - Created AdMob service with banner and interstitial management
+- `app/lib/core/services/ad_service_provider.dart` - Created Riverpod provider
+- `app/lib/core/widgets/banner_ad_widget.dart` - Created reusable banner ad widget
+- `app/lib/app/env.dart` - Added AdMob app IDs and ad unit IDs configuration
+- `app/ios/Runner/Info.plist` - Added GADApplicationIdentifier and SKAdNetworkItems
+- `app/android/app/src/main/AndroidManifest.xml` - Added AdMob APPLICATION_ID
+- `app/lib/main.dart` - Added AdMob initialization and interstitial preloading
+- `app/lib/features/home/presentation/screens/home_screen.dart` - Integrated BannerAdWidget
+- `app/lib/features/runs/presentation/screens/run_summary_screen.dart` - Integrated interstitial ad logic
+- `docs/03-sprint-plan.md` - Marked Sprint 16 completed, added AdMob tasks to Sprint 19
+- `docs/trackers/Session_log.md` - Reordered sessions (019 before 020)
+- `docs/trackers/Change_log.md` - This file
+
+**Architecture Notes:**
+- Singleton pattern for AdService
+- Platform-specific ad unit ID handling (iOS vs Android)
+- Premium status checks using isPremiumProvider
+- Frequency control for interstitial ads (every 3 runs)
+- Using Google test ad IDs for development
+- Production ad unit setup deferred to Sprint 19
+
+**Sprint 16 Status:**
+- ✓ AdMob SDK integrated for iOS and Android
+- ✓ Banner ads display on home screen for free users
+- ✓ Interstitial ads show after run completion with frequency control
+- ✓ Ads automatically hidden for premium users
+- ✓ Graceful failure handling (ads never block app)
+- ✓ All analyzer issues fixed (0 issues)
+- ⏳ AdMob account creation deferred to Sprint 19
+- ⏳ Physical device testing deferred to Sprint 18/22
+- Next: Sprint 17 - Onboarding & Tutorial
+
+---
+
+**Last Updated:** 2026-01-05
+**Total Changes:** 113 (Session 020: +13)
+**Last Session:** 020 (Ad Integration - AdMob)

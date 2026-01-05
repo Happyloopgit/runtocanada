@@ -79,6 +79,49 @@ class Env {
   static const String monthlyProductId = 'premium_monthly';
   static const String annualProductId = 'premium_annual';
 
+  /// AdMob App IDs (load from environment variable)
+  /// Get these from AdMob Console after creating your app
+  /// iOS uses ca-app-pub-XXXXXXXXXXXXXXXX~YYYYYYYYYY format
+  /// Android uses ca-app-pub-XXXXXXXXXXXXXXXX~ZZZZZZZZZZ format
+  /// For testing, use test IDs provided by Google
+  static String get admobAppIdIos => const String.fromEnvironment(
+        'ADMOB_APP_ID_IOS',
+        defaultValue:
+            'ca-app-pub-3940256099942544~1458002511', // Test ID for development
+      );
+
+  static String get admobAppIdAndroid => const String.fromEnvironment(
+        'ADMOB_APP_ID_ANDROID',
+        defaultValue:
+            'ca-app-pub-3940256099942544~3347511713', // Test ID for development
+      );
+
+  /// AdMob Ad Unit IDs
+  /// These are test IDs - replace with real IDs in production
+  static String get admobBannerAdUnitIdIos => const String.fromEnvironment(
+        'ADMOB_BANNER_AD_UNIT_ID_IOS',
+        defaultValue: 'ca-app-pub-3940256099942544/2934735716', // Test banner
+      );
+
+  static String get admobBannerAdUnitIdAndroid => const String.fromEnvironment(
+        'ADMOB_BANNER_AD_UNIT_ID_ANDROID',
+        defaultValue: 'ca-app-pub-3940256099942544/6300978111', // Test banner
+      );
+
+  static String get admobInterstitialAdUnitIdIos =>
+      const String.fromEnvironment(
+        'ADMOB_INTERSTITIAL_AD_UNIT_ID_IOS',
+        defaultValue:
+            'ca-app-pub-3940256099942544/4411468910', // Test interstitial
+      );
+
+  static String get admobInterstitialAdUnitIdAndroid =>
+      const String.fromEnvironment(
+        'ADMOB_INTERSTITIAL_AD_UNIT_ID_ANDROID',
+        defaultValue:
+            'ca-app-pub-3940256099942544/1033173712', // Test interstitial
+      );
+
   /// Enable debug logs
   static bool get enableDebugLogs => !isProduction;
 
