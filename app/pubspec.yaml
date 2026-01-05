@@ -60,9 +60,9 @@ dependencies:
   # Monitoring
   sentry_flutter: ^8.0.0
 
-  # Monetization (will be added in later sprints)
-  # google_mobile_ads: ^5.0.0
-  # purchases_flutter: ^6.0.0
+  # Monetization
+  purchases_flutter: ^8.4.0
+  # google_mobile_ads: ^5.0.0  # Will be added in Sprint 16
 
 dev_dependencies:
   flutter_test:

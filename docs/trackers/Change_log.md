@@ -147,6 +147,15 @@ This document tracks all changes made to the Run to Canada project, organized by
 | 016 | 2025-12-31 | Sprint 14 | app/lib/features/settings/presentation/providers/settings_providers.dart | Feature | Created SettingsNotifier class with setUseMetricUnits(), setDefaultMapStyle(), setNotificationsEnabled() | [Session 016](Session_log.md#session-016---2025-12-31) |
 | 016 | 2025-12-31 | Sprint 14 | app/lib/features/settings/presentation/providers/settings_providers.dart | Feature | Implemented deleteAccount() method with Firestore and Hive cleanup plus Firebase Auth deletion | [Session 016](Session_log.md#session-016---2025-12-31) |
 | 016 | 2025-12-31 | Sprint 14 | app/lib/features/settings/presentation/providers/settings_providers.dart | Feature | Created settingsNotifierProvider for app-wide settings state management | [Session 016](Session_log.md#session-016---2025-12-31) |
+| 019 | 2026-01-05 | Sprint 15 | app/pubspec.yaml | Configuration | Added purchases_flutter: ^8.4.0 for RevenueCat SDK | [Session 019](Session_log.md#session-019---2026-01-05) |
+| 019 | 2026-01-05 | Sprint 15 | app/lib/app/env.dart | Configuration | Added RevenueCat API key configuration (Apple and Google) and Product IDs | [Session 019](Session_log.md#session-019---2026-01-05) |
+| 019 | 2026-01-05 | Sprint 15 | app/lib/features/premium/data/services/revenue_cat_service.dart | Feature | Created RevenueCatService with initialization, purchase flow, restore purchases, and entitlement checking | [Session 019](Session_log.md#session-019---2026-01-05) |
+| 019 | 2026-01-05 | Sprint 15 | app/lib/features/premium/presentation/providers/premium_providers.dart | Feature | Added RevenueCat providers (revenueCatServiceProvider, subscriptionPackagesProvider, customerInfoProvider, etc.) | [Session 019](Session_log.md#session-019---2026-01-05) |
+| 019 | 2026-01-05 | Sprint 15 | app/lib/features/premium/presentation/screens/paywall_screen.dart | Enhancement | Integrated RevenueCat purchase flow with dynamic pricing from store packages | [Session 019](Session_log.md#session-019---2026-01-05) |
+| 019 | 2026-01-05 | Sprint 15 | app/lib/features/auth/presentation/providers/auth_providers.dart | Enhancement | Added RevenueCat initialization on user login and logout on signout | [Session 019](Session_log.md#session-019---2026-01-05) |
+| 019 | 2026-01-05 | Sprint 15 | app/lib/features/premium/data/services/revenue_cat_service.dart | Bug Fix | Fixed PlatformException import, PurchasesConfiguration syntax, and purchase flow error handling | [Session 019](Session_log.md#session-019---2026-01-05) |
+| 019 | 2026-01-05 | Sprint 15 | docs/03-sprint-plan.md | Documentation | Marked Sprint 15 as completed, updated Sprint 20, 21, 22 with RevenueCat store configuration tasks | [Session 019](Session_log.md#session-019---2026-01-05) |
+| 019 | 2026-01-05 | Sprint 15 | docs/trackers/* | Documentation | Updated session log and change log for Session 019 | [Session 019](Session_log.md#session-019---2026-01-05) |
 | 016 | 2025-12-31 | Sprint 14 | app/lib/features/settings/data/datasources/user_local_datasource.dart | Enhancement | Added getSettings(), watchSettings(), and saveSettings() methods | [Session 016](Session_log.md#session-016---2025-12-31) |
 | 016 | 2025-12-31 | Sprint 14 | app/lib/core/navigation/app_router.dart | Enhancement | Added profile and settings routes to navigation system | [Session 016](Session_log.md#session-016---2025-12-31) |
 | 016 | 2025-12-31 | Sprint 14 | app/lib/features/home/presentation/screens/home_screen.dart | Enhancement | Replaced logout button with Profile button in app bar | [Session 016](Session_log.md#session-016---2025-12-31) |
@@ -1027,6 +1036,6 @@ Add a change log entry when:
 
 ---
 
-**Last Updated:** 2025-12-31
-**Total Changes:** 91
-**Last Session:** 013 (Journey Visualization & Progress Tracking)
+**Last Updated:** 2026-01-05
+**Total Changes:** 100
+**Last Session:** 019 (Premium Features & Paywall - Core Implementation)

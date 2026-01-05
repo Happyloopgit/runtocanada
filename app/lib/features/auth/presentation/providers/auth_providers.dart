@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../data/services/auth_service.dart';
 import '../../domain/models/user_model.dart';
+import 'package:run_to_canada/features/premium/data/services/revenue_cat_service.dart';
 
 /// Provider for AuthService instance
 final authServiceProvider = Provider<AuthService>((ref) {
@@ -26,6 +27,17 @@ final currentUserProvider = StreamProvider<UserModel?>((ref) async* {
     } else {
       try {
         final userModel = await authService.getUserProfile(user.uid);
+
+        // Initialize RevenueCat when user logs in
+        try {
+          final revenueCatService = RevenueCatService();
+          await revenueCatService.initialize(userId: user.uid);
+        } catch (e) {
+          // Log error but don't block authentication
+          // ignore: avoid_print
+          print('Failed to initialize RevenueCat: $e');
+        }
+
         yield userModel;
       } catch (e) {
         // Log error but don't crash the app
@@ -173,6 +185,16 @@ class AuthController extends StateNotifier<AuthState> {
     state = state.copyWith(isLoading: true);
 
     try {
+      // Logout from RevenueCat first
+      try {
+        final revenueCatService = RevenueCatService();
+        await revenueCatService.logout();
+      } catch (e) {
+        // Log error but continue with sign out
+        // ignore: avoid_print
+        print('Failed to logout from RevenueCat: $e');
+      }
+
       await _authService.signOut();
       state = AuthState(
         isLoading: false,

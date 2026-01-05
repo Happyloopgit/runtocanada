@@ -60,6 +60,25 @@ class Env {
         defaultValue: '',
       );
 
+  /// RevenueCat API Keys (load from environment variable)
+  /// Get these from RevenueCat Dashboard after creating your project
+  /// iOS uses the Apple App Store API key
+  /// Android uses the Google Play Store API key
+  static String get revenueCatAppleApiKey => const String.fromEnvironment(
+        'REVENUECAT_APPLE_API_KEY',
+        defaultValue: '',
+      );
+
+  static String get revenueCatGoogleApiKey => const String.fromEnvironment(
+        'REVENUECAT_GOOGLE_API_KEY',
+        defaultValue: '',
+      );
+
+  /// RevenueCat Product IDs
+  /// These match the product IDs configured in App Store Connect and Google Play Console
+  static const String monthlyProductId = 'premium_monthly';
+  static const String annualProductId = 'premium_annual';
+
   /// Enable debug logs
   static bool get enableDebugLogs => !isProduction;
 

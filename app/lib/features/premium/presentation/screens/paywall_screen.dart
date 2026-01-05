@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:purchases_flutter/purchases_flutter.dart';
 import 'package:run_to_canada/core/theme/app_colors.dart';
 import 'package:run_to_canada/core/theme/app_text_styles.dart';
 import 'package:run_to_canada/core/widgets/custom_button.dart';
 import 'package:run_to_canada/features/premium/data/services/premium_service.dart';
+import 'package:run_to_canada/features/premium/presentation/providers/premium_providers.dart';
 
 class PaywallScreen extends ConsumerStatefulWidget {
   const PaywallScreen({super.key});
@@ -15,11 +17,28 @@ class PaywallScreen extends ConsumerStatefulWidget {
 class _PaywallScreenState extends ConsumerState<PaywallScreen> {
   String _selectedPlan = 'annual'; // 'monthly' or 'annual'
   bool _isLoading = false;
+  Package? _monthlyPackage;
+  Package? _annualPackage;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadPackages();
+  }
+
+  Future<void> _loadPackages() async {
+    final packages = await ref.read(subscriptionPackagesProvider.future);
+    setState(() {
+      _monthlyPackage = packages['monthly'];
+      _annualPackage = packages['annual'];
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     final pricingInfo = PremiumService.getPricingInfo();
     final benefits = PremiumService.getPremiumBenefits();
+    final packagesAsync = ref.watch(subscriptionPackagesProvider);
 
     return Scaffold(
       body: Container(
@@ -142,34 +161,101 @@ class _PaywallScreenState extends ConsumerState<PaywallScreen> {
 
                       const SizedBox(height: 32),
 
-                      // Pricing cards
-                      _buildPricingCard(
-                        'annual',
-                        'Annual Plan',
-                        pricingInfo['annual']['displayPrice'],
-                        pricingInfo['annual']['monthlyCost'],
-                        'Save ${pricingInfo['annual']['savings']}',
-                        true, // Recommended
-                      ),
+                      // Show loading or pricing cards
+                      packagesAsync.when(
+                        data: (packages) {
+                          final monthlyPackage = packages['monthly'];
+                          final annualPackage = packages['annual'];
 
-                      const SizedBox(height: 16),
+                          // Calculate savings if both packages available
+                          String? savings;
+                          String? monthlyEquivalent;
 
-                      _buildPricingCard(
-                        'monthly',
-                        'Monthly Plan',
-                        pricingInfo['monthly']['displayPrice'],
-                        null,
-                        null,
-                        false,
+                          if (monthlyPackage != null && annualPackage != null) {
+                            final revenueCatService = ref.read(revenueCatServiceProvider);
+                            savings = revenueCatService.getAnnualSavings(monthlyPackage, annualPackage);
+                            monthlyEquivalent = revenueCatService.getMonthlyEquivalent(annualPackage);
+                          }
+
+                          return Column(
+                            children: [
+                              // Annual plan (if available)
+                              if (annualPackage != null) ...[
+                                _buildPricingCard(
+                                  'annual',
+                                  'Annual Plan',
+                                  annualPackage.storeProduct.priceString,
+                                  monthlyEquivalent,
+                                  savings != null ? 'Save $savings' : null,
+                                  true, // Recommended
+                                ),
+                                const SizedBox(height: 16),
+                              ],
+
+                              // Monthly plan (if available)
+                              if (monthlyPackage != null)
+                                _buildPricingCard(
+                                  'monthly',
+                                  'Monthly Plan',
+                                  monthlyPackage.storeProduct.priceString,
+                                  null,
+                                  null,
+                                  false,
+                                ),
+
+                              // Fallback if no packages loaded
+                              if (monthlyPackage == null && annualPackage == null) ...[
+                                _buildPricingCard(
+                                  'annual',
+                                  'Annual Plan',
+                                  pricingInfo['annual']['displayPrice'],
+                                  pricingInfo['annual']['monthlyCost'],
+                                  'Save ${pricingInfo['annual']['savings']}',
+                                  true,
+                                ),
+                                const SizedBox(height: 16),
+                                _buildPricingCard(
+                                  'monthly',
+                                  'Monthly Plan',
+                                  pricingInfo['monthly']['displayPrice'],
+                                  null,
+                                  null,
+                                  false,
+                                ),
+                              ],
+                            ],
+                          );
+                        },
+                        loading: () => const Center(child: CircularProgressIndicator()),
+                        error: (error, stack) => Column(
+                          children: [
+                            // Fallback to static pricing on error
+                            _buildPricingCard(
+                              'annual',
+                              'Annual Plan',
+                              pricingInfo['annual']['displayPrice'],
+                              pricingInfo['annual']['monthlyCost'],
+                              'Save ${pricingInfo['annual']['savings']}',
+                              true,
+                            ),
+                            const SizedBox(height: 16),
+                            _buildPricingCard(
+                              'monthly',
+                              'Monthly Plan',
+                              pricingInfo['monthly']['displayPrice'],
+                              null,
+                              null,
+                              false,
+                            ),
+                          ],
+                        ),
                       ),
 
                       const SizedBox(height: 32),
 
                       // Subscribe button
                       CustomButton(
-                        text: _selectedPlan == 'annual'
-                            ? 'Subscribe for ${pricingInfo['annual']['displayPrice']}'
-                            : 'Subscribe for ${pricingInfo['monthly']['displayPrice']}',
+                        text: _getSubscribeButtonText(packagesAsync),
                         onPressed: _isLoading ? null : _handleSubscribe,
                         isLoading: _isLoading,
                       ),
@@ -342,28 +428,86 @@ class _PaywallScreenState extends ConsumerState<PaywallScreen> {
     );
   }
 
+  String _getSubscribeButtonText(AsyncValue<Map<String, Package?>> packagesAsync) {
+    return packagesAsync.when(
+      data: (packages) {
+        final selectedPackage = _selectedPlan == 'annual' ? packages['annual'] : packages['monthly'];
+        if (selectedPackage != null) {
+          return 'Subscribe for ${selectedPackage.storeProduct.priceString}';
+        }
+        final pricingInfo = PremiumService.getPricingInfo();
+        return _selectedPlan == 'annual'
+            ? 'Subscribe for ${pricingInfo['annual']['displayPrice']}'
+            : 'Subscribe for ${pricingInfo['monthly']['displayPrice']}';
+      },
+      loading: () => 'Loading...',
+      error: (error, stackTrace) {
+        final pricingInfo = PremiumService.getPricingInfo();
+        return _selectedPlan == 'annual'
+            ? 'Subscribe for ${pricingInfo['annual']['displayPrice']}'
+            : 'Subscribe for ${pricingInfo['monthly']['displayPrice']}';
+      },
+    );
+  }
+
   Future<void> _handleSubscribe() async {
     setState(() {
       _isLoading = true;
     });
 
     try {
-      // TODO: Implement RevenueCat purchase flow
-      await Future.delayed(const Duration(seconds: 1)); // Placeholder
+      final revenueCatService = ref.read(revenueCatServiceProvider);
+      final premiumService = ref.read(premiumServiceProvider);
 
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Purchase flow will be implemented with RevenueCat'),
-            backgroundColor: AppColors.success,
-          ),
-        );
+      // Get the selected package
+      final selectedPackage = _selectedPlan == 'annual' ? _annualPackage : _monthlyPackage;
+
+      if (selectedPackage == null) {
+        throw Exception('Selected package not available. Please try again.');
+      }
+
+      // Make the purchase
+      final customerInfo = await revenueCatService.purchasePackage(selectedPackage);
+
+      // Check if user now has premium access
+      // Check for the "premium" entitlement
+      final premiumEntitlement = customerInfo.entitlements.all['premium'];
+      final hasPremium = premiumEntitlement?.isActive ?? false;
+
+      if (hasPremium) {
+        // Update premium status in Firestore
+        await premiumService.updatePremiumStatus(true);
+
+        if (mounted) {
+          // Show success message
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Welcome to Premium! Enjoy unlimited journeys.'),
+              backgroundColor: AppColors.success,
+            ),
+          );
+
+          // Close the paywall
+          Navigator.of(context).pop(true); // Return true to indicate success
+        }
+      } else {
+        throw Exception('Purchase completed but premium access not granted');
       }
     } catch (e) {
       if (mounted) {
+        String errorMessage = 'Purchase failed. Please try again.';
+
+        if (e.toString().contains('cancelled')) {
+          errorMessage = 'Purchase was cancelled.';
+        } else if (e.toString().contains('not allowed')) {
+          errorMessage = 'Purchases are not allowed on this device.';
+        } else if (e.toString().contains('pending')) {
+          errorMessage = 'Payment is pending. Please check back later.';
+        }
+
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Error: $e'),
+            content: Text(errorMessage),
             backgroundColor: AppColors.error,
           ),
         );
@@ -383,22 +527,47 @@ class _PaywallScreenState extends ConsumerState<PaywallScreen> {
     });
 
     try {
-      // TODO: Implement RevenueCat restore purchases flow
-      await Future.delayed(const Duration(seconds: 1)); // Placeholder
+      final revenueCatService = ref.read(revenueCatServiceProvider);
+      final premiumService = ref.read(premiumServiceProvider);
 
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Restore purchases will be implemented with RevenueCat'),
-            backgroundColor: AppColors.success,
-          ),
-        );
+      // Restore purchases
+      final customerInfo = await revenueCatService.restorePurchases();
+
+      // Check if user has premium access
+      // Check for the "premium" entitlement
+      final premiumEntitlement = customerInfo.entitlements.all['premium'];
+      final hasPremium = premiumEntitlement?.isActive ?? false;
+
+      if (hasPremium) {
+        // Update premium status in Firestore
+        await premiumService.updatePremiumStatus(true);
+
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Purchases restored successfully!'),
+              backgroundColor: AppColors.success,
+            ),
+          );
+
+          // Close the paywall
+          Navigator.of(context).pop(true);
+        }
+      } else {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('No previous purchases found.'),
+              backgroundColor: AppColors.warning,
+            ),
+          );
+        }
       }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Error: $e'),
+            content: Text('Failed to restore purchases: ${e.toString()}'),
             backgroundColor: AppColors.error,
           ),
         );
