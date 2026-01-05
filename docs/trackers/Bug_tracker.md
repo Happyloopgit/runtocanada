@@ -6,10 +6,10 @@ This document tracks all bugs discovered and their resolution status.
 
 | Status | Count |
 |--------|-------|
-| Open | 3 |
+| Open | 0 |
 | In Progress | 0 |
 | Fixed | 0 |
-| Closed | 0 |
+| Closed | 3 |
 | **Total** | **3** |
 
 ---
@@ -18,9 +18,7 @@ This document tracks all bugs discovered and their resolution status.
 
 | Bug ID | Priority | Sprint | Component | Description | Discovered | Assigned | Reference |
 |--------|----------|--------|-----------|-------------|------------|----------|-----------|
-| BUG-001 | Medium | Sprint 9 | iOS/CocoaPods | CocoaPods dependency conflicts preventing iOS build: GoogleUtilities version mismatch (Firebase needs ~7.8, GoogleSignIn needs ~8.0), AppAuth version conflict, nanopb version conflict | 2025-12-31 Session 011 | Unassigned | [Session 011](Session_log.md#session-011---2025-12-31) |
-| BUG-002 | High | Sprint 9 | Goal Creation / Geocoding | Location search not showing suggestions or accepting input - typing "Bengaluru" shows no results, pressing Enter doesn't select location | 2025-12-31 Session 017 | Unassigned | [Session 017](Session_log.md#session-017---2025-12-31) |
-| BUG-003 | Low | Sprint 14 | Profile / UI | Profile screen stat cards have padding/alignment issues on Android - visual inconsistency in statistics tiles | 2025-12-31 Session 017 | Unassigned | [Session 017](Session_log.md#session-017---2025-12-31) |
+| - | - | - | - | No open bugs | - | - | - |
 
 ---
 
@@ -44,7 +42,9 @@ This document tracks all bugs discovered and their resolution status.
 
 | Bug ID | Priority | Sprint | Component | Description | Fixed In Session | Verified Date | Reference |
 |--------|----------|--------|-----------|-------------|------------------|---------------|-----------|
-| - | - | - | - | No bugs closed yet | - | - | - |
+| BUG-001 | Medium | Sprint 9 | iOS/CocoaPods | CocoaPods dependency conflicts resolved by upgrading Firebase packages to v3.x and Sentry to v8.x | Session 2026-01-05 | 2026-01-05 | See detailed fix below |
+| BUG-002 | High | Sprint 9 | Goal Creation / Geocoding | Location search fixed by replacing secret Mapbox token with public token | Session 2026-01-05 | 2026-01-05 | [env.dart:48](app/lib/app/env.dart#L48) |
+| BUG-003 | Low | Sprint 14 | Profile / UI | Profile stat cards padding fixed with improved layout constraints | Session 2026-01-05 | 2026-01-05 | [profile_screen.dart:270](app/lib/features/profile/presentation/screens/profile_screen.dart#L270) |
 
 ---
 
@@ -518,7 +518,7 @@ When reporting bugs via feedback:
 
 ---
 
-**Last Updated:** 2025-12-31
+**Last Updated:** 2026-01-05
 **Total Bugs Logged:** 3
-**Bugs Fixed:** 0
-**Open Bugs:** 3
+**Bugs Fixed:** 3
+**Open Bugs:** 0

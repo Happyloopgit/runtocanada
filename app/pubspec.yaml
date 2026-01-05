@@ -23,13 +23,13 @@ dependencies:
   hive_flutter: ^1.1.0
 
   # Firebase Backend
-  firebase_core: ^2.24.0
-  firebase_auth: ^4.15.0
-  cloud_firestore: ^4.13.0
-  firebase_analytics: ^10.7.0
-  firebase_storage: ^11.5.0
-  firebase_crashlytics: ^3.4.0
-  google_sign_in: ^6.2.1
+  firebase_core: ^3.8.0
+  firebase_auth: ^5.3.3
+  cloud_firestore: ^5.5.2
+  firebase_analytics: ^11.3.5
+  firebase_storage: ^12.3.6
+  firebase_crashlytics: ^4.1.6
+  google_sign_in: ^6.2.2
 
   # Maps & Location
   mapbox_maps_flutter: ^2.17.0
@@ -54,11 +54,11 @@ dependencies:
   intl: ^0.19.0
   uuid: ^4.0.0
   connectivity_plus: ^5.0.0
-  package_info_plus: ^5.0.0
+  package_info_plus: ^9.0.0
   shared_preferences: ^2.2.0
 
   # Monitoring
-  sentry_flutter: ^7.13.0
+  sentry_flutter: ^8.0.0
 
   # Monetization (will be added in later sprints)
   # google_mobile_ads: ^5.0.0

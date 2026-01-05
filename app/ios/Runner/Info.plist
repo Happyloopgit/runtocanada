@@ -57,5 +57,18 @@
 	</array>
 	<key>MBXAccessToken</key>
 	<string>pk.eyJ1IjoiaGFwcHlsb29wIiwiYSI6ImNtanNqaXhwdTJnc2Uya3Nkd2ZuaWdmcHYifQ.GRxjzAh8Fwc9--MvJvjLSg</string>
+	<key>GIDClientID</key>
+	<string>845378302830-vodesujk4r7egfil9lla530vr90o92q5.apps.googleusercontent.com</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.845378302830-vodesujk4r7egfil9lla530vr90o92q5</string>
+			</array>
+		</dict>
+	</array>
 </dict>
 </plist>

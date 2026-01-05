@@ -1209,9 +1209,9 @@ Each session entry should include:
 
 ---
 
-**Last Updated:** 2025-12-31
-**Total Sessions:** 17
-**Completed Sprints:** 0-14 (Sprint 14 completed in Session 016)
+**Last Updated:** 2026-01-05
+**Total Sessions:** 18
+**Completed Sprints:** 0-15 (Sprint 15 completed in Session 017, Bug Fixes completed in Session 018)
 
 ---
 
@@ -1293,6 +1293,103 @@ Each session entry should include:
 - OR continue with Sprint 16: Ad Integration (AdMob)
 - OR continue with Sprint 17: Onboarding & Tutorial
 - OR work on other requested features
+
+---
+
+### Session 018 - 2026-01-05
+
+**Sprint:** Bug Fixes - All Tracked Bugs
+**Duration:** ~3 hours
+**Participants:** Development Team (with Claude Code)
+
+**Objectives:**
+- Fix BUG-001: iOS CocoaPods dependency conflicts
+- Fix BUG-002: Goal Creation Location Search not working
+- Fix BUG-003: Profile Screen stat cards padding issues
+- Fix Google Sign-In configuration missing on iOS
+- Verify all fixes and test on device
+
+**Work Completed:**
+- **BUG-002 FIXED:** Location Search Now Working
+  - Root cause: Mapbox API token was a SECRET key (sk.) instead of PUBLIC key (pk.)
+  - Solution: Replaced secret token with public token in env.dart
+  - File: `app/lib/app/env.dart:48`
+  - Status: ✅ Verified working
+
+- **BUG-003 FIXED:** Profile Screen Stat Cards Padding
+  - Root cause: Fixed padding and layout constraints causing visual inconsistencies on Android
+  - Solution: Reduced padding from 16.0 to 12.0, added Flexible/FittedBox for responsive text
+  - Added maxLines and overflow properties to prevent text overflow
+  - File: `app/lib/features/profile/presentation/screens/profile_screen.dart:270`
+  - Status: ✅ Verified working
+
+- **BUG-001 FIXED:** iOS CocoaPods Dependency Conflicts
+  - Root cause: Firebase v2.x required GoogleUtilities ~7.x while GoogleSignIn required ~8.x
+  - Solution: Upgraded all Firebase packages to v3.x which uses GoogleUtilities ~8.x
+  - Also fixed Sentry C++ compilation errors by upgrading from v7.x to v8.x
+  - Package upgrades:
+    - firebase_core: 2.24.0 → 3.8.0
+    - firebase_auth: 4.15.0 → 5.3.3
+    - cloud_firestore: 4.13.0 → 5.5.2
+    - firebase_analytics: 10.7.0 → 11.3.5
+    - firebase_storage: 11.5.0 → 12.3.6
+    - firebase_crashlytics: 3.4.0 → 4.1.6
+    - sentry_flutter: 7.13.0 → 8.0.0
+    - package_info_plus: 5.0.0 → 9.0.0 (required for compatibility)
+  - Updated iOS Podfile with deployment target fixes
+  - Files: `app/pubspec.yaml`, `app/ios/Podfile`
+  - Status: ✅ Pod install successful, iOS build working
+
+- **BONUS FIX:** Google Sign-In Configuration
+  - Root cause: Missing GIDClientID in Info.plist causing app crash on launch
+  - Also fixed bundle ID mismatch (was com.runtocanada.runToCanada, should be com.runtocanada.app)
+  - Solution: Added Google OAuth client ID to Info.plist
+  - Added CFBundleURLTypes for OAuth callback
+  - Updated Xcode project bundle ID to match Firebase configuration
+  - Files: `app/ios/Runner/Info.plist`, `app/ios/Runner.xcodeproj/project.pbxproj`
+  - Status: ✅ App launches successfully, sign-in working
+
+- **Documentation Updates:**
+  - Updated Bug_tracker.md with all fixes verified and closed
+  - All 3 bugs moved from "Fixed (Pending Verification)" to "Closed"
+  - Updated bug counts: 3 closed, 0 open
+  - Last Updated date changed to 2026-01-05
+
+**Files Modified:**
+- `app/lib/app/env.dart` - Fixed Mapbox token (BUG-002)
+- `app/lib/features/profile/presentation/screens/profile_screen.dart` - Fixed stat card padding (BUG-003)
+- `app/pubspec.yaml` - Upgraded Firebase and Sentry packages (BUG-001)
+- `app/pubspec.lock` - Dependency lock file updated
+- `app/ios/Podfile` - Added deployment target and build settings fixes
+- `app/ios/Podfile.lock` - CocoaPods lock file updated
+- `app/ios/Runner/Info.plist` - Added Google OAuth configuration
+- `app/ios/Runner.xcodeproj/project.pbxproj` - Fixed bundle ID consistency
+- `app/ios/Runner.xcworkspace/contents.xcworkspacedata` - Workspace updates
+- `app/macos/Flutter/GeneratedPluginRegistrant.swift` - Auto-generated plugin updates
+- `docs/trackers/Bug_tracker.md` - Updated all bugs to closed status
+
+**Issues Encountered:**
+- Initial Sentry v7.x had C++ compilation errors with modern Xcode
+  - Error: "No type named 'terminate_handler' in namespace 'std'"
+  - Solution: Upgraded to sentry_flutter v8.0.0
+- Google Sign-In crash on app launch
+  - Error: "No active configuration. Make sure GIDClientID is set in Info.plist"
+  - Solution: Added OAuth client ID from Firebase Console to Info.plist
+- Bundle ID mismatch between Xcode (com.runtocanada.runToCanada) and Firebase (com.runtocanada.app)
+  - Solution: Updated Xcode project to use com.runtocanada.app
+
+**Testing Performed:**
+- ✅ iOS build successful (no CocoaPods errors)
+- ✅ App launches without crashes
+- ✅ Google Sign-In working
+- ✅ Location search showing autocomplete suggestions
+- ✅ Profile screen stat cards displaying correctly
+
+**Next Steps:**
+- Commit all bug fixes to git
+- Push changes to remote repository
+- Continue with remaining sprints or new features as needed
+- Monitor for any new bugs during testing
 
 ---
 
