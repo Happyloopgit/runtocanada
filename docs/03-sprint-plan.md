@@ -4,8 +4,8 @@
 
 This sprint plan divides the entire implementation into logical, atomic, and sequential sprints. Each sprint is modular and builds upon previous sprints. Every sprint contains checkable individual tasks that can be used as a tracker.
 
-**Total Sprints:** 15
-**Estimated Timeline:** 12-14 weeks (assuming 1-1.5 weeks per sprint on average)
+**Total Sprints:** 24 + Sprint 17.5 (Health Data Integration)
+**Estimated Timeline:** 14-17 weeks to launch (3.5-4 months)
 
 ---
 
@@ -823,11 +823,207 @@ This sprint plan divides the entire implementation into logical, atomic, and seq
 
 ---
 
+## Sprint 17.5: Health Data Integration (Wearables Support)
+
+**Goal:** Enable workout import/export with Apple Health (iOS) and Health Connect (Android)
+
+**Dependencies:** Sprint 17
+
+**Status:** NOT STARTED
+
+### Tasks:
+
+#### **Package Installation:**
+- [ ] Add `health: ^11.0.0` package to pubspec.yaml
+- [ ] Run `flutter pub get` to install package
+- [ ] Verify package compatibility with current Flutter version
+
+#### **iOS Configuration:**
+- [ ] Open Xcode project (ios/Runner.xcworkspace)
+- [ ] Add HealthKit capability to Runner target
+- [ ] Navigate to Signing & Capabilities → + Capability → HealthKit
+- [ ] Add NSHealthShareUsageDescription to Info.plist
+  - Description: "Run to Canada needs access to your workout data to import runs from Apple Health and sync with your wearable devices"
+- [ ] Add NSHealthUpdateUsageDescription to Info.plist
+  - Description: "Run to Canada saves your completed runs to Apple Health so you can track all your workouts in one place"
+- [ ] Verify HealthKit entitlements in Runner.entitlements file
+- [ ] Test HealthKit configuration with sample code
+
+#### **Android Configuration:**
+- [ ] Add Health Connect permissions to AndroidManifest.xml
+- [ ] Add READ_EXERCISE, READ_DISTANCE, READ_STEPS permissions
+- [ ] Add WRITE_EXERCISE, WRITE_DISTANCE, WRITE_STEPS permissions
+- [ ] Add activity-alias for Health Connect permissions rationale
+- [ ] Configure ViewPermissionUsageActivity in manifest
+- [ ] Test Health Connect app installation on Android 9-13 devices
+- [ ] Verify built-in Health Connect on Android 14+ devices
+- [ ] Add health data types declaration for Play Console
+
+#### **Core Service Implementation:**
+- [ ] Create `HealthService` class in `lib/core/services/health_service.dart`
+- [ ] Implement singleton pattern for HealthService
+- [ ] Create `requestHealthPermissions()` method
+- [ ] Define required health data types (WORKOUT, DISTANCE_DELTA, STEPS, ACTIVE_ENERGY_BURNED)
+- [ ] Handle permission request success/failure
+- [ ] Implement platform-specific permission UI (iOS: HealthKit sheet, Android: Health Connect screen)
+- [ ] Create `hasHealthPermissions()` check method
+- [ ] Add error handling for permission denied scenarios
+
+#### **Workout Import Functionality:**
+- [ ] Implement `importWorkouts()` method
+- [ ] Fetch workouts from last 30 days by default
+- [ ] Filter for running/walking workout types
+- [ ] Convert HealthDataPoint to RunModel
+- [ ] Map health data fields: distance, duration, calories, start/end time
+- [ ] Handle missing GPS route data gracefully
+- [ ] Implement `syncRecentWorkouts()` for automatic background sync
+- [ ] Add duplicate detection (don't import same workout twice)
+- [ ] Store import metadata (source: "Apple Health" or "Health Connect")
+- [ ] Create batch import for multiple workouts
+- [ ] Add progress callback for UI updates during import
+
+#### **Workout Export Functionality:**
+- [ ] Implement `exportWorkout(RunModel)` method
+- [ ] Convert RunModel to HealthWorkoutActivityType.RUNNING
+- [ ] Write workout data to health platform
+- [ ] Include: start time, end time, distance, calories
+- [ ] Add route data if available (GPS coordinates)
+- [ ] Handle export errors gracefully
+- [ ] Implement `autoExportOnRunComplete()` for automatic sync
+- [ ] Add user preference toggle for auto-export
+- [ ] Verify workout appears in Apple Health / Health Connect app
+- [ ] Test export with various run lengths (short, medium, long)
+
+#### **Riverpod State Management:**
+- [ ] Create `health_providers.dart` in appropriate feature folder
+- [ ] Create `healthServiceProvider` for HealthService instance
+- [ ] Create `healthPermissionsProvider` to watch permission status
+- [ ] Create `hasHealthAccessProvider` boolean provider
+- [ ] Create `importedWorkoutsProvider` for tracking imports
+- [ ] Add loading state providers for import/export operations
+- [ ] Implement error state handling in providers
+
+#### **UI Integration - Settings Screen:**
+- [ ] Add "Health & Wearables" section to Settings screen
+- [ ] Add "Sync with Apple Health" toggle (iOS) / "Sync with Health Connect" toggle (Android)
+- [ ] Display platform-specific name dynamically
+- [ ] Add "Auto-export runs" preference toggle
+- [ ] Show current permission status (Granted / Not Granted / Denied)
+- [ ] Add "Grant Permission" button if not granted
+- [ ] Add "Open Health App" button for iOS
+- [ ] Add "Open Health Connect" button for Android
+- [ ] Display last sync timestamp
+- [ ] Show count of imported workouts
+
+#### **UI Integration - Run History Screen:**
+- [ ] Add "Import from Health App" button to Run History screen
+- [ ] Position button above run list or in app bar
+- [ ] Show import dialog with date range selector
+- [ ] Display import progress indicator (X of Y workouts imported)
+- [ ] Show success message with count of imported runs
+- [ ] Add visual badge to imported runs ("Imported from Apple Watch", "From Galaxy Watch", etc.)
+- [ ] Differentiate imported runs from app-tracked runs in list
+- [ ] Add filter option to show/hide imported runs
+- [ ] Update empty state to mention health import option
+
+#### **Privacy & Compliance:**
+- [ ] Create Privacy Policy page in app
+- [ ] Add route: `/privacy-policy` to AppRouter
+- [ ] Create `privacy_policy_screen.dart` widget
+- [ ] Write privacy policy content covering:
+  - What health data is collected (workouts, distance, duration, calories)
+  - How health data is used (display in app, sync to Firebase for backup)
+  - That health data is NOT used for advertising or data mining
+  - That health data is NOT shared with third parties
+  - User control over health data (can revoke permission anytime)
+- [ ] Add "Privacy Policy" link in Settings screen
+- [ ] Add "Privacy Policy" link in authentication screens
+- [ ] Make privacy policy accessible without login
+- [ ] Update App Store description to mention Apple Health integration
+- [ ] Update Play Store description to mention Health Connect integration
+- [ ] Prepare Data Safety section content for Play Console:
+  - Declare health data types accessed
+  - Explain purpose of health data collection
+  - Confirm data encryption and security measures
+
+#### **Testing - iOS:**
+- [ ] Test on physical iPhone (iOS 14+) - simulator doesn't support HealthKit
+- [ ] Test permission request flow on first use
+- [ ] Test import workouts from Apple Health
+- [ ] Verify imported runs appear correctly in history
+- [ ] Test export run to Apple Health
+- [ ] Open Apple Health app and verify run appears
+- [ ] Test with Apple Watch recorded workout
+- [ ] Test with third-party app workout (Nike Run Club, Strava)
+- [ ] Test permission denied scenario
+- [ ] Test permission revoked scenario (Settings → Privacy → Health)
+- [ ] Test with no workouts in Apple Health (empty state)
+- [ ] Test auto-export toggle on/off
+
+#### **Testing - Android:**
+- [ ] Test on physical Android device (Android 9+)
+- [ ] Test on Android 14+ device (built-in Health Connect)
+- [ ] Test on Android 9-13 device (separate Health Connect app from Play Store)
+- [ ] Verify Health Connect app is installed/installable
+- [ ] Test permission request flow
+- [ ] Test import workouts from Health Connect
+- [ ] Test export run to Health Connect
+- [ ] Open Health Connect app and verify run appears
+- [ ] Test with Wear OS watch recorded workout (if available)
+- [ ] Test with Garmin/Fitbit workout synced to Health Connect
+- [ ] Test permission denied scenario
+- [ ] Test permission revoked scenario (Health Connect → App permissions)
+- [ ] Test with no workouts in Health Connect (empty state)
+- [ ] Test auto-export toggle on/off
+
+#### **Edge Cases & Error Handling:**
+- [ ] Test import with very large number of workouts (100+)
+- [ ] Test with corrupted health data
+- [ ] Test with workout missing required fields
+- [ ] Test offline scenario (health APIs should work offline)
+- [ ] Test with health app not installed (Android 9-13)
+- [ ] Test rapid permission toggle on/off
+- [ ] Test simultaneous import and export operations
+- [ ] Handle HealthKit/Health Connect API errors gracefully
+- [ ] Add user-friendly error messages for all failure scenarios
+
+#### **Documentation:**
+- [ ] Add inline code comments explaining health integration
+- [ ] Document HealthService public API
+- [ ] Create README section for health integration setup
+- [ ] Document required iOS capabilities
+- [ ] Document required Android permissions
+- [ ] Add troubleshooting guide for common issues
+- [ ] Document supported wearable devices
+
+**Acceptance Criteria:**
+- [ ] Users can grant health permissions on both iOS and Android
+- [ ] App can import workouts from Apple Health (iOS) and Health Connect (Android)
+- [ ] Imported workouts appear correctly in Run History with proper attribution
+- [ ] App can export completed runs to health platform automatically
+- [ ] Exported runs appear in Apple Health / Health Connect app
+- [ ] Works with Apple Watch, Wear OS, Garmin, Fitbit, and other compatible devices
+- [ ] Privacy policy complete and accessible
+- [ ] Health integration mentioned in app store descriptions
+- [ ] All permissions handled gracefully (granted, denied, revoked scenarios)
+- [ ] No crashes or data loss in any health-related scenario
+- [ ] Code passes `flutter analyze` with 0 issues
+
+**Marketing Benefits:**
+- "Works with ALL major fitness wearables"
+- "Apple Watch, Samsung Galaxy Watch, Google Pixel Watch, Garmin, Fitbit, Polar, and more"
+- "Seamless sync with Apple Health and Health Connect"
+- "Import workouts from any compatible device"
+
+**Timeline:** 1-2 weeks
+
+---
+
 ## Sprint 18: Polish, Testing & Bug Fixes
 
 **Goal:** Polish UI, fix bugs, and prepare for beta testing
 
-**Dependencies:** All previous sprints
+**Dependencies:** Sprint 17.5 (updated to include health integration testing)
 
 ### Tasks:
 - [ ] Conduct thorough app testing on iOS
@@ -1278,6 +1474,8 @@ Sprint 16: Ad Integration
   ↓
 Sprint 17: Onboarding
   ↓
+Sprint 17.5: Health Data Integration (Wearables Support) ← NEW!
+  ↓
 Sprint 18: Polish & Testing
   ↓
 Sprint 19: App Store Assets
@@ -1293,11 +1491,11 @@ Sprint 24: Post-Launch Monitoring
 
 ### Total Timeline Estimate
 
-- **Development Sprints (0-18):** ~10-12 weeks
-- **Store Submission & Beta (19-22):** ~2-3 weeks
+- **Development Sprints (0-17.5):** ~11-13 weeks
+- **Store Submission & Beta (18-22):** ~3-4 weeks
 - **Launch & Post-Launch (23-24):** Ongoing
 
-**Total to Launch:** ~12-15 weeks (3-4 months)
+**Total to Launch:** ~14-17 weeks (3.5-4 months)
 
 ---
 
