@@ -100,10 +100,13 @@ class _PaywallScreenState extends ConsumerState<PaywallScreen> {
                           ),
                         ],
                       ),
-                      child: const Icon(
-                        Icons.workspace_premium,
-                        size: 40,
-                        color: Colors.white,
+                      child: const Hero(
+                        tag: 'premium_icon',
+                        child: Icon(
+                          Icons.workspace_premium,
+                          size: 40,
+                          color: Colors.white,
+                        ),
                       ),
                     ),
                     const SizedBox(height: 24),

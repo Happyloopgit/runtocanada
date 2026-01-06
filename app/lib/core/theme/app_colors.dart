@@ -20,6 +20,7 @@ class AppColors {
   // Dark Mode (Primary)
   static const Color backgroundDark = Color(0xFF101922);
   static const Color surfaceDark = Color(0xFF1C2A38);
+  static const Color surfaceCard = Color(0xFF182430); // Alias for cardDark
   static const Color cardDark = Color(0xFF182430);
   static const Color surfaceInput = Color(0xFF223649);
 
@@ -49,6 +50,18 @@ class AppColors {
   static const Color info = Color(0xFF2196F3);
 
   // ===== GRADIENTS =====
+
+  static const LinearGradient primaryGradient = LinearGradient(
+    colors: [primary, primaryDark],
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+  );
+
+  static const LinearGradient secondaryGradient = LinearGradient(
+    colors: [secondary, milestone],
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+  );
 
   static const LinearGradient milestoneGradient = LinearGradient(
     colors: [milestoneGradientStart, milestoneGradientEnd],
@@ -139,6 +152,7 @@ class AppColors {
   // ===== PREMIUM COLORS =====
 
   static const Color premium = Color(0xFFFFD700); // Gold
+  static const Color premiumGold = Color(0xFFFFD700); // Alias for premium
   static const Color premiumLight = Color(0xFFFFE082);
 
   static const LinearGradient premiumGradient = LinearGradient(

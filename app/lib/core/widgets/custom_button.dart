@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:run_to_canada/core/theme/app_colors.dart';
 import 'package:run_to_canada/core/theme/app_text_styles.dart';
+import 'package:run_to_canada/core/widgets/animated_widgets.dart';
 
 /// Modern primary button with glow effect
 /// Uses bright blue primary color with shadow/glow
@@ -32,70 +33,78 @@ class CustomButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (isOutlined) {
-      return Container(
-        width: width ?? double.infinity,
-        height: height,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(9999),
-          border: Border.all(
-            color: backgroundColor ?? AppColors.primary,
-            width: 2,
-          ),
-        ),
-        child: Material(
-          color: Colors.transparent,
-          child: InkWell(
-            onTap: isLoading ? null : onPressed,
-            borderRadius: BorderRadius.circular(9999),
-            child: Container(
-              padding: padding ?? const EdgeInsets.symmetric(horizontal: 24),
-              alignment: Alignment.center,
-              child: _buildChild(backgroundColor ?? AppColors.primary),
+    final buttonContent = isOutlined
+        ? Container(
+            width: width ?? double.infinity,
+            height: height,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(9999),
+              border: Border.all(
+                color: backgroundColor ?? AppColors.primary,
+                width: 2,
+              ),
             ),
-          ),
-        ),
+            child: Material(
+              color: Colors.transparent,
+              child: InkWell(
+                onTap: isLoading ? null : onPressed,
+                borderRadius: BorderRadius.circular(9999),
+                child: Container(
+                  padding: padding ?? const EdgeInsets.symmetric(horizontal: 24),
+                  alignment: Alignment.center,
+                  child: _buildChild(backgroundColor ?? AppColors.primary),
+                ),
+              ),
+            ),
+          )
+        : Container(
+            width: width ?? double.infinity,
+            height: height,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(9999),
+              gradient: backgroundColor == null
+                  ? LinearGradient(
+                      colors: [AppColors.primary, AppColors.primaryDark],
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                    )
+                  : null,
+              color: backgroundColor,
+              boxShadow: isLoading || onPressed == null
+                  ? null
+                  : backgroundColor == null
+                      ? AppColors.buttonShadow
+                      : [
+                          BoxShadow(
+                            color: backgroundColor!.withValues(alpha: 0.4),
+                            blurRadius: 30,
+                            offset: const Offset(0, 8),
+                          ),
+                        ],
+            ),
+            child: Material(
+              color: Colors.transparent,
+              child: InkWell(
+                onTap: isLoading ? null : onPressed,
+                borderRadius: BorderRadius.circular(9999),
+                child: Container(
+                  padding: padding ?? const EdgeInsets.symmetric(horizontal: 24),
+                  alignment: Alignment.center,
+                  child: _buildChild(textColor ?? AppColors.textOnPrimary),
+                ),
+              ),
+            ),
+          );
+
+    // Wrap with AnimatedTapButton for scale effect
+    if (!isLoading && onPressed != null) {
+      return AnimatedTapButton(
+        onTap: onPressed,
+        child: buttonContent,
       );
     }
 
-    return Container(
-      width: width ?? double.infinity,
-      height: height,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(9999),
-        gradient: backgroundColor == null
-            ? LinearGradient(
-                colors: [AppColors.primary, AppColors.primaryDark],
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-              )
-            : null,
-        color: backgroundColor,
-        boxShadow: isLoading || onPressed == null
-            ? null
-            : backgroundColor == null
-                ? AppColors.buttonShadow
-                : [
-                    BoxShadow(
-                      color: backgroundColor!.withValues(alpha: 0.4),
-                      blurRadius: 30,
-                      offset: const Offset(0, 8),
-                    ),
-                  ],
-      ),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          onTap: isLoading ? null : onPressed,
-          borderRadius: BorderRadius.circular(9999),
-          child: Container(
-            padding: padding ?? const EdgeInsets.symmetric(horizontal: 24),
-            alignment: Alignment.center,
-            child: _buildChild(textColor ?? AppColors.textOnPrimary),
-          ),
-        ),
-      ),
-    );
+    return buttonContent;
   }
 
   Widget _buildChild(Color color) {
@@ -186,7 +195,7 @@ class CustomTextButton extends StatelessWidget {
   }
 }
 
-/// Modern icon button with proper sizing
+/// Modern icon button with proper sizing and animation
 class CustomIconButton extends StatelessWidget {
   final IconData icon;
   final VoidCallback? onPressed;
@@ -207,33 +216,42 @@ class CustomIconButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (backgroundColor != null) {
-      return Container(
-        width: backgroundSize ?? 48,
-        height: backgroundSize ?? 48,
-        decoration: BoxDecoration(
-          color: backgroundColor,
-          shape: BoxShape.circle,
-        ),
-        child: IconButton(
-          onPressed: onPressed,
-          icon: Icon(
-            icon,
-            color: color ?? AppColors.textPrimaryDark,
-            size: size,
-          ),
-        ),
+    final buttonContent = backgroundColor != null
+        ? Container(
+            width: backgroundSize ?? 48,
+            height: backgroundSize ?? 48,
+            decoration: BoxDecoration(
+              color: backgroundColor,
+              shape: BoxShape.circle,
+            ),
+            child: IconButton(
+              onPressed: onPressed,
+              icon: Icon(
+                icon,
+                color: color ?? AppColors.textPrimaryDark,
+                size: size,
+              ),
+            ),
+          )
+        : IconButton(
+            onPressed: onPressed,
+            icon: Icon(
+              icon,
+              color: color ?? AppColors.textPrimaryDark,
+              size: size,
+            ),
+          );
+
+    // Wrap with AnimatedTapButton for scale effect
+    if (onPressed != null) {
+      return AnimatedTapButton(
+        onTap: onPressed,
+        scaleAmount: 0.9,
+        child: buttonContent,
       );
     }
 
-    return IconButton(
-      onPressed: onPressed,
-      icon: Icon(
-        icon,
-        color: color ?? AppColors.textPrimaryDark,
-        size: size,
-      ),
-    );
+    return buttonContent;
   }
 }
 
@@ -310,7 +328,7 @@ class SocialSignInButton extends StatelessWidget {
   }
 }
 
-/// Floating action button with glow
+/// Floating action button with glow and animation
 class GlowingFAB extends StatelessWidget {
   final IconData icon;
   final VoidCallback? onPressed;
@@ -331,7 +349,7 @@ class GlowingFAB extends StatelessWidget {
   Widget build(BuildContext context) {
     final bgColor = backgroundColor ?? AppColors.primary;
 
-    return Container(
+    final fabContent = Container(
       width: size,
       height: size,
       decoration: BoxDecoration(
@@ -362,5 +380,17 @@ class GlowingFAB extends StatelessWidget {
         ),
       ),
     );
+
+    // Wrap with AnimatedTapButton for scale effect
+    if (onPressed != null) {
+      return AnimatedTapButton(
+        onTap: onPressed,
+        scaleAmount: 0.92,
+        duration: const Duration(milliseconds: 150),
+        child: fabContent,
+      );
+    }
+
+    return fabContent;
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:run_to_canada/core/constants/route_constants.dart';
+import 'package:run_to_canada/core/navigation/page_transitions.dart';
 import 'package:run_to_canada/features/auth/presentation/screens/forgot_password_screen.dart';
 import 'package:run_to_canada/features/auth/presentation/screens/login_screen.dart';
 import 'package:run_to_canada/features/auth/presentation/screens/signup_screen.dart';
@@ -14,85 +15,100 @@ import 'package:run_to_canada/features/premium/presentation/screens/paywall_scre
 
 /// App router configuration
 class AppRouter {
-  /// Generate routes for the app
+  /// Generate routes for the app with custom transitions
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
+      // Auth screens - fade transition for smooth auth flow
       case RouteConstants.login:
-        return MaterialPageRoute(
-          builder: (_) => const LoginScreen(),
+        return PageTransitions.fadeIn(
+          page: const LoginScreen(),
           settings: settings,
+          slideUp: true,
         );
 
       case RouteConstants.signup:
-        return MaterialPageRoute(
-          builder: (_) => const SignupScreen(),
+        return PageTransitions.fadeIn(
+          page: const SignupScreen(),
           settings: settings,
+          slideUp: true,
         );
 
       case RouteConstants.forgotPassword:
-        return MaterialPageRoute(
-          builder: (_) => const ForgotPasswordScreen(),
+        return PageTransitions.fadeIn(
+          page: const ForgotPasswordScreen(),
           settings: settings,
+          slideUp: true,
         );
 
+      // Home screen - fade in (usually first screen after auth)
       case RouteConstants.home:
-        return MaterialPageRoute(
-          builder: (_) => const HomeScreen(),
+        return PageTransitions.fadeIn(
+          page: const HomeScreen(),
           settings: settings,
         );
 
+      // Run tracking - slide from bottom (modal feel for starting a run)
       case RouteConstants.runTracking:
-        return MaterialPageRoute(
-          builder: (_) => const RunTrackingScreen(),
+        return PageTransitions.slideFromBottom(
+          page: const RunTrackingScreen(),
           settings: settings,
         );
 
+      // Map demo - slide from right (exploration)
       case RouteConstants.mapDemo:
-        return MaterialPageRoute(
-          builder: (_) => const MapDemoScreen(),
+        return PageTransitions.slideFromRight(
+          page: const MapDemoScreen(),
           settings: settings,
         );
 
+      // Goal creation - slide from bottom (important action)
       case RouteConstants.goalCreation:
-        return MaterialPageRoute(
-          builder: (_) => const GoalCreationScreen(),
+        return PageTransitions.slideFromBottom(
+          page: const GoalCreationScreen(),
           settings: settings,
         );
 
+      // Journey map - fade with slide (detail view)
       case RouteConstants.journeyMap:
-        return MaterialPageRoute(
-          builder: (_) => const JourneyMapScreen(),
+        return PageTransitions.fadeIn(
+          page: const JourneyMapScreen(),
           settings: settings,
+          slideUp: true,
         );
 
+      // Profile - slide from right (standard navigation)
       case RouteConstants.profile:
-        return MaterialPageRoute(
-          builder: (_) => const ProfileScreen(),
+        return PageTransitions.slideFromRight(
+          page: const ProfileScreen(),
           settings: settings,
         );
 
+      // Settings - slide from right (standard navigation)
       case RouteConstants.settings:
-        return MaterialPageRoute(
-          builder: (_) => const SettingsScreen(),
+        return PageTransitions.slideFromRight(
+          page: const SettingsScreen(),
           settings: settings,
         );
 
+      // Paywall - scale and fade (attention-grabbing modal)
       case RouteConstants.paywall:
-        return MaterialPageRoute(
-          builder: (_) => const PaywallScreen(),
+        return PageTransitions.slideFromBottom(
+          page: const PaywallScreen(),
           settings: settings,
+          duration: const Duration(milliseconds: 400),
         );
 
       // TODO: Add more routes as we implement features
 
       default:
-        return MaterialPageRoute(
-          builder: (_) => Scaffold(
+        return PageTransitions.fadeIn(
+          page: Scaffold(
             appBar: AppBar(title: const Text('Not Found')),
             body: Center(
               child: Text('No route defined for ${settings.name}'),
             ),
           ),
+          settings: settings,
         );
     }
   }

@@ -89,10 +89,13 @@ class HomeScreen extends ConsumerWidget {
                                 child: Row(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
-                                    const Icon(
-                                      Icons.workspace_premium,
-                                      color: Colors.white,
-                                      size: 18,
+                                    Hero(
+                                      tag: 'premium_icon',
+                                      child: const Icon(
+                                        Icons.workspace_premium,
+                                        color: Colors.white,
+                                        size: 18,
+                                      ),
                                     ),
                                     const SizedBox(width: 6),
                                     Text(
