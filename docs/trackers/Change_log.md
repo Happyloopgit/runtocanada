@@ -1160,3 +1160,109 @@ Complete transformation of the app's visual design from Canadian red theme to de
 **Last Updated:** 2026-01-06
 **Total Changes:** 123 (Session 022: +10)
 **Last Session:** 022 (Design System Overhaul - Phase 1)
+
+## Session 023 - 2026-01-06: Sprint 16.5 Phase 2 - Component Library
+
+**Summary:**
+Completed Phase 2 of the Design System Overhaul sprint, creating a comprehensive component library with glassmorphic cards, modern buttons, and rebuilt authentication screens. Also updated home screen with floating action button.
+
+**Components Added:**
+- Card Components Library:
+  - `GlassCard` - Glassmorphic card with backdrop blur
+  - `SolidCard` - Dark-themed solid card (primary for forms)
+  - `PrimaryCard` - Blue gradient card with glow
+  - `MilestoneCard` - Orange gradient card for achievements
+  - `PremiumCard` - Gold gradient card for premium features
+- Button Components:
+  - Enhanced `CustomButton` - Gradient backgrounds, glow shadows, 56px height
+  - Enhanced `CustomTextButton` - Icon support, Lexend typography
+  - Enhanced `CustomIconButton` - Background circle option
+  - `SocialSignInButton` - Google/Apple sign-in with dark input styling
+  - `GlowingFAB` - Floating action button with gradient and glow (64px)
+
+**Screens Redesigned:**
+- Login Screen:
+  - Dark background (#101922)
+  - Logo with circular glow effect
+  - Gradient text for "Welcome Back!" heading
+  - Form wrapped in SolidCard component
+  - Modernized Google Sign-In button
+  - Updated spacing and color scheme
+- Signup Screen:
+  - Dark background with transparent app bar
+  - Gradient text for "Start Your Journey" heading
+  - Form wrapped in SolidCard component
+  - Improved checkbox layout and alignment
+  - Custom back button using CustomIconButton
+- Home Screen:
+  - Added dark background (#101922)
+  - Updated app bar with dark surface (#1C2A38)
+  - Added GlowingFAB for "Start Run" action (64px, bottom-right)
+  - Updated profile icon to CustomIconButton
+  - Typography updated to Lexend (h2 for title)
+
+**Files Created:**
+- `app/lib/core/widgets/glass_card.dart` - Complete card component library (5 card variants)
+
+**Files Modified:**
+- `app/lib/core/widgets/custom_button.dart` - Modernized all button components (5 button types)
+- `app/lib/features/auth/presentation/screens/login_screen.dart` - New dark design with gradient text
+- `app/lib/features/auth/presentation/screens/signup_screen.dart` - New dark design with improved layout
+- `app/lib/features/home/presentation/screens/home_screen.dart` - Added FAB and dark theme
+- `docs/SPRINT_16_5_DESIGN_SYSTEM.md` - Marked Phases 2 & 3 completed
+- `docs/trackers/Session_log.md` - Added Session 023
+- `docs/trackers/Change_log.md` - This file
+
+**Technical Details:**
+- All cards support customizable sizing, padding, borders, shadows
+- Buttons use fully rounded borders (border-radius: 9999px)
+- Button gradients: primary (#0D7FF2) → primaryDark (#0A66C2)
+- GlowingFAB has gradient and shadow glow with 0.5 alpha
+- All components use Lexend typography (buttonMedium for buttons)
+- SolidCard used for forms (24px padding, 24px border-radius)
+- Gradient text effects using ShaderMask
+- Dark theme applied consistently across all screens
+
+**Architecture Notes:**
+- Card library provides 5 variants for different use cases
+- All cards extend Container with decoration patterns
+- Optional tap callbacks for interactive cards
+- Button components maintain backwards compatibility
+- FAB integrates with canStartRunProvider for premium checks
+- Dark color scheme: background #101922, surface #1C2A38, cards #182430
+
+**Design System Phase 2 Complete:**
+- ✓ Glassmorphic card components (5 variants)
+- ✓ Modern button components (5 types)
+- ✓ Login screen redesigned
+- ✓ Signup screen redesigned
+- ✓ Home screen updated with FAB
+- ✓ Gradient text effects
+- ✓ Logo glow effects
+- ✓ All components use Lexend typography
+- ✓ flutter analyze: 0 issues found
+- ⏳ Chip/pill components pending
+- ⏳ Progress components pending
+- Next: Phase 4 - Home Dashboard (stats cards, journey map, achievements)
+
+**Visual Improvements:**
+- Modern dark aesthetic across authentication flow
+- Gradient text creates visual interest on headings
+- Glassmorphic and solid cards provide depth
+- Buttons have subtle gradients and glow effects
+- FAB provides quick access to start runs
+- Consistent spacing and typography
+
+**Session Statistics:**
+- Files created: 1 (glass_card.dart)
+- Files modified: 7
+- Lines of code added: ~500
+- Analyzer issues: 0 ✅
+- Duration: ~2 hours
+- Sprint progress: Phases 1, 2, 3 (partial) complete
+
+---
+
+**Last Updated:** 2026-01-06
+**Total Changes:** 131 (Session 023: +8)
+**Last Session:** 023 (Design System Overhaul - Phase 2)

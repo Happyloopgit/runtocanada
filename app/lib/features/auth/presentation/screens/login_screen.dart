@@ -7,6 +7,7 @@ import 'package:run_to_canada/core/theme/app_text_styles.dart';
 import 'package:run_to_canada/core/widgets/custom_button.dart';
 import 'package:run_to_canada/core/widgets/custom_text_field.dart';
 import 'package:run_to_canada/core/widgets/error_message.dart';
+import 'package:run_to_canada/core/widgets/glass_card.dart';
 import '../providers/auth_providers.dart';
 
 /// Login screen
@@ -69,38 +70,59 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     final authState = ref.watch(authControllerProvider);
 
     return Scaffold(
+      backgroundColor: AppColors.backgroundDark,
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.all(24),
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
           child: Form(
             key: _formKey,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                const SizedBox(height: 48),
-
-                // App logo
-                Image.asset(
-                  'assets/images/logo.png',
-                  height: 120,
-                  width: 120,
-                ),
-
                 const SizedBox(height: 24),
 
-                // Welcome text
-                Text(
-                  'Welcome Back!',
-                  style: AppTextStyles.displayMedium,
-                  textAlign: TextAlign.center,
+                // App logo with glow effect
+                Center(
+                  child: Container(
+                    width: 100,
+                    height: 100,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      boxShadow: AppColors.primaryGlow,
+                    ),
+                    child: ClipOval(
+                      child: Image.asset(
+                        'assets/images/logo.png',
+                        width: 100,
+                        height: 100,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
                 ),
 
-                const SizedBox(height: 8),
+                const SizedBox(height: 32),
+
+                // Welcome text with gradient
+                ShaderMask(
+                  shaderCallback: (bounds) => LinearGradient(
+                    colors: [AppColors.primary, AppColors.primaryLight],
+                  ).createShader(bounds),
+                  child: Text(
+                    'Welcome Back!',
+                    style: AppTextStyles.displayMedium.copyWith(
+                      color: Colors.white,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+
+                const SizedBox(height: 12),
 
                 Text(
                   'Sign in to continue your journey to Canada',
-                  style: AppTextStyles.bodyMedium.copyWith(
-                    color: AppColors.textSecondary,
+                  style: AppTextStyles.bodyLarge.copyWith(
+                    color: AppColors.textSecondaryDark,
                   ),
                   textAlign: TextAlign.center,
                 ),
@@ -119,79 +141,91 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   const SizedBox(height: 16),
                 ],
 
-                // Email field
-                EmailTextField(
-                  controller: _emailController,
-                  autofocus: false,
-                  textInputAction: TextInputAction.next,
-                  enabled: !authState.isLoading,
-                ),
+                // Form card with glassmorphic design
+                SolidCard(
+                  padding: const EdgeInsets.all(24),
+                  borderRadius: 24,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      // Email field
+                      EmailTextField(
+                        controller: _emailController,
+                        autofocus: false,
+                        textInputAction: TextInputAction.next,
+                        enabled: !authState.isLoading,
+                      ),
 
-                const SizedBox(height: 16),
+                      const SizedBox(height: 16),
 
-                // Password field
-                PasswordTextField(
-                  controller: _passwordController,
-                  requireStrength: false,
-                  textInputAction: TextInputAction.done,
-                  enabled: !authState.isLoading,
-                  onSubmitted: (_) => _handleLogin(),
-                ),
+                      // Password field
+                      PasswordTextField(
+                        controller: _passwordController,
+                        requireStrength: false,
+                        textInputAction: TextInputAction.done,
+                        enabled: !authState.isLoading,
+                        onSubmitted: (_) => _handleLogin(),
+                      ),
 
-                const SizedBox(height: 8),
+                      const SizedBox(height: 12),
 
-                // Forgot password link
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: CustomTextButton(
-                    text: 'Forgot Password?',
-                    onPressed: _navigateToForgotPassword,
+                      // Forgot password link
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: CustomTextButton(
+                          text: 'Forgot Password?',
+                          onPressed: _navigateToForgotPassword,
+                          fontSize: 14,
+                        ),
+                      ),
+
+                      const SizedBox(height: 24),
+
+                      // Login button
+                      CustomButton(
+                        text: 'Sign In',
+                        onPressed: _handleLogin,
+                        isLoading: authState.isLoading,
+                      ),
+                    ],
                   ),
                 ),
 
-                const SizedBox(height: 24),
-
-                // Login button
-                CustomButton(
-                  text: 'Sign In',
-                  onPressed: _handleLogin,
-                  isLoading: authState.isLoading,
-                ),
-
-                const SizedBox(height: 24),
+                const SizedBox(height: 32),
 
                 // Divider
                 Row(
                   children: [
-                    const Expanded(child: Divider()),
+                    Expanded(
+                      child: Divider(color: AppColors.divider, thickness: 1),
+                    ),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
                       child: Text(
                         'OR',
-                        style: AppTextStyles.bodySmall,
+                        style: AppTextStyles.labelMedium.copyWith(
+                          color: AppColors.textSecondaryDark,
+                        ),
                       ),
                     ),
-                    const Expanded(child: Divider()),
+                    Expanded(
+                      child: Divider(color: AppColors.divider, thickness: 1),
+                    ),
                   ],
                 ),
 
-                const SizedBox(height: 24),
+                const SizedBox(height: 32),
 
                 // Google Sign-In button
-                OutlinedButton.icon(
+                CustomButton(
+                  text: 'Continue with Google',
+                  icon: FontAwesomeIcons.google,
                   onPressed: authState.isLoading ? null : _handleGoogleSignIn,
-                  icon: const FaIcon(FontAwesomeIcons.google, size: 20),
-                  label: Text(
-                    'Continue with Google',
-                    style: AppTextStyles.labelLarge,
-                  ),
-                  style: OutlinedButton.styleFrom(
-                    minimumSize: const Size(double.infinity, 56),
-                    side: BorderSide(color: AppColors.border),
-                  ),
+                  isOutlined: true,
+                  isLoading: authState.isLoading,
                 ),
 
-                const SizedBox(height: 24),
+                const SizedBox(height: 32),
 
                 // Sign up link
                 Row(
@@ -199,14 +233,19 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   children: [
                     Text(
                       "Don't have an account? ",
-                      style: AppTextStyles.bodyMedium,
+                      style: AppTextStyles.bodyMedium.copyWith(
+                        color: AppColors.textSecondaryDark,
+                      ),
                     ),
                     CustomTextButton(
                       text: 'Sign Up',
                       onPressed: _navigateToSignup,
+                      fontSize: 14,
                     ),
                   ],
                 ),
+
+                const SizedBox(height: 24),
               ],
             ),
           ),

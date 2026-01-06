@@ -19,18 +19,42 @@ class HomeScreen extends ConsumerWidget {
     final userAsync = ref.watch(currentUserProvider);
 
     return Scaffold(
+      backgroundColor: AppColors.backgroundDark,
       appBar: AppBar(
-        title: const Text('Run to Canada'),
+        backgroundColor: AppColors.surfaceDark,
+        elevation: 0,
+        title: Text(
+          'Run to Canada',
+          style: AppTextStyles.h2.copyWith(color: AppColors.textPrimaryDark),
+        ),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.person),
+          CustomIconButton(
+            icon: Icons.person,
             onPressed: () {
               AppRouter.navigateTo(context, RouteConstants.profile);
             },
-            tooltip: 'Profile',
+            color: AppColors.textPrimaryDark,
           ),
         ],
       ),
+      floatingActionButton: userAsync.maybeWhen(
+        data: (user) => user != null
+            ? GlowingFAB(
+                icon: Icons.play_arrow,
+                onPressed: () async {
+                  final canStart = await ref.read(canStartRunProvider.future);
+                  if (!canStart && context.mounted) {
+                    AppRouter.navigateTo(context, RouteConstants.paywall);
+                  } else if (context.mounted) {
+                    AppRouter.navigateTo(context, RouteConstants.runTracking);
+                  }
+                },
+                size: 64,
+              )
+            : null,
+        orElse: () => null,
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       body: userAsync.when(
         data: (user) {
           if (user == null) {
