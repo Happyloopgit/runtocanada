@@ -29,7 +29,8 @@ class RouteConstants {
 
   // Onboarding
   static const String onboarding = '/onboarding';
+  static const String initial = '/';
 
-  // Initial Route
-  static const String initial = login;
+  // Default initial route (checks onboarding status)
+  static const String initialRoute = initial;
 }

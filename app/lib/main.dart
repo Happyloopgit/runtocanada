@@ -57,11 +57,11 @@ void main() async {
   );
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends ConsumerWidget {
   const MyApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return MaterialApp(
       // App configuration
       title: AppConstants.appName,
@@ -72,8 +72,8 @@ class MyApp extends StatelessWidget {
       darkTheme: AppTheme.darkTheme,
       themeMode: ThemeMode.dark, // Dark mode first approach
 
-      // Routing
-      initialRoute: RouteConstants.login,
+      // Routing - start with initial screen (checks onboarding status)
+      initialRoute: RouteConstants.initialRoute,
       onGenerateRoute: AppRouter.generateRoute,
 
       // Localization (for future implementation)

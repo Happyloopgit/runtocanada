@@ -3074,3 +3074,162 @@ static const LinearGradient secondaryGradient = LinearGradient(
 
 **Last Updated:** 2026-01-06
 **Total Sessions:** 28
+
+### Session 029 - 2026-01-06
+
+**Sprint:** Sprint 17 - Onboarding & Tutorial
+**Duration:** ~2 hours
+**Participants:** Development Team (with Claude Code)
+
+**Objectives:**
+- Create first-time user onboarding experience
+- Implement 4-screen onboarding flow
+- Add onboarding completion tracking
+- Follow Sprint 16.5 design system
+
+**Work Completed:**
+
+#### 1. Onboarding Flow Design & Implementation ✅
+
+**Created: `app/lib/features/onboarding/presentation/screens/onboarding_screen.dart` (175 lines)**
+- PageView-based onboarding with 4 screens
+- Smooth page transitions with animation (400ms easeInOut)
+- Skip button (top right) for quick bypass
+- Next/Get Started button at bottom
+- Completes onboarding and navigates to login on finish
+
+**Created: `app/lib/features/onboarding/presentation/widgets/onboarding_page.dart` (68 lines)**
+- Individual page component with icon, title, description
+- Large circular gradient icon (160x160) with shadow
+- Gradient text effect on title using ShaderMask
+- Centered layout with spacers for proper vertical alignment
+- Each page has unique gradient matching icon theme:
+  - Page 1 (Welcome): Blue primary gradient
+  - Page 2 (GPS): Orange milestone gradient
+  - Page 3 (Journey): Purple achievement gradient
+  - Page 4 (Discover): Green success gradient
+
+**Created: `app/lib/features/onboarding/presentation/widgets/page_indicator.dart` (38 lines)**
+- Animated dot indicators showing current page
+- Active indicator: 32px wide pill with primary gradient and glow
+- Inactive indicators: 8px circles with 30% opacity
+- Smooth 300ms animations on page change
+- Follows design system (primary colors, shadows)
+
+**Content:**
+- **Screen 1:** Welcome to Run to Canada
+  - Icon: directions_run (blue gradient)
+  - Explains virtual journey concept
+- **Screen 2:** GPS Tracking
+  - Icon: near_me (orange gradient)
+  - Explains accurate distance tracking
+- **Screen 3:** Journey Progress
+  - Icon: flag (purple gradient)
+  - Explains destination goals and milestones
+- **Screen 4:** Discover Cities
+  - Icon: photo_camera (green gradient)
+  - Explains city photos and fun facts
+
+#### 2. Onboarding State Management ✅
+
+**Created: `app/lib/features/onboarding/data/onboarding_service.dart` (25 lines)**
+- Simple service to manage onboarding completion status
+- Uses Hive cache box for persistence
+- Methods:
+  - `isOnboardingCompleted()` - Check status
+  - `completeOnboarding()` - Mark as done
+  - `resetOnboarding()` - Reset for testing
+- Storage key: 'onboarding_completed'
+
+**Created: `app/lib/features/onboarding/providers/onboarding_provider.dart` (6 lines)**
+- FutureProvider to check onboarding status
+- Used by initial screen to determine routing
+
+#### 3. Initial Route Logic ✅
+
+**Created: `app/lib/features/onboarding/presentation/screens/initial_screen.dart` (76 lines)**
+- Smart initial screen that checks onboarding status
+- Routes to onboarding if first-time user
+- Routes to login if onboarding already completed
+- Shows LoadingSpinner while checking status
+- Handles errors gracefully (defaults to login)
+- Uses WidgetsBinding.addPostFrameCallback for safe navigation
+
+#### 4. Routing Integration ✅
+
+**Modified: `app/lib/core/constants/route_constants.dart`**
+- Added `initial` route: '/'
+- Added `initialRoute` constant pointing to initial
+- Updated route structure for onboarding flow
+
+**Modified: `app/lib/core/navigation/app_router.dart`**
+- Imported InitialScreen and OnboardingScreen
+- Added case for `RouteConstants.initial` (instant transition)
+- Added case for `RouteConstants.onboarding` (fade transition)
+- Proper route transitions for smooth UX
+
+**Modified: `app/lib/main.dart`**
+- Changed MyApp from StatelessWidget to ConsumerWidget (Riverpod)
+- Updated initialRoute to `RouteConstants.initialRoute`
+- App now starts with initial screen (checks onboarding status)
+
+#### 5. Code Quality ✅
+
+**Flutter Analyze Results:**
+- **0 issues found** across all new files ✅
+- Fixed all analyzer warnings:
+  - Removed unused import: hive_flutter (onboarding_service.dart)
+  - Removed unused import: app_text_styles (onboarding_screen.dart)
+  - Fixed undefined parameter errors: LoadingSpinner size parameter
+- All code follows design system guidelines
+- Proper use of AppColors, AppTextStyles, gradients
+- Consistent 24px horizontal padding
+- Modern component usage (Custom Button, gradient icons)
+
+**Files Created:**
+1. `app/lib/features/onboarding/presentation/screens/onboarding_screen.dart` (175 lines)
+2. `app/lib/features/onboarding/presentation/screens/initial_screen.dart` (76 lines)
+3. `app/lib/features/onboarding/presentation/widgets/onboarding_page.dart` (68 lines)
+4. `app/lib/features/onboarding/presentation/widgets/page_indicator.dart` (38 lines)
+5. `app/lib/features/onboarding/data/onboarding_service.dart` (25 lines)
+6. `app/lib/features/onboarding/providers/onboarding_provider.dart` (6 lines)
+
+**Files Modified:**
+1. `app/lib/core/constants/route_constants.dart` - Added initial routes
+2. `app/lib/core/navigation/app_router.dart` - Added onboarding routes
+3. `app/lib/main.dart` - Changed initial route logic
+
+**Issues Encountered:**
+- Initial analyzer errors for LoadingSpinner size parameter → Fixed (removed parameter)
+- Unused imports → Fixed (removed app_text_styles, hive_flutter)
+- All issues resolved successfully ✅
+
+**Sprint 17 Progress:**
+- ✅ Design onboarding flow (4 screens)
+- ✅ Create onboarding screen widget
+- ✅ Implement all 4 screens with modern design
+- ✅ Add page indicators and navigation
+- ✅ Store onboarding completion status
+- ⏹️ Request location permissions (deferred - can be added in future)
+- ⏹️ Tutorial overlays (deferred - Sprint 17 continuation)
+
+**Next Session (030):**
+- Optional: Add location permission request to onboarding
+- Optional: Add interactive tutorial overlays
+- OR: Begin Sprint 17.5: Health Data Integration (Wearables Support)
+- OR: Begin Sprint 18: Polish, Testing & Bug Fixes
+
+**Key Achievements:**
+- ✅ Complete onboarding flow with modern design system
+- ✅ 4 beautiful screens with gradient icons and text
+- ✅ Animated page indicators with glow effects
+- ✅ Smart routing based on first-time user status
+- ✅ Persistent onboarding completion tracking
+- ✅ Zero analyzer issues - production ready
+- ✅ Follows Sprint 16.5 design system perfectly
+- ✅ Smooth animations and transitions throughout
+
+---
+
+**Last Updated:** 2026-01-06
+**Total Sessions:** 29

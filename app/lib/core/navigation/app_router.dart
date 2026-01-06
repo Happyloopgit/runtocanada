@@ -12,12 +12,21 @@ import 'package:run_to_canada/features/goals/presentation/screens/journey_map_sc
 import 'package:run_to_canada/features/profile/presentation/screens/profile_screen.dart';
 import 'package:run_to_canada/features/settings/presentation/screens/settings_screen.dart';
 import 'package:run_to_canada/features/premium/presentation/screens/paywall_screen.dart';
+import 'package:run_to_canada/features/onboarding/presentation/screens/initial_screen.dart';
+import 'package:run_to_canada/features/onboarding/presentation/screens/onboarding_screen.dart';
 
 /// App router configuration
 class AppRouter {
   /// Generate routes for the app with custom transitions
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
+      // Initial route - checks onboarding status and routes accordingly
+      case RouteConstants.initial:
+        return PageTransitions.instant(
+          page: const InitialScreen(),
+          settings: settings,
+        );
+
       // Auth screens - fade transition for smooth auth flow
       case RouteConstants.login:
         return PageTransitions.fadeIn(
@@ -96,6 +105,13 @@ class AppRouter {
           page: const PaywallScreen(),
           settings: settings,
           duration: const Duration(milliseconds: 400),
+        );
+
+      // Onboarding - fade in (first-time user experience)
+      case RouteConstants.onboarding:
+        return PageTransitions.fadeIn(
+          page: const OnboardingScreen(),
+          settings: settings,
         );
 
       // TODO: Add more routes as we implement features

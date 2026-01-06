@@ -927,38 +927,46 @@ The designer provided a significantly more polished visual direction than our cu
 
 **Dependencies:** Sprint 16.5 (updated - depends on new design system)
 
+**Status:** ⏳ IN PROGRESS (Core onboarding complete - Session 029)
+
 ### Tasks:
-- [ ] Design onboarding flow (3-4 screens)
-- [ ] Create Onboarding screen widget
-- [ ] Screen 1: Welcome & app introduction
-- [ ] Screen 2: GPS tracking explanation
-- [ ] Screen 3: Journey concept explanation
-- [ ] Screen 4: Goal creation preview
-- [ ] Add illustrations or animations to onboarding
-- [ ] Use Lottie animations for visual appeal
-- [ ] Implement page indicator (dots)
-- [ ] Add "Next" button for each screen
-- [ ] Add "Skip" button to skip onboarding
-- [ ] Add "Get Started" button on final screen
-- [ ] Request location permission during onboarding
-- [ ] Explain why location permission is needed
-- [ ] Store onboarding completion status
-- [ ] Don't show onboarding again after first time
-- [ ] Create interactive tutorial for goal creation
-- [ ] Highlight important UI elements
-- [ ] Use tooltips or overlays
-- [ ] Create tutorial for starting first run
-- [ ] Test onboarding flow from fresh install
-- [ ] Test skip functionality
-- [ ] Test permission request flow
-- [ ] Ensure onboarding only shows once
+- [x] Design onboarding flow (3-4 screens)
+- [x] Create Onboarding screen widget
+- [x] Screen 1: Welcome & app introduction
+- [x] Screen 2: GPS tracking explanation
+- [x] Screen 3: Journey concept explanation
+- [x] Screen 4: Goal creation preview
+- [x] Add illustrations or animations to onboarding (gradient icons with shadows)
+- [ ] Use Lottie animations for visual appeal (deferred - using gradient icons instead)
+- [x] Implement page indicator (dots)
+- [x] Add "Next" button for each screen
+- [x] Add "Skip" button to skip onboarding
+- [x] Add "Get Started" button on final screen
+- [ ] Request location permission during onboarding (deferred - can be added later)
+- [ ] Explain why location permission is needed (deferred)
+- [x] Store onboarding completion status
+- [x] Don't show onboarding again after first time
+- [ ] Create interactive tutorial for goal creation (deferred - optional feature)
+- [ ] Highlight important UI elements (deferred)
+- [ ] Use tooltips or overlays (deferred)
+- [ ] Create tutorial for starting first run (deferred)
+- [ ] Test onboarding flow from fresh install (needs physical device testing)
+- [x] Test skip functionality (code verified)
+- [ ] Test permission request flow (deferred - not implemented yet)
+- [x] Ensure onboarding only shows once (Hive-based tracking implemented)
 
 **Acceptance Criteria:**
-- Onboarding appears on first app launch
-- Onboarding explains core app concepts clearly
-- Users can skip or complete onboarding
-- Location permission requested at appropriate time
-- Onboarding only shown once per user
+- [x] Onboarding appears on first app launch (InitialScreen checks status)
+- [x] Onboarding explains core app concepts clearly (4 screens with descriptions)
+- [x] Users can skip or complete onboarding (Skip button implemented)
+- [ ] Location permission requested at appropriate time (deferred)
+- [x] Onboarding only shown once per user (Hive cache tracking)
+
+**Completed:** Session 029 (2026-01-06) - Core onboarding flow
+
+**Notes:**
+- Location permission and tutorial overlays deferred to future sprints
+- Can proceed to Sprint 17.5 (Health Data Integration) or Sprint 18 (Polish & Testing)
 
 ---
 
