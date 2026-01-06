@@ -2094,3 +2094,124 @@ This helps others who might encounter the same issue.
 
 **Last Updated:** 2026-01-06
 **Total Sessions:** 23
+
+### Session 024 - 2026-01-06
+
+**Sprint:** Sprint 16.5 - Design System Overhaul (Phase 4: Home Dashboard)
+**Duration:** ~1.5 hours
+**Participants:** Development Team (with Claude Code)
+
+**Objectives:**
+- Complete Phase 4 of design system overhaul
+- Create modern home dashboard with designer mockup components
+- Build user avatar widget with level badge
+- Build journey map card with badges and overlays
+- Build stats grid with trend indicators
+- Build next milestone preview card
+- Build achievements carousel
+- Rebuild home screen with all new components
+
+**Work Completed:**
+- Created `UserAvatar` widget (`user_avatar.dart`):
+  - Circular avatar with gradient ring (primary blue)
+  - Optional level badge overlay with yellow-to-orange gradient
+  - Supports image URL or initials fallback
+  - Customizable size (default 48px)
+  - Shadow with primary glow effect
+  - Tap gesture support for navigation
+- Created `JourneyMapCard` widget (`journey_map_card.dart`):
+  - 4:3 aspect ratio map display
+  - Gradient overlay for badge readability
+  - "Live Tracking" badge with pulsing animation
+  - "Day X" badge showing journey progress
+  - "Currently near Journey" badge at bottom with glassmorphic styling
+  - Tap to navigate to full journey map
+  - Fully rounded corners (16px border radius)
+- Created `JourneyStatsGrid` widget (`journey_stats_grid.dart`):
+  - 2-column grid layout for "Covered" and "Remaining" stats
+  - Large distance numbers with tabular figures
+  - Decorative circle accent on "Covered" card (partially visible)
+  - Trend indicator (+X% this week) with up/down arrow
+  - Estimated arrival date on "Remaining" card
+  - Glassmorphic card backgrounds
+  - Responsive to different screen sizes
+- Created `NextMilestoneCard` widget (`next_milestone_card.dart`):
+  - Full-width card with orange-to-yellow gradient (#FF6B35 → #FFA500)
+  - Star icon with "NEXT MILESTONE" label
+  - Large milestone city name (headlineSmall, bold)
+  - Distance remaining display
+  - Estimated runs remaining ("~2 runs left")
+  - Optional city photo thumbnail (64px, rounded)
+  - Shadow with orange glow effect
+- Created `AchievementsCarousel` widget (`achievements_carousel.dart`):
+  - Horizontal scrolling achievement chips
+  - Achievement model with icon, title, subtitle, gradient
+  - Predefined gradients: purple, orange, blue, green
+  - Compact 160px wide chips with rounded corners
+  - Icon in circular background
+  - "View All" button for full achievements screen
+  - Smooth scrolling list with 12px spacing
+- Rebuilt Home Screen (`home_screen.dart`):
+  - **Modern App Bar:**
+    - UserAvatar in leading position (40px)
+    - Time-based greeting: "Good morning/afternoon/evening, [Name]"
+    - Notification bell icon in actions
+    - Dark surface background
+  - **Dashboard Content:**
+    - Journey title: "Toronto to Vancouver"
+    - JourneyMapCard with placeholder map (will integrate real map later)
+    - JourneyStatsGrid showing covered/remaining distance
+    - NextMilestoneCard showing "Lake Superior" milestone
+    - AchievementsCarousel with sample achievements
+    - Quick action buttons (Start Run, View History, Create Goal)
+    - Banner ad for free users at bottom
+  - **Layout:**
+    - SingleChildScrollView for scrollable content
+    - 20px horizontal padding, 16px vertical padding
+    - Proper spacing between all sections
+    - GlowingFAB positioned at bottom-right
+- Fixed all analyzer issues:
+  - Changed `blurAmount` → `blurStrength` in GlassCard calls
+  - Changed `opacity` → `backgroundColor` with alpha in GlassCard calls
+  - Removed unused import `goal_service_provider.dart`
+- Successfully ran flutter analyze: **0 issues found** ✅
+
+**Files Modified:**
+- Created: `app/lib/core/widgets/user_avatar.dart` - User avatar with level badge
+- Created: `app/lib/features/home/presentation/widgets/journey_map_card.dart` - Map card with badges
+- Created: `app/lib/features/home/presentation/widgets/journey_stats_grid.dart` - Stats grid
+- Created: `app/lib/features/home/presentation/widgets/next_milestone_card.dart` - Milestone card
+- Created: `app/lib/features/home/presentation/widgets/achievements_carousel.dart` - Achievements list
+- Modified: `app/lib/features/home/presentation/screens/home_screen.dart` - Complete rebuild
+- Modified: `docs/trackers/Session_log.md` - This file
+
+**Issues Encountered:**
+- GlassCard parameter mismatch (`blurAmount`, `opacity`) → Fixed by using correct parameters (`blurStrength`, `backgroundColor`)
+- Unused import warning → Fixed by removing unused goal_service_provider import
+- All issues resolved successfully ✅
+
+**Visual Improvements:**
+- Home screen now matches designer mockup aesthetic
+- User avatar with gradient ring adds polish
+- Journey map card with pulsing "Live Tracking" badge creates dynamism
+- Stats grid with decorative circle adds visual interest
+- Next milestone card stands out with warm orange gradient
+- Achievements carousel provides horizontal scrolling discovery
+- Time-based greeting personalizes the experience
+- Consistent 16px border-radius on all cards
+- Glassmorphic styling throughout creates depth
+- All components use Lexend typography
+- Dark theme colors create modern, premium feel
+
+**Next Steps:**
+- Test home dashboard on device to verify layout and interactions
+- Integrate real map data into JourneyMapCard
+- Fetch actual goal/milestone data for stats and next milestone
+- Build achievements system and populate real data
+- Continue Phase 5: Run Tracking & History screens
+- Apply design system to remaining screens (Profile, Settings, etc.)
+
+---
+
+**Last Updated:** 2026-01-06
+**Total Sessions:** 24
