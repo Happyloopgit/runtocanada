@@ -57,6 +57,64 @@ class HomeScreen extends ConsumerWidget {
           orElse: () => null,
         ),
         actions: [
+          // Premium button for non-premium users
+          Consumer(
+            builder: (context, ref, child) {
+              final isPremiumAsync = ref.watch(isPremiumProvider);
+              return isPremiumAsync.maybeWhen(
+                data: (isPremium) => !isPremium
+                    ? Padding(
+                        padding: const EdgeInsets.only(right: 8),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            gradient: AppColors.premiumGradient,
+                            borderRadius: BorderRadius.circular(20),
+                            boxShadow: [
+                              BoxShadow(
+                                color: AppColors.premium.withValues(alpha: 0.3),
+                                blurRadius: 8,
+                                offset: const Offset(0, 2),
+                              ),
+                            ],
+                          ),
+                          child: Material(
+                            color: Colors.transparent,
+                            child: InkWell(
+                              borderRadius: BorderRadius.circular(20),
+                              onTap: () {
+                                AppRouter.navigateTo(context, RouteConstants.paywall);
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    const Icon(
+                                      Icons.workspace_premium,
+                                      color: Colors.white,
+                                      size: 18,
+                                    ),
+                                    const SizedBox(width: 6),
+                                    Text(
+                                      'Premium',
+                                      style: AppTextStyles.bodySmall.copyWith(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 13,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      )
+                    : const SizedBox.shrink(),
+                orElse: () => const SizedBox.shrink(),
+              );
+            },
+          ),
           IconButton(
             icon: const Icon(Icons.notifications_outlined),
             color: AppColors.textPrimaryDark,

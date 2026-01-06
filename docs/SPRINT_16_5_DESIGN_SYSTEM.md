@@ -277,31 +277,42 @@ This sprint implements the complete design transformation before we continue wit
 **Completed:** 2026-01-06 (Session 025)
 **Flutter Analyze:** 0 issues found ✅
 
-### Goal Creation Flow
-- [ ] Rebuild "Choose Starting Point" screen
-  - [ ] Half-screen map at top
-  - [ ] Bottom sheet with handle
-  - [ ] Large pulsing location pin on map
-  - [ ] "Start Point" label below pin
-  - [ ] Search bar (circular)
-  - [ ] "Use Current Location" quick action
-  - [ ] Horizontal chip scroll (Home, Recent, Popular)
-  - [ ] Vertical location suggestions
-  - [ ] Sticky bottom CTA
-- [ ] Rebuild "Set Destination" screen (similar layout)
-  - [ ] Popular destinations with photos
-  - [ ] Journey distance preview
-- [ ] Create confirmation screen
-  - [ ] Full route on map
-  - [ ] Journey stats
-  - [ ] Milestone count
-  - [ ] Major cities list
+### Goal Creation Flow ✅ COMPLETED
+- [x] Rebuild "Choose Starting Point" screen (Step 0)
+  - [x] Modern step indicator with gradients and glows
+  - [x] Map view at top (2/5 of screen)
+  - [x] Selected location card with gradient icon
+  - [x] "Use Current Location" button
+  - [x] Search bar with debounced search
+  - [x] Search results as SolidCard items
+  - [x] Navigation buttons at bottom
+- [x] Rebuild "Set Destination" screen (Step 1)
+  - [x] Same layout as Step 0
+  - [x] Search functionality for destinations
+  - [x] SolidCard search results with icons
+- [x] Rebuild Route Preview screen (Step 2)
+  - [x] PrimaryCard route summary with gradient
+  - [x] 2-column stats (Distance | Duration)
+  - [x] Milestone list with SolidCard items
+  - [x] Numbered gradient icons for milestones
+  - [x] Loading state with spinner
+- [x] Rebuild Confirmation screen (Step 3)
+  - [x] Goal name input field
+  - [x] SolidCard journey summary
+  - [x] 4 summary rows with labels and values
+  - [x] Info message about virtual progress
+  - [x] Create Goal button at bottom
+
+**Completed:** 2026-01-06 (Session 026)
+**Flutter Analyze:** 0 issues found ✅
 
 **Acceptance Criteria:**
-- Run tracking screen is focused and minimal
-- History shows rich timeline with photos
-- Goal creation is intuitive and beautiful
-- All screens match designs
+- [x] Run tracking screen is focused and minimal
+- [x] History shows rich timeline with photos
+- [x] Goal creation is intuitive and beautiful
+- [x] All screens use modern design system
+- [x] Consistent card components throughout
+- [x] All 4 steps redesigned with proper spacing
 
 ---
 

@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Run History - Run to Canada</title>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#0d7ff2",
+                        "background-light": "#f5f7f8",
+                        "background-dark": "#101922",
+                        "card-dark": "#1a2632",
+                        "card-light": "#ffffff",
+                    },
+                    fontFamily: {
+                        "display": ["Lexend", "sans-serif"]
+                    },
+                    borderRadius: { "DEFAULT": "1rem", "lg": "1.5rem", "xl": "2rem", "full": "9999px" },
+                },
+            },
+        }
+    </script>
+<style>
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        /* Custom timeline connector */
+        .timeline-connector::before {
+            content: '';
+            position: absolute;
+            top: 2rem;
+            bottom: -2rem;
+            left: 2rem;
+            width: 2px;
+            background-image: linear-gradient(to bottom, #314d68 33%, rgba(255,255,255,0) 0%);
+            background-position: right;
+            background-size: 2px 12px;
+            background-repeat: repeat-y;
+            z-index: 0;
+        }
+        .timeline-connector:last-child::before {
+            display: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-gray-900 dark:text-white antialiased overflow-x-hidden">
+<div class="relative flex h-full min-h-screen w-full flex-col max-w-md mx-auto bg-background-light dark:bg-background-dark shadow-xl overflow-hidden">
+<!-- Header -->
+<header class="flex items-center justify-between p-4 pb-2 sticky top-0 z-50 bg-background-light/95 dark:bg-background-dark/95 backdrop-blur-md border-b border-gray-200 dark:border-gray-800">
+<h2 class="text-xl font-bold leading-tight tracking-tight">Run History</h2>
+<button class="flex items-center justify-center w-10 h-10 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+<span class="material-symbols-outlined text-gray-900 dark:text-white">tune</span>
+</button>
+</header>
+<!-- Profile Stats Summary -->
+<section class="px-4 py-4">
+<div class="flex flex-wrap gap-3">
+<div class="flex flex-1 flex-col gap-1 rounded-xl bg-card-light dark:bg-card-dark p-4 items-start shadow-sm border border-gray-200 dark:border-[#314d68]">
+<div class="flex items-center gap-2 mb-1">
+<span class="material-symbols-outlined text-primary text-xl">directions_run</span>
+<p class="text-gray-500 dark:text-[#90adcb] text-xs font-medium uppercase tracking-wider">Total Distance</p>
+</div>
+<p class="text-2xl font-bold leading-tight">450 km</p>
+</div>
+<div class="flex flex-1 flex-col gap-1 rounded-xl bg-card-light dark:bg-card-dark p-4 items-start shadow-sm border border-gray-200 dark:border-[#314d68]">
+<div class="flex items-center gap-2 mb-1">
+<span class="material-symbols-outlined text-primary text-xl">flag</span>
+<p class="text-gray-500 dark:text-[#90adcb] text-xs font-medium uppercase tracking-wider">To Canada</p>
+</div>
+<p class="text-2xl font-bold leading-tight">85%</p>
+</div>
+</div>
+<!-- Overall Progress -->
+<div class="mt-4 flex flex-col gap-2">
+<div class="flex justify-between items-end">
+<p class="text-sm font-medium text-gray-700 dark:text-gray-300">Journey Progress</p>
+<p class="text-xs font-medium text-primary">150km to go</p>
+</div>
+<div class="h-3 w-full rounded-full bg-gray-200 dark:bg-[#314d68] overflow-hidden">
+<div class="h-full rounded-full bg-primary relative w-[85%]">
+<div class="absolute inset-0 bg-white/20 w-full h-full animate-pulse"></div>
+</div>
+</div>
+</div>
+</section>
+<!-- Search & Filter -->
+<section class="px-4 py-2 sticky top-[60px] z-40 bg-background-light dark:bg-background-dark">
+<div class="flex w-full items-center rounded-full h-12 bg-card-light dark:bg-card-dark shadow-sm border border-gray-200 dark:border-gray-800 px-4 mb-3">
+<span class="material-symbols-outlined text-gray-400 dark:text-[#90adcb]">search</span>
+<input class="w-full bg-transparent border-none focus:ring-0 text-base font-normal text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-[#90adcb] ml-2" placeholder="Search by date or location..."/>
+</div>
+<div class="flex gap-2 overflow-x-auto hide-scrollbar pb-2">
+<button class="flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-full bg-primary text-white px-5 transition-transform active:scale-95 shadow-lg shadow-primary/20">
+<span class="text-sm font-medium">All Runs</span>
+</button>
+<button class="flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-full bg-card-light dark:bg-card-dark border border-gray-200 dark:border-gray-700 px-5 transition-transform active:scale-95 hover:bg-gray-50 dark:hover:bg-gray-800">
+<span class="text-sm font-medium text-gray-600 dark:text-gray-300">Milestones</span>
+</button>
+<button class="flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-full bg-card-light dark:bg-card-dark border border-gray-200 dark:border-gray-700 px-5 transition-transform active:scale-95 hover:bg-gray-50 dark:hover:bg-gray-800">
+<span class="text-sm font-medium text-gray-600 dark:text-gray-300">This Month</span>
+</button>
+<button class="flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-full bg-card-light dark:bg-card-dark border border-gray-200 dark:border-gray-700 px-5 transition-transform active:scale-95 hover:bg-gray-50 dark:hover:bg-gray-800">
+<span class="text-sm font-medium text-gray-600 dark:text-gray-300">Longest</span>
+</button>
+</div>
+</section>
+<!-- Timeline Feed -->
+<main class="flex-1 px-4 py-2 pb-24 space-y-0">
+<!-- Item 1: Milestone -->
+<div class="relative timeline-connector pl-0 pb-6 group">
+<div class="relative z-10">
+<div class="absolute left-4 top-0 bottom-0 w-0"></div> <!-- Alignment Helper -->
+<!-- Date Header -->
+<div class="flex items-center gap-3 mb-3 ml-12">
+<span class="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Yesterday</span>
+</div>
+<div class="flex gap-4">
+<!-- Icon Column -->
+<div class="flex flex-col items-center">
+<div class="w-16 h-16 rounded-full bg-primary flex items-center justify-center shadow-lg shadow-primary/30 z-20 border-4 border-background-light dark:border-background-dark">
+<span class="material-symbols-outlined text-white text-3xl">emoji_events</span>
+</div>
+</div>
+<!-- Card -->
+<div class="flex-1 rounded-2xl bg-gradient-to-br from-primary/20 to-card-light dark:from-primary/10 dark:to-card-dark p-[1px]">
+<div class="h-full w-full rounded-2xl bg-card-light dark:bg-card-dark p-4 border border-primary/30 shadow-md">
+<div class="flex justify-between items-start mb-2">
+<div class="flex flex-col">
+<h3 class="text-lg font-bold text-gray-900 dark:text-white">Arrived in Seattle!</h3>
+<p class="text-xs text-primary font-medium">+ Milestone Reached</p>
+</div>
+<div class="px-2 py-1 rounded-lg bg-primary/10 text-primary text-xs font-bold">
+                                        8.5 km
+                                    </div>
+</div>
+<div class="w-full h-24 rounded-lg bg-gray-200 dark:bg-gray-800 mb-3 overflow-hidden relative group cursor-pointer">
+<img alt="Seattle skyline view with space needle during sunset" class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity" data-alt="Seattle skyline view with space needle during sunset" data-location="Seattle" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBYQ02F3ZpiLY7VOvn2ZpJns9FX_cRdqK38FypwUJ9hx3oSW5puGDnJPskdyN_RfSFMda93eb7Nn07Zc7IQ72ulIWcja9NVyB0uywc9vr02RIwCRzTVS3zlRk9VbMEti861xkxHkA2CZ8QYr0uRzn9oQMwv6jEErBM1mm16PbFuLKZv9lxBzs8vjGSnDIbtRA_omXZF5v9viKcLIokrKQQ4bTZR_Qu5s4bL0Vi--CcFGxqlbdCEbV1gwQcV53n7LGy-NQwSbJBtPbs"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-2">
+<div class="flex items-center gap-1 text-white/90 text-xs">
+<span class="material-symbols-outlined text-[14px]">map</span>
+                                            View on Map
+                                        </div>
+</div>
+</div>
+<div class="flex items-center justify-between text-gray-600 dark:text-gray-400 text-sm">
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">schedule</span>
+<span>48:20</span>
+</div>
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">local_fire_department</span>
+<span>620 cal</span>
+</div>
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">bolt</span>
+<span>5'41"/km</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Item 2: Standard Run -->
+<div class="relative timeline-connector pl-0 pb-6 group">
+<div class="relative z-10">
+<!-- Date Header -->
+<div class="flex items-center gap-3 mb-3 ml-12">
+<span class="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Oct 10</span>
+</div>
+<div class="flex gap-4">
+<!-- Icon Column -->
+<div class="flex flex-col items-center">
+<div class="w-16 h-16 rounded-full bg-card-light dark:bg-card-dark flex items-center justify-center border-4 border-background-light dark:border-background-dark z-20 shadow-sm">
+<span class="material-symbols-outlined text-gray-400 dark:text-gray-500 text-3xl">directions_run</span>
+</div>
+</div>
+<!-- Card -->
+<div class="flex-1 rounded-2xl bg-card-light dark:bg-card-dark p-4 border border-gray-200 dark:border-gray-800 shadow-sm hover:border-gray-300 dark:hover:border-gray-700 transition-colors cursor-pointer">
+<div class="flex justify-between items-start mb-3">
+<div class="flex flex-col">
+<h3 class="text-base font-bold text-gray-900 dark:text-white">Morning Jog</h3>
+<p class="text-xs text-gray-500 dark:text-gray-400">Portland outskirts</p>
+</div>
+<div class="px-2 py-1 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white text-xs font-bold">
+                                    5.0 km
+                                </div>
+</div>
+<!-- Mini Progress -->
+<div class="mb-3">
+<div class="flex justify-between text-xs mb-1">
+<span class="text-primary font-medium">+3% closer to border</span>
+</div>
+<div class="h-1.5 w-full bg-gray-100 dark:bg-gray-800 rounded-full">
+<div class="h-1.5 bg-primary rounded-full w-[15%]"></div>
+</div>
+</div>
+<div class="flex items-center gap-4 text-gray-600 dark:text-gray-400 text-sm">
+<span class="font-medium text-gray-900 dark:text-white">32:15</span>
+<span class="w-1 h-1 rounded-full bg-gray-400"></span>
+<span>6'25"/km</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Item 3: Standard Run -->
+<div class="relative timeline-connector pl-0 pb-6 group">
+<div class="relative z-10">
+<!-- Date Header -->
+<div class="flex items-center gap-3 mb-3 ml-12">
+<span class="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Oct 08</span>
+</div>
+<div class="flex gap-4">
+<!-- Icon Column -->
+<div class="flex flex-col items-center">
+<div class="w-16 h-16 rounded-full bg-card-light dark:bg-card-dark flex items-center justify-center border-4 border-background-light dark:border-background-dark z-20 shadow-sm">
+<span class="material-symbols-outlined text-gray-400 dark:text-gray-500 text-3xl">directions_run</span>
+</div>
+</div>
+<!-- Card -->
+<div class="flex-1 rounded-2xl bg-card-light dark:bg-card-dark p-4 border border-gray-200 dark:border-gray-800 shadow-sm hover:border-gray-300 dark:hover:border-gray-700 transition-colors cursor-pointer">
+<div class="flex justify-between items-start mb-3">
+<div class="flex flex-col">
+<h3 class="text-base font-bold text-gray-900 dark:text-white">Evening Run</h3>
+<p class="text-xs text-gray-500 dark:text-gray-400">Neighborhood loop</p>
+</div>
+<div class="px-2 py-1 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white text-xs font-bold">
+                                    3.2 km
+                                </div>
+</div>
+<!-- Mini Progress -->
+<div class="mb-3">
+<div class="flex justify-between text-xs mb-1">
+<span class="text-primary font-medium">+1% closer to border</span>
+</div>
+<div class="h-1.5 w-full bg-gray-100 dark:bg-gray-800 rounded-full">
+<div class="h-1.5 bg-primary rounded-full w-[5%]"></div>
+</div>
+</div>
+<div class="flex items-center gap-4 text-gray-600 dark:text-gray-400 text-sm">
+<span class="font-medium text-gray-900 dark:text-white">18:45</span>
+<span class="w-1 h-1 rounded-full bg-gray-400"></span>
+<span>5'50"/km</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Item 4: Standard Run -->
+<div class="relative timeline-connector pl-0 group">
+<div class="relative z-10">
+<!-- Date Header -->
+<div class="flex items-center gap-3 mb-3 ml-12">
+<span class="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Oct 05</span>
+</div>
+<div class="flex gap-4">
+<!-- Icon Column -->
+<div class="flex flex-col items-center">
+<div class="w-16 h-16 rounded-full bg-card-light dark:bg-card-dark flex items-center justify-center border-4 border-background-light dark:border-background-dark z-20 shadow-sm">
+<span class="material-symbols-outlined text-gray-400 dark:text-gray-500 text-3xl">directions_run</span>
+</div>
+</div>
+<!-- Card -->
+<div class="flex-1 rounded-2xl bg-card-light dark:bg-card-dark p-4 border border-gray-200 dark:border-gray-800 shadow-sm hover:border-gray-300 dark:hover:border-gray-700 transition-colors cursor-pointer">
+<div class="flex justify-between items-start mb-3">
+<div class="flex flex-col">
+<h3 class="text-base font-bold text-gray-900 dark:text-white">Long Run Sunday</h3>
+<p class="text-xs text-gray-500 dark:text-gray-400">River trail</p>
+</div>
+<div class="px-2 py-1 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white text-xs font-bold">
+                                    10.5 km
+                                </div>
+</div>
+<!-- Mini Progress -->
+<div class="mb-3">
+<div class="flex justify-between text-xs mb-1">
+<span class="text-primary font-medium">+6% closer to border</span>
+</div>
+<div class="h-1.5 w-full bg-gray-100 dark:bg-gray-800 rounded-full">
+<div class="h-1.5 bg-primary rounded-full w-[25%]"></div>
+</div>
+</div>
+<div class="flex items-center gap-4 text-gray-600 dark:text-gray-400 text-sm">
+<span class="font-medium text-gray-900 dark:text-white">58:12</span>
+<span class="w-1 h-1 rounded-full bg-gray-400"></span>
+<span>5'32"/km</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Start Marker -->
+<div class="relative pl-0 pt-8 pb-4">
+<div class="flex gap-4">
+<div class="flex flex-col items-center w-16">
+<div class="w-3 h-3 rounded-full bg-gray-600 dark:bg-gray-600"></div>
+</div>
+<div class="flex-1 text-center text-gray-400 dark:text-gray-600 text-sm">
+<p>Keep scrolling to see older runs...</p>
+</div>
+</div>
+</div>
+</main>
+<!-- Bottom Navigation -->
+<nav class="fixed bottom-0 w-full max-w-md bg-background-light dark:bg-background-dark border-t border-gray-200 dark:border-gray-800 pb-safe pt-2 px-6 z-50 backdrop-blur-lg bg-opacity-95 dark:bg-opacity-95">
+<div class="flex justify-between items-center h-16">
+<button class="flex flex-col items-center gap-1 w-16 text-gray-400 dark:text-gray-500">
+<span class="material-symbols-outlined text-2xl">home</span>
+<span class="text-[10px] font-medium">Home</span>
+</button>
+<button class="flex flex-col items-center gap-1 w-16 text-primary">
+<span class="material-symbols-outlined text-2xl fill-current">history</span>
+<span class="text-[10px] font-medium">History</span>
+</button>
+<!-- Center Action Button -->
+<div class="-mt-8">
+<button class="flex items-center justify-center w-14 h-14 rounded-full bg-primary text-white shadow-lg shadow-primary/40 transform active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-3xl">add</span>
+</button>
+</div>
+<button class="flex flex-col items-center gap-1 w-16 text-gray-400 dark:text-gray-500">
+<span class="material-symbols-outlined text-2xl">map</span>
+<span class="text-[10px] font-medium">Journey</span>
+</button>
+<button class="flex flex-col items-center gap-1 w-16 text-gray-400 dark:text-gray-500">
+<span class="material-symbols-outlined text-2xl">person</span>
+<span class="text-[10px] font-medium">Profile</span>
+</button>
+</div>
+<!-- Safe Area Spacer for iPhone -->
+<div class="h-4 w-full"></div>
+</nav>
+</div>
+</body></html>

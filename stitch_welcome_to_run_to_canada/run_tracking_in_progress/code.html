@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Run Tracking In Progress - Run to Canada</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#0d7ff2",
+              "background-light": "#f5f7f8",
+              "background-dark": "#101922",
+            },
+            fontFamily: {
+              "display": ["Lexend", "sans-serif"]
+            },
+            borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display h-screen flex flex-col overflow-hidden text-[#111418] dark:text-white">
+<!-- Top Status Bar -->
+<header class="flex items-center justify-between p-4 pb-2 z-10 shrink-0">
+<div class="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/10 dark:bg-white/5 text-[#111418] dark:text-white">
+<span class="material-symbols-outlined text-xl">signal_cellular_alt</span>
+</div>
+<h2 class="text-lg font-bold leading-tight tracking-[-0.015em] flex-1 text-center pr-12 uppercase opacity-80 animate-pulse">Running...</h2>
+</header>
+<!-- Gamification Context (Next Stop) -->
+<div class="px-6 py-2 shrink-0 z-10">
+<div class="flex flex-col gap-2 p-4 bg-white dark:bg-[#223649] rounded-2xl shadow-sm border border-[#e5e7eb] dark:border-transparent">
+<div class="flex gap-6 justify-between items-center">
+<p class="text-base font-bold leading-normal text-[#111418] dark:text-white flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-lg">flag</span>
+                    Next stop: Montreal
+                </p>
+<p class="text-[#637588] dark:text-[#90adcb] text-xs font-medium leading-normal">12km left</p>
+</div>
+<div class="h-2 w-full rounded-full bg-[#e5e7eb] dark:bg-[#314d68] overflow-hidden">
+<div class="h-full rounded-full bg-primary transition-all duration-500" style="width: 84%;"></div>
+</div>
+</div>
+</div>
+<!-- Main Content Area: Map & Metrics -->
+<main class="flex-1 relative flex flex-col">
+<!-- Map Background -->
+<div class="absolute inset-0 w-full h-full z-0 opacity-40 dark:opacity-30">
+<!-- Abstract map representation using a gradient or placeholder since actual maps require API keys/JS -->
+<div class="w-full h-full bg-gradient-to-b from-transparent to-[#f5f7f8] dark:to-[#101922] absolute bottom-0 z-10"></div>
+<img alt="Map background" class="w-full h-full object-cover grayscale invert dark:invert-0 dark:grayscale-0 contrast-125" data-alt="Dark aesthetic map view of city streets with a blue running path highlighted" data-location="Montreal" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDsbqv2YsMaSQFthDwe7WrgOMlkbxz5_1jToOU5Ihi1v7yeyHhy2jIowZh5QkjxixEkC4ZYgF4yxzfMlmEa0XBoic3rb6kXUVM8U2jO-6IRi6sfuA-WDcpdpXsCCybyseevwMRmbgumWu6DrmaN1pGHZ1ojRbzM3wG2la9d46_-Vt49XWBrfj_H4t5ENqP-O4B5WYR0dPl_MoENxvQfCP314sqEAxuvoVVpMLDtt0p3Fe8keN-vwODWr4DeKCckbPEpMfL468hPeSQ"/>
+</div>
+<!-- Primary Metric: Distance -->
+<div class="relative z-10 flex-1 flex flex-col justify-center items-center -mt-8">
+<div class="flex flex-col items-center justify-center">
+<h1 class="text-primary tracking-tighter text-[84px] leading-none font-bold drop-shadow-sm">5.24</h1>
+<p class="text-[#637588] dark:text-[#90adcb] text-lg font-medium tracking-widest uppercase mt-1">Kilometers</p>
+</div>
+</div>
+<!-- Secondary Metrics Grid -->
+<div class="relative z-10 px-4 pb-6">
+<div class="grid grid-cols-3 gap-3">
+<!-- Time -->
+<div class="flex flex-col items-center justify-center gap-1 rounded-2xl p-4 bg-white/80 dark:bg-[#223649]/80 backdrop-blur-md border border-white/20 shadow-sm">
+<span class="material-symbols-outlined text-[#637588] dark:text-[#90adcb] text-2xl mb-1">timer</span>
+<p class="text-xl font-bold leading-tight text-[#111418] dark:text-white tabular-nums">00:24</p>
+<p class="text-[#637588] dark:text-[#90adcb] text-xs font-medium uppercase">Time</p>
+</div>
+<!-- Pace -->
+<div class="flex flex-col items-center justify-center gap-1 rounded-2xl p-4 bg-white/80 dark:bg-[#223649]/80 backdrop-blur-md border border-white/20 shadow-sm">
+<span class="material-symbols-outlined text-[#637588] dark:text-[#90adcb] text-2xl mb-1">speed</span>
+<p class="text-xl font-bold leading-tight text-[#111418] dark:text-white tabular-nums">5:30</p>
+<p class="text-[#637588] dark:text-[#90adcb] text-xs font-medium uppercase">/km</p>
+</div>
+<!-- Elevation -->
+<div class="flex flex-col items-center justify-center gap-1 rounded-2xl p-4 bg-white/80 dark:bg-[#223649]/80 backdrop-blur-md border border-white/20 shadow-sm">
+<span class="material-symbols-outlined text-[#637588] dark:text-[#90adcb] text-2xl mb-1">landscape</span>
+<p class="text-xl font-bold leading-tight text-[#111418] dark:text-white tabular-nums">+45</p>
+<p class="text-[#637588] dark:text-[#90adcb] text-xs font-medium uppercase">m Gain</p>
+</div>
+</div>
+</div>
+</main>
+<!-- Controls Dock -->
+<footer class="relative z-20 pb-8 pt-4 px-6 bg-transparent">
+<div class="flex items-center justify-center gap-8">
+<!-- Secondary Action (Hidden/Small initially) - Lock/Unlock -->
+<button class="flex items-center justify-center size-14 rounded-full bg-[#e5e7eb] dark:bg-[#223649] text-[#111418] dark:text-white transition-transform active:scale-95 shadow-lg">
+<span class="material-symbols-outlined text-2xl">lock_open</span>
+</button>
+<!-- Primary Action - Pause/Resume -->
+<button class="flex items-center justify-center size-24 rounded-full bg-primary text-white shadow-xl shadow-primary/30 transition-transform active:scale-95 ring-4 ring-primary/20">
+<span class="material-symbols-outlined text-[48px] fill-1">pause</span>
+</button>
+<!-- Secondary Action - Camera/Share -->
+<button class="flex items-center justify-center size-14 rounded-full bg-[#e5e7eb] dark:bg-[#223649] text-[#111418] dark:text-white transition-transform active:scale-95 shadow-lg">
+<span class="material-symbols-outlined text-2xl">photo_camera</span>
+</button>
+</div>
+</footer>
+</body></html>

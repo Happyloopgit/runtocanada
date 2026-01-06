@@ -2389,3 +2389,239 @@ This helps others who might encounter the same issue.
 
 **Last Updated:** 2026-01-06
 **Total Sessions:** 25
+
+
+### Session 026 - 2026-01-06
+
+**Sprint:** Sprint 16.5 - Design System Overhaul (Phase 5 → Phase 6)
+**Duration:** ~3 hours
+**Participants:** Development Team (with Claude Code)
+
+**Objectives:**
+- Complete Phase 5 by redesigning Goal Creation Flow screens (4-step wizard)
+- Begin Phase 6: Premium & Polish features
+- Improve premium upgrade accessibility (UX enhancement)
+
+**Work Completed:**
+
+#### 1. Goal Creation Flow Redesign (All Steps) ✅
+
+**Step Indicator Redesign:**
+- Modern stepper with gradient circles for active/completed steps
+- Blue gradient on active/completed steps with primary glow shadow
+- Inactive steps with light surface color and border
+- Check icons for completed steps
+- Gradient progress lines connecting steps
+- Surface background with subtle bottom border
+
+**Step 0 & 1: Location Selection (Start & Destination):**
+- **Selected Location Card:** SolidCard with circular gradient icon, check icon, location name
+  - 48px circular icon with blue gradient and glow
+  - Edit button for changing selection
+- **Search Results:** Modern SolidCard list items
+  - 40px circular icon containers with primary background
+  - Arrow indicators for tap affordance
+  - Compact 12px subtitle text
+  - 8px spacing between items
+- **Use Current Location Button:** Existing CustomButton with outline style
+
+**Step 2: Route & Milestones Preview:**
+- **Route Summary Card:** PrimaryCard with blue gradient background
+  - 40px circular route icon in semi-transparent white circle
+  - White divider separator
+  - 2-column stats layout (Distance | Est. Duration)
+  - Large white text for numbers
+  - Icons above each stat
+  - Vertical white divider between columns
+- **Milestone List:** SolidCard items with timeline feel
+  - 48px circular gradient icons with numbered badges
+  - City name and distance from start
+  - Location pin icon on right
+  - 12px spacing between milestone cards
+- **Section Header:** "Milestones Along Your Journey" with count subtitle
+
+**Step 3: Confirmation:**
+- **Goal Name Input:** CustomTextField with label "Goal Name"
+- **Journey Summary Card:** SolidCard with structured layout
+  - 40px circular gradient icon (summarize icon)
+  - "Journey Summary" header with icon
+  - Horizontal divider
+  - 4 summary rows: Start Location, Destination, Total Distance, Milestone Cities
+  - 2-column flex layout (label: 40%, value: 60%)
+  - Semi-transparent text for labels, bold text for values
+- **Info Message:** Enhanced info container
+  - 32px circular icon in primary background
+  - Longer explanatory text about virtual progress tracking
+  - 16px border radius with primary tint background
+
+**Visual Consistency:**
+- All cards use SolidCard or PrimaryCard components
+- Consistent 16px border radius throughout
+- Circular gradient icons (40-48px) for all card headers
+- Primary blue color scheme with gradients and glows
+- 20px padding for major sections (increased from 16px)
+- Semi-transparent colors for dividers and secondary elements
+- Modern typography with proper weights (w600 for emphasis)
+
+#### 2. Premium Upgrade Button (UX Enhancement) ✅
+
+**Critical UX Issue Identified:**
+- User feedback: "why the users may want to upgrade even before??? we are stupidly stopping the users from upgrading before 100 kms??"
+- Previous design only showed paywall when hitting 100km limit
+- Users couldn't upgrade proactively
+
+**Solution Implemented:**
+- **Added Premium Button to Home Screen App Bar**
+  - Gold gradient pill button with workspace_premium icon
+  - Only visible for non-premium users (uses Consumer with isPremiumProvider)
+  - Always accessible regardless of distance progress
+  - 18px icon + "Premium" text label
+  - Gold glow shadow effect
+  - Routes to `/paywall` screen
+  - Positioned in app bar actions (top right)
+
+**UX Impact:**
+- Users can now upgrade to premium anytime
+- Better monetization opportunity
+- Removes frustration of forced waiting
+- More prominent premium visibility
+
+#### 3. Premium Paywall Screen Redesign ✅
+
+**Complete Visual Overhaul:**
+
+**Header Section:**
+- Gold gradient curved header with 32px bottom radius
+- 80px premium crown icon (workspace_premium) in semi-transparent white circle
+- Large white glow shadow on icon container
+- "Run Further. Explore More." headline in display medium
+- "Unlock unlimited journeys and premium features" subtitle
+- 100px top padding (extends behind app bar)
+- Gold shadow with 20px blur and -5px spread
+
+**Features Section:**
+- Each benefit displayed in SolidCard
+- 48px circular gradient icons (custom icons per feature)
+  - all_inclusive icon for unlimited distance
+  - block icon for ad-free experience
+  - flag icon for detailed milestones
+  - bar_chart icon for advanced statistics
+- Gold premium gradient on all benefit icons
+- Gold glow shadow on icon containers
+- Large bold benefit text with proper spacing
+- 16px padding per card, 16px spacing between cards
+
+**Pricing Cards:**
+- Modern selectable pricing cards with radio buttons
+- Selected state: premium gold border (2px), gold glow shadow
+- Unselected state: subtle border, card dark background
+- Circular gradient radio button when selected with check icon
+- **Annual Plan (Recommended):**
+  - "BEST VALUE" badge at top with gold gradient
+  - Savings badge (e.g., "Save 40%") with milestone gradient
+  - Monthly equivalent price shown as subtitle
+- **Monthly Plan:**
+  - Standard pricing display
+  - No special badges
+- Both plans show price prominently on right side
+- Plan title and subtitle on left
+- Tap anywhere on card to select
+
+**Action Buttons:**
+- Primary subscribe button (CustomButton) with dynamic text
+- Secondary restore purchases button (outlined)
+- Both full width with proper spacing
+
+**Terms Text:**
+- 11px font size (reduced for less visual weight)
+- Secondary text color
+- Center-aligned
+- Complete subscription terms and auto-renewal info
+
+**Visual Details:**
+- All semi-transparent colors use `.withValues(alpha: X)` (Flutter 3.27+)
+- Consistent gold gradient throughout (AppColors.premiumGradient)
+- Premium glow shadows (gold with 0.3-0.5 alpha)
+- White text on gradient backgrounds
+- 24px horizontal padding throughout
+- 32px vertical spacing between major sections
+
+**Files Modified:**
+- Modified: `app/lib/features/goals/presentation/screens/goal_creation_screen.dart` - Complete redesign (1,223 lines)
+  - Added imports for SolidCard and PrimaryCard from glass_card.dart
+  - Redesigned step indicator with gradients and shadows
+  - Rebuilt all 4 steps with modern design system
+  - Updated all card layouts and spacing
+  - Enhanced visual hierarchy and information density
+
+- Modified: `app/lib/features/home/presentation/screens/home_screen.dart` - Added premium button
+  - Added Consumer wrapper for premium button in app bar actions
+  - Gold gradient pill button with icon and text
+  - Only shows for non-premium users
+  - Routes to paywall screen
+
+- Modified: `app/lib/features/premium/presentation/screens/paywall_screen.dart` - Complete redesign (583 lines)
+  - Gold gradient curved header with crown icon
+  - Redesigned feature cards with gradient icons
+  - Modern selectable pricing cards with radio buttons
+  - "BEST VALUE" badge for annual plan
+  - Savings calculation and display
+  - Reduced terms text size to 11px
+  - All gradient and shadow styling updated
+
+- Modified: `docs/03-sprint-plan.md`
+  - Updated Phase 5 status to ✅ COMPLETED
+  - Updated Phase 6 status to ⏳ IN PROGRESS
+  - Added Session 026 to completed sessions list
+  - Updated accomplishments list
+
+- Modified: `docs/trackers/Change_log.md`
+  - Added comprehensive Session 026 entry
+  - Documented all visual changes
+  - Listed all files modified
+  - Included before/after comparisons
+
+**Issues Encountered:**
+- Initial import errors for card widgets → Fixed by using correct path (glass_card.dart)
+- Syntax error in paywall_screen.dart (extra closing bracket) → Fixed by removing duplicate
+- All issues resolved successfully ✅
+
+**Flutter Analyze Results:**
+- **0 issues found** across all modified files ✅
+
+**Phase 5 Status:**
+- ✅ Run Tracking Screen - COMPLETE (Session 025)
+- ✅ Run History Screen - COMPLETE (Session 025)
+- ✅ Goal Creation Flow (4 steps) - COMPLETE (Session 026)
+- **Phase 5 is now 100% COMPLETE** ✅
+
+**Phase 6 Status:**
+- ⏳ Premium Paywall - COMPLETE (Session 026)
+- ⏳ Premium Upgrade Button - COMPLETE (Session 026)
+- ⏹️ Settings Screen - Pending
+- ⏹️ Profile Screen - Pending
+- ⏹️ Animations & Transitions - Pending
+
+**Next Session (027):**
+- Continue Phase 6: Premium & Polish
+  - Settings screen redesign
+  - Profile screen enhancements
+  - Final polish and animations
+  - Performance optimizations
+
+**Key Achievements:**
+- ✅ Completed entire Goal Creation Flow redesign (4-step wizard)
+- ✅ Modern stepper indicator with gradients
+- ✅ Consistent use of card components throughout
+- ✅ Information-dense layouts while maintaining readability
+- ✅ Identified and fixed critical UX issue with premium upgrade flow
+- ✅ Added always-visible premium upgrade button
+- ✅ Completely redesigned premium paywall with compelling visuals
+- ✅ All code passes analyzer checks perfectly
+- ✅ Phase 5 is now 100% COMPLETE
+- ✅ Phase 6 premium work is COMPLETE
+
+---
+
+**Last Updated:** 2026-01-06
+**Total Sessions:** 26

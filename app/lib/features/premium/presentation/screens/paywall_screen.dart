@@ -4,6 +4,7 @@ import 'package:purchases_flutter/purchases_flutter.dart';
 import 'package:run_to_canada/core/theme/app_colors.dart';
 import 'package:run_to_canada/core/theme/app_text_styles.dart';
 import 'package:run_to_canada/core/widgets/custom_button.dart';
+import 'package:run_to_canada/core/widgets/glass_card.dart';
 import 'package:run_to_canada/features/premium/data/services/premium_service.dart';
 import 'package:run_to_canada/features/premium/presentation/providers/premium_providers.dart';
 
@@ -41,128 +42,159 @@ class _PaywallScreenState extends ConsumerState<PaywallScreen> {
     final packagesAsync = ref.watch(subscriptionPackagesProvider);
 
     return Scaffold(
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              AppColors.primary,
-              AppColors.primary.withValues(alpha: 0.8),
-              Colors.white,
-            ],
-            stops: const [0.0, 0.3, 0.7],
+      backgroundColor: AppColors.background,
+      extendBodyBehindAppBar: true,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        leading: IconButton(
+          icon: Container(
+            width: 36,
+            height: 36,
+            decoration: BoxDecoration(
+              color: AppColors.surface.withValues(alpha: 0.8),
+              shape: BoxShape.circle,
+            ),
+            child: const Icon(Icons.close, size: 20),
           ),
+          onPressed: () => Navigator.of(context).pop(),
         ),
-        child: SafeArea(
+      ),
+      body: SafeArea(
+        top: false,
+        child: SingleChildScrollView(
           child: Column(
             children: [
-              // Close button
-              Align(
-                alignment: Alignment.topRight,
-                child: IconButton(
-                  icon: const Icon(Icons.close, color: Colors.white),
-                  onPressed: () => Navigator.of(context).pop(),
+              // Premium header with gradient
+              Container(
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  gradient: AppColors.premiumGradient,
+                  borderRadius: const BorderRadius.only(
+                    bottomLeft: Radius.circular(32),
+                    bottomRight: Radius.circular(32),
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppColors.premium.withValues(alpha: 0.3),
+                      blurRadius: 20,
+                      spreadRadius: -5,
+                      offset: const Offset(0, 10),
+                    ),
+                  ],
+                ),
+                padding: const EdgeInsets.fromLTRB(24, 100, 24, 40),
+                child: Column(
+                  children: [
+                    // Premium crown icon
+                    Container(
+                      width: 80,
+                      height: 80,
+                      decoration: BoxDecoration(
+                        color: Colors.white.withValues(alpha: 0.2),
+                        shape: BoxShape.circle,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.white.withValues(alpha: 0.3),
+                            blurRadius: 20,
+                          ),
+                        ],
+                      ),
+                      child: const Icon(
+                        Icons.workspace_premium,
+                        size: 40,
+                        color: Colors.white,
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+
+                    // Title
+                    Text(
+                      'Run Further.\nExplore More.',
+                      style: AppTextStyles.displayMedium.copyWith(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        height: 1.2,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 12),
+
+                    // Subtitle
+                    Text(
+                      'Unlock unlimited journeys and premium features',
+                      style: AppTextStyles.bodyLarge.copyWith(
+                        color: Colors.white.withValues(alpha: 0.9),
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
                 ),
               ),
 
-              Expanded(
-                child: SingleChildScrollView(
-                  padding: const EdgeInsets.all(24.0),
-                  child: Column(
-                    children: [
-                      // Trophy icon
-                      Container(
-                        width: 100,
-                        height: 100,
-                        decoration: BoxDecoration(
-                          color: Colors.white.withValues(alpha: 0.2),
-                          shape: BoxShape.circle,
-                        ),
-                        child: const Icon(
-                          Icons.emoji_events,
-                          size: 60,
-                          color: Colors.white,
-                        ),
-                      ),
+              const SizedBox(height: 32),
 
-                      const SizedBox(height: 24),
+              // Features list
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24),
+                child: Column(
+                  children: [
+                    ...benefits.asMap().entries.map((entry) {
+                      final index = entry.key;
+                      final benefit = entry.value;
+                      final icon = _getBenefitIcon(index);
 
-                      // Title
-                      Text(
-                        'Upgrade to Premium',
-                        style: AppTextStyles.displayLarge.copyWith(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-
-                      const SizedBox(height: 12),
-
-                      // Subtitle
-                      Text(
-                        'You\'ve reached the 100km free tier limit!\nUpgrade to continue your journey to Canada.',
-                        style: AppTextStyles.bodyLarge.copyWith(
-                          color: Colors.white.withValues(alpha: 0.9),
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-
-                      const SizedBox(height: 32),
-
-                      // Benefits list
-                      Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(16),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withValues(alpha: 0.1),
-                              blurRadius: 10,
-                              offset: const Offset(0, 5),
-                            ),
-                          ],
-                        ),
-                        padding: const EdgeInsets.all(24),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Premium Benefits',
-                              style: AppTextStyles.headlineSmall.copyWith(
-                                fontWeight: FontWeight.bold,
-                                color: AppColors.primary,
+                      return Padding(
+                        padding: const EdgeInsets.only(bottom: 16),
+                        child: SolidCard(
+                          padding: const EdgeInsets.all(16),
+                          child: Row(
+                            children: [
+                              Container(
+                                width: 48,
+                                height: 48,
+                                decoration: BoxDecoration(
+                                  gradient: AppColors.premiumGradient,
+                                  shape: BoxShape.circle,
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: AppColors.premium.withValues(alpha: 0.3),
+                                      blurRadius: 8,
+                                      offset: const Offset(0, 2),
+                                    ),
+                                  ],
+                                ),
+                                child: Icon(
+                                  icon,
+                                  color: Colors.white,
+                                  size: 24,
+                                ),
                               ),
-                            ),
-                            const SizedBox(height: 16),
-                            ...benefits.map((benefit) => Padding(
-                                  padding: const EdgeInsets.only(bottom: 12),
-                                  child: Row(
-                                    children: [
-                                      Icon(
-                                        Icons.check_circle,
-                                        color: AppColors.primary,
-                                        size: 24,
-                                      ),
-                                      const SizedBox(width: 12),
-                                      Expanded(
-                                        child: Text(
-                                          benefit,
-                                          style: AppTextStyles.bodyLarge,
-                                        ),
-                                      ),
-                                    ],
+                              const SizedBox(width: 16),
+                              Expanded(
+                                child: Text(
+                                  benefit,
+                                  style: AppTextStyles.bodyLarge.copyWith(
+                                    fontWeight: FontWeight.w500,
+                                    color: AppColors.textPrimary,
                                   ),
-                                )),
-                          ],
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
+                      );
+                    }),
+                  ],
+                ),
+              ),
 
-                      const SizedBox(height: 32),
+              const SizedBox(height: 32),
 
-                      // Show loading or pricing cards
-                      packagesAsync.when(
+              // Pricing cards
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24),
+                child: packagesAsync.when(
                         data: (packages) {
                           final monthlyPackage = packages['monthly'];
                           final annualPackage = packages['annual'];
@@ -249,38 +281,46 @@ class _PaywallScreenState extends ConsumerState<PaywallScreen> {
                             ),
                           ],
                         ),
+                ),
+              ),
+
+              const SizedBox(height: 32),
+
+              // Action buttons
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24),
+                child: Column(
+                  children: [
+                    // Subscribe button
+                    CustomButton(
+                      text: _getSubscribeButtonText(packagesAsync),
+                      onPressed: _isLoading ? null : _handleSubscribe,
+                      isLoading: _isLoading,
+                    ),
+
+                    const SizedBox(height: 16),
+
+                    // Restore purchases button
+                    CustomButton(
+                      text: 'Restore Purchases',
+                      onPressed: _isLoading ? null : _handleRestorePurchases,
+                      isOutlined: true,
+                    ),
+
+                    const SizedBox(height: 24),
+
+                    // Terms and privacy
+                    Text(
+                      'By subscribing, you agree to our Terms of Service and Privacy Policy. Subscription automatically renews unless auto-renew is turned off at least 24 hours before the end of the current period.',
+                      style: AppTextStyles.bodySmall.copyWith(
+                        color: AppColors.textSecondary,
+                        fontSize: 11,
                       ),
+                      textAlign: TextAlign.center,
+                    ),
 
-                      const SizedBox(height: 32),
-
-                      // Subscribe button
-                      CustomButton(
-                        text: _getSubscribeButtonText(packagesAsync),
-                        onPressed: _isLoading ? null : _handleSubscribe,
-                        isLoading: _isLoading,
-                      ),
-
-                      const SizedBox(height: 16),
-
-                      // Restore purchases button
-                      CustomButton(
-                        text: 'Restore Purchases',
-                        onPressed: _isLoading ? null : _handleRestorePurchases,
-                        isOutlined: true,
-                      ),
-
-                      const SizedBox(height: 24),
-
-                      // Terms and privacy
-                      Text(
-                        'By subscribing, you agree to our Terms of Service and Privacy Policy. Subscription automatically renews unless auto-renew is turned off at least 24 hours before the end of the current period.',
-                        style: AppTextStyles.bodySmall.copyWith(
-                          color: AppColors.textSecondary,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ],
-                  ),
+                    const SizedBox(height: 32),
+                  ],
                 ),
               ),
             ],
@@ -288,6 +328,21 @@ class _PaywallScreenState extends ConsumerState<PaywallScreen> {
         ),
       ),
     );
+  }
+
+  IconData _getBenefitIcon(int index) {
+    switch (index) {
+      case 0:
+        return Icons.all_inclusive; // Unlimited distance
+      case 1:
+        return Icons.block; // Ad-free
+      case 2:
+        return Icons.flag; // Detailed milestones
+      case 3:
+        return Icons.bar_chart; // Advanced statistics
+      default:
+        return Icons.check_circle;
+    }
   }
 
   Widget _buildPricingCard(
@@ -306,28 +361,28 @@ class _PaywallScreenState extends ConsumerState<PaywallScreen> {
           _selectedPlan = planId;
         });
       },
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(
-            color: isSelected ? AppColors.primary : AppColors.border,
-            width: isSelected ? 3 : 1,
-          ),
-          boxShadow: isSelected
-              ? [
-                  BoxShadow(
-                    color: AppColors.primary.withValues(alpha: 0.3),
-                    blurRadius: 10,
-                    offset: const Offset(0, 5),
-                  ),
-                ]
-              : [],
-        ),
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          children: [
-            Row(
+      child: Stack(
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              color: isSelected ? AppColors.surfaceLight : AppColors.cardDark,
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(
+                color: isSelected ? AppColors.premium : AppColors.border.withValues(alpha: 0.3),
+                width: isSelected ? 2 : 1,
+              ),
+              boxShadow: isSelected
+                  ? [
+                      BoxShadow(
+                        color: AppColors.premium.withValues(alpha: 0.3),
+                        blurRadius: 16,
+                        offset: const Offset(0, 4),
+                      ),
+                    ]
+                  : null,
+            ),
+            padding: const EdgeInsets.all(20),
+            child: Row(
               children: [
                 // Radio button
                 Container(
@@ -335,11 +390,11 @@ class _PaywallScreenState extends ConsumerState<PaywallScreen> {
                   height: 24,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
+                    gradient: isSelected ? AppColors.premiumGradient : null,
                     border: Border.all(
-                      color: isSelected ? AppColors.primary : AppColors.border,
+                      color: isSelected ? Colors.transparent : AppColors.border,
                       width: 2,
                     ),
-                    color: isSelected ? AppColors.primary : Colors.transparent,
                   ),
                   child: isSelected
                       ? const Icon(
@@ -350,54 +405,34 @@ class _PaywallScreenState extends ConsumerState<PaywallScreen> {
                       : null,
                 ),
 
-                const SizedBox(width: 12),
+                const SizedBox(width: 16),
 
                 // Plan info
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Row(
-                        children: [
-                          Text(
-                            title,
-                            style: AppTextStyles.titleMedium.copyWith(
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          if (isRecommended) ...[
-                            const SizedBox(width: 8),
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 8,
-                                vertical: 4,
-                              ),
-                              decoration: BoxDecoration(
-                                color: AppColors.secondary,
-                                borderRadius: BorderRadius.circular(4),
-                              ),
-                              child: Text(
-                                'BEST VALUE',
-                                style: AppTextStyles.bodySmall.copyWith(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 10,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ],
+                      Text(
+                        title,
+                        style: AppTextStyles.titleMedium.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.textPrimary,
+                        ),
                       ),
-                      if (subtitle != null)
+                      if (subtitle != null) ...[
+                        const SizedBox(height: 4),
                         Text(
                           subtitle,
                           style: AppTextStyles.bodySmall.copyWith(
                             color: AppColors.textSecondary,
                           ),
                         ),
+                      ],
                     ],
                   ),
                 ),
+
+                const SizedBox(width: 12),
 
                 // Price
                 Column(
@@ -407,23 +442,65 @@ class _PaywallScreenState extends ConsumerState<PaywallScreen> {
                       price,
                       style: AppTextStyles.titleLarge.copyWith(
                         fontWeight: FontWeight.bold,
-                        color: AppColors.primary,
+                        color: isSelected ? AppColors.premium : AppColors.textPrimary,
                       ),
                     ),
-                    if (badge != null)
-                      Text(
-                        badge,
-                        style: AppTextStyles.bodySmall.copyWith(
-                          color: AppColors.secondary,
-                          fontWeight: FontWeight.bold,
+                    if (badge != null) ...[
+                      const SizedBox(height: 2),
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                        decoration: BoxDecoration(
+                          gradient: AppColors.milestoneGradient,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Text(
+                          badge,
+                          style: AppTextStyles.bodySmall.copyWith(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 10,
+                          ),
                         ),
                       ),
+                    ],
                   ],
                 ),
               ],
             ),
-          ],
-        ),
+          ),
+          // Best Value badge
+          if (isRecommended)
+            Positioned(
+              top: -1,
+              right: 20,
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                decoration: BoxDecoration(
+                  gradient: AppColors.premiumGradient,
+                  borderRadius: const BorderRadius.only(
+                    bottomLeft: Radius.circular(8),
+                    bottomRight: Radius.circular(8),
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppColors.premium.withValues(alpha: 0.5),
+                      blurRadius: 8,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
+                ),
+                child: Text(
+                  'BEST VALUE',
+                  style: AppTextStyles.bodySmall.copyWith(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 10,
+                    letterSpacing: 0.5,
+                  ),
+                ),
+              ),
+            ),
+        ],
       ),
     );
   }

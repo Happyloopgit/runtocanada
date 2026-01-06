@@ -11,6 +11,7 @@ import '../../../../core/widgets/custom_button.dart';
 import '../../../../core/widgets/custom_text_field.dart';
 import '../../../../core/widgets/loading_indicator.dart';
 import '../../../../core/widgets/error_message.dart';
+import '../../../../core/widgets/glass_card.dart';
 import '../../domain/models/location_model.dart';
 import '../providers/goal_creation_provider.dart';
 
@@ -351,7 +352,16 @@ class _GoalCreationScreenState extends ConsumerState<GoalCreationScreen> {
     final goalState = ref.watch(goalCreationProvider);
 
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+      decoration: BoxDecoration(
+        color: AppColors.surface,
+        border: Border(
+          bottom: BorderSide(
+            color: AppColors.border.withValues(alpha: 0.3),
+            width: 1,
+          ),
+        ),
+      ),
       child: Row(
         children: [
           _buildStepCircle(0, 'Start', isActive: _currentStep >= 0, isCompleted: _startLocation != null),
@@ -374,15 +384,32 @@ class _GoalCreationScreenState extends ConsumerState<GoalCreationScreen> {
           height: 40,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: isCompleted
-                ? AppColors.success
-                : isActive
-                    ? AppColors.primary
-                    : AppColors.surface,
+            gradient: isCompleted || isActive
+                ? LinearGradient(
+                    colors: [
+                      AppColors.primary,
+                      AppColors.primary.withValues(alpha: 0.7),
+                    ],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  )
+                : null,
+            color: isCompleted || isActive ? null : AppColors.surfaceLight,
             border: Border.all(
-              color: isActive ? AppColors.primary : AppColors.border,
+              color: isCompleted || isActive
+                  ? AppColors.primary.withValues(alpha: 0.5)
+                  : AppColors.border,
               width: 2,
             ),
+            boxShadow: isActive
+                ? [
+                    BoxShadow(
+                      color: AppColors.primary.withValues(alpha: 0.3),
+                      blurRadius: 8,
+                      offset: const Offset(0, 2),
+                    ),
+                  ]
+                : null,
           ),
           child: Center(
             child: isCompleted
@@ -396,12 +423,13 @@ class _GoalCreationScreenState extends ConsumerState<GoalCreationScreen> {
                   ),
           ),
         ),
-        const SizedBox(height: 4),
+        const SizedBox(height: 6),
         Text(
           label,
           style: AppTextStyles.bodySmall.copyWith(
             color: isActive ? AppColors.textPrimary : AppColors.textSecondary,
-            fontWeight: isActive ? FontWeight.bold : FontWeight.normal,
+            fontWeight: isActive ? FontWeight.w600 : FontWeight.normal,
+            fontSize: 11,
           ),
         ),
       ],
@@ -411,8 +439,18 @@ class _GoalCreationScreenState extends ConsumerState<GoalCreationScreen> {
   Widget _buildStepLine({required bool isCompleted}) {
     return Container(
       height: 2,
-      margin: const EdgeInsets.only(bottom: 24),
-      color: isCompleted ? AppColors.success : AppColors.border,
+      margin: const EdgeInsets.only(bottom: 28),
+      decoration: BoxDecoration(
+        gradient: isCompleted
+            ? LinearGradient(
+                colors: [
+                  AppColors.primary,
+                  AppColors.primary.withValues(alpha: 0.5),
+                ],
+              )
+            : null,
+        color: isCompleted ? null : AppColors.border.withValues(alpha: 0.3),
+      ),
     );
   }
 
@@ -532,27 +570,50 @@ class _GoalCreationScreenState extends ConsumerState<GoalCreationScreen> {
 
     if (location == null) return const SizedBox.shrink();
 
-    return Container(
+    return SolidCard(
       padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: AppColors.success.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.success),
-      ),
       child: Row(
         children: [
-          const Icon(Icons.check_circle, color: AppColors.success),
-          const SizedBox(width: 12),
+          Container(
+            width: 48,
+            height: 48,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              gradient: LinearGradient(
+                colors: [
+                  AppColors.primary,
+                  AppColors.primary.withValues(alpha: 0.7),
+                ],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: AppColors.primary.withValues(alpha: 0.3),
+                  blurRadius: 8,
+                  offset: const Offset(0, 2),
+                ),
+              ],
+            ),
+            child: const Icon(
+              Icons.check_circle,
+              color: Colors.white,
+              size: 24,
+            ),
+          ),
+          const SizedBox(width: 16),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   location.placeName,
-                  style: AppTextStyles.bodyMedium.copyWith(
-                    fontWeight: FontWeight.bold,
+                  style: AppTextStyles.bodyLarge.copyWith(
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.textPrimary,
                   ),
                 ),
+                const SizedBox(height: 2),
                 if (location.country != null)
                   Text(
                     location.country!,
@@ -563,8 +624,9 @@ class _GoalCreationScreenState extends ConsumerState<GoalCreationScreen> {
               ],
             ),
           ),
-          CustomIconButton(
-            icon: Icons.edit,
+          IconButton(
+            icon: const Icon(Icons.edit_outlined, size: 20),
+            color: AppColors.textSecondary,
             onPressed: () {
               setState(() {
                 if (_currentStep == 0) {
@@ -584,24 +646,63 @@ class _GoalCreationScreenState extends ConsumerState<GoalCreationScreen> {
   Widget _buildSearchResults() {
     return Container(
       constraints: const BoxConstraints(maxHeight: 300),
-      child: ListView.builder(
+      child: ListView.separated(
         shrinkWrap: true,
         itemCount: _searchResults.length,
+        separatorBuilder: (context, index) => const SizedBox(height: 8),
         itemBuilder: (context, index) {
           final result = _searchResults[index];
 
-          return ListTile(
-            leading: const Icon(Icons.place, color: AppColors.primary),
-            title: Text(result.shortName),
-            subtitle: Text(
-              result.fullName,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: AppTextStyles.bodySmall.copyWith(
-                color: AppColors.textSecondary,
-              ),
-            ),
+          return SolidCard(
+            padding: const EdgeInsets.all(12),
             onTap: () => _selectLocation(result),
+            child: Row(
+              children: [
+                Container(
+                  width: 40,
+                  height: 40,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: AppColors.primary.withValues(alpha: 0.1),
+                  ),
+                  child: const Icon(
+                    Icons.place,
+                    color: AppColors.primary,
+                    size: 20,
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        result.shortName,
+                        style: AppTextStyles.bodyMedium.copyWith(
+                          fontWeight: FontWeight.w600,
+                          color: AppColors.textPrimary,
+                        ),
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        result.fullName,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: AppTextStyles.bodySmall.copyWith(
+                          color: AppColors.textSecondary,
+                          fontSize: 12,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const Icon(
+                  Icons.arrow_forward_ios,
+                  size: 16,
+                  color: AppColors.textSecondary,
+                ),
+              ],
+            ),
           );
         },
       ),
@@ -668,11 +769,12 @@ class _GoalCreationScreenState extends ConsumerState<GoalCreationScreen> {
         children: [
           // Step title
           Padding(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.all(20),
             child: Text(
               'Route & Milestones',
               style: AppTextStyles.headlineSmall.copyWith(
                 fontWeight: FontWeight.bold,
+                color: AppColors.textPrimary,
               ),
             ),
           ),
@@ -680,69 +782,136 @@ class _GoalCreationScreenState extends ConsumerState<GoalCreationScreen> {
           // Error message
           if (goalState.errorMessage != null)
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
+              padding: const EdgeInsets.symmetric(horizontal: 20),
               child: ErrorMessage(message: goalState.errorMessage!),
             ),
 
           Expanded(
             child: goalState.isCalculatingRoute || goalState.isGeneratingMilestones
-                ? const Center(
+                ? Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        LoadingIndicator(),
-                        SizedBox(height: 16),
-                        Text('Calculating route and generating milestones...'),
+                        const LoadingIndicator(),
+                        const SizedBox(height: 16),
+                        Text(
+                          'Calculating route and generating milestones...',
+                          style: AppTextStyles.bodyMedium.copyWith(
+                            color: AppColors.textSecondary,
+                          ),
+                        ),
                       ],
                     ),
                   )
                 : SingleChildScrollView(
-                    padding: const EdgeInsets.all(16),
+                    padding: const EdgeInsets.all(20),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         // Route Info Card
                         if (goalState.route != null)
-                          Card(
-                            child: Padding(
-                              padding: const EdgeInsets.all(16),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'Route Summary',
-                                    style: AppTextStyles.titleMedium.copyWith(
-                                      fontWeight: FontWeight.bold,
+                          PrimaryCard(
+                            padding: const EdgeInsets.all(20),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  children: [
+                                    Container(
+                                      width: 40,
+                                      height: 40,
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: Colors.white.withValues(alpha: 0.2),
+                                      ),
+                                      child: const Icon(
+                                        Icons.route,
+                                        color: Colors.white,
+                                        size: 20,
+                                      ),
                                     ),
-                                  ),
-                                  const SizedBox(height: 12),
-                                  Row(
-                                    children: [
-                                      const Icon(Icons.straighten, size: 20),
-                                      const SizedBox(width: 8),
-                                      Text(
-                                        'Distance: ${goalState.route!.distanceInKm.toStringAsFixed(1)} km',
-                                        style: AppTextStyles.bodyLarge,
+                                    const SizedBox(width: 12),
+                                    Text(
+                                      'Route Summary',
+                                      style: AppTextStyles.titleMedium.copyWith(
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white,
                                       ),
-                                    ],
-                                  ),
-                                  const SizedBox(height: 8),
-                                  Row(
-                                    children: [
-                                      const Icon(Icons.access_time, size: 20),
-                                      const SizedBox(width: 8),
-                                      Text(
-                                        'Est. Duration: ${goalState.route!.durationInHours.toStringAsFixed(1)} hrs (driving)',
-                                        style: AppTextStyles.bodyLarge,
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 20),
+                                Container(
+                                  height: 1,
+                                  color: Colors.white.withValues(alpha: 0.2),
+                                ),
+                                const SizedBox(height: 20),
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: Column(
+                                        children: [
+                                          const Icon(
+                                            Icons.straighten,
+                                            color: Colors.white,
+                                            size: 24,
+                                          ),
+                                          const SizedBox(height: 8),
+                                          Text(
+                                            '${goalState.route!.distanceInKm.toStringAsFixed(1)} km',
+                                            style: AppTextStyles.headlineSmall.copyWith(
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                          const SizedBox(height: 4),
+                                          Text(
+                                            'Distance',
+                                            style: AppTextStyles.bodySmall.copyWith(
+                                              color: Colors.white.withValues(alpha: 0.7),
+                                            ),
+                                          ),
+                                        ],
                                       ),
-                                    ],
-                                  ),
-                                ],
-                              ),
+                                    ),
+                                    Container(
+                                      width: 1,
+                                      height: 60,
+                                      color: Colors.white.withValues(alpha: 0.2),
+                                    ),
+                                    Expanded(
+                                      child: Column(
+                                        children: [
+                                          const Icon(
+                                            Icons.access_time,
+                                            color: Colors.white,
+                                            size: 24,
+                                          ),
+                                          const SizedBox(height: 8),
+                                          Text(
+                                            '${goalState.route!.durationInHours.toStringAsFixed(1)} hrs',
+                                            style: AppTextStyles.headlineSmall.copyWith(
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                          const SizedBox(height: 4),
+                                          Text(
+                                            'Est. Duration',
+                                            style: AppTextStyles.bodySmall.copyWith(
+                                              color: Colors.white.withValues(alpha: 0.7),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
                             ),
                           ),
 
-                        const SizedBox(height: 16),
+                        const SizedBox(height: 20),
 
                         // Milestones
                         if (goalState.milestones.isNotEmpty) ...[
@@ -750,9 +919,10 @@ class _GoalCreationScreenState extends ConsumerState<GoalCreationScreen> {
                             'Milestones Along Your Journey',
                             style: AppTextStyles.titleMedium.copyWith(
                               fontWeight: FontWeight.bold,
+                              color: AppColors.textPrimary,
                             ),
                           ),
-                          const SizedBox(height: 12),
+                          const SizedBox(height: 8),
                           Text(
                             '${goalState.milestones.length} milestone cities to discover',
                             style: AppTextStyles.bodyMedium.copyWith(
@@ -760,33 +930,76 @@ class _GoalCreationScreenState extends ConsumerState<GoalCreationScreen> {
                             ),
                           ),
                           const SizedBox(height: 16),
-                          ListView.builder(
+                          ListView.separated(
                             shrinkWrap: true,
                             physics: const NeverScrollableScrollPhysics(),
                             itemCount: goalState.milestones.length,
+                            separatorBuilder: (context, index) => const SizedBox(height: 12),
                             itemBuilder: (context, index) {
                               final milestone = goalState.milestones[index];
-                              return Card(
-                                margin: const EdgeInsets.only(bottom: 12),
-                                child: ListTile(
-                                  leading: CircleAvatar(
-                                    backgroundColor: AppColors.primary,
-                                    child: Text(
-                                      '${index + 1}',
-                                      style: const TextStyle(color: Colors.white),
+                              return SolidCard(
+                                padding: const EdgeInsets.all(16),
+                                child: Row(
+                                  children: [
+                                    Container(
+                                      width: 48,
+                                      height: 48,
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        gradient: LinearGradient(
+                                          colors: [
+                                            AppColors.primary,
+                                            AppColors.primary.withValues(alpha: 0.7),
+                                          ],
+                                          begin: Alignment.topLeft,
+                                          end: Alignment.bottomRight,
+                                        ),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: AppColors.primary.withValues(alpha: 0.3),
+                                            blurRadius: 8,
+                                            offset: const Offset(0, 2),
+                                          ),
+                                        ],
+                                      ),
+                                      child: Center(
+                                        child: Text(
+                                          '${index + 1}',
+                                          style: AppTextStyles.bodyLarge.copyWith(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ),
                                     ),
-                                  ),
-                                  title: Text(
-                                    milestone.cityName,
-                                    style: AppTextStyles.bodyLarge.copyWith(
-                                      fontWeight: FontWeight.bold,
+                                    const SizedBox(width: 16),
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            milestone.cityName,
+                                            style: AppTextStyles.bodyLarge.copyWith(
+                                              fontWeight: FontWeight.bold,
+                                              color: AppColors.textPrimary,
+                                            ),
+                                          ),
+                                          const SizedBox(height: 4),
+                                          Text(
+                                            '${milestone.distanceInKm.toStringAsFixed(1)} km from start',
+                                            style: AppTextStyles.bodySmall.copyWith(
+                                              color: AppColors.textSecondary,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                     ),
-                                  ),
-                                  subtitle: Text(
-                                    '${milestone.distanceInKm.toStringAsFixed(1)} km from start',
-                                    style: AppTextStyles.bodySmall,
-                                  ),
-                                  trailing: const Icon(Icons.location_on, color: AppColors.primary),
+                                    const Icon(
+                                      Icons.location_on,
+                                      color: AppColors.primary,
+                                      size: 24,
+                                    ),
+                                  ],
                                 ),
                               );
                             },
@@ -817,18 +1030,19 @@ class _GoalCreationScreenState extends ConsumerState<GoalCreationScreen> {
         children: [
           // Step title
           Padding(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.all(20),
             child: Text(
               'Confirm Your Goal',
               style: AppTextStyles.headlineSmall.copyWith(
                 fontWeight: FontWeight.bold,
+                color: AppColors.textPrimary,
               ),
             ),
           ),
 
           Expanded(
             child: SingleChildScrollView(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.all(20),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
@@ -836,10 +1050,11 @@ class _GoalCreationScreenState extends ConsumerState<GoalCreationScreen> {
                   Text(
                     'Goal Name',
                     style: AppTextStyles.titleMedium.copyWith(
-                      fontWeight: FontWeight.bold,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.textPrimary,
                     ),
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 12),
                   CustomTextField(
                     label: 'Name your goal',
                     hint: 'Run to ${_destinationLocation?.placeName ?? "Destination"}',
@@ -851,55 +1066,113 @@ class _GoalCreationScreenState extends ConsumerState<GoalCreationScreen> {
 
                   const SizedBox(height: 24),
 
-                  // Summary
-                  Card(
-                    child: Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Summary',
-                            style: AppTextStyles.titleMedium.copyWith(
-                              fontWeight: FontWeight.bold,
+                  // Summary Card
+                  SolidCard(
+                    padding: const EdgeInsets.all(20),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Container(
+                              width: 40,
+                              height: 40,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                gradient: LinearGradient(
+                                  colors: [
+                                    AppColors.primary,
+                                    AppColors.primary.withValues(alpha: 0.7),
+                                  ],
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                ),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: AppColors.primary.withValues(alpha: 0.3),
+                                    blurRadius: 8,
+                                    offset: const Offset(0, 2),
+                                  ),
+                                ],
+                              ),
+                              child: const Icon(
+                                Icons.summarize,
+                                color: Colors.white,
+                                size: 20,
+                              ),
                             ),
-                          ),
-                          const Divider(height: 24),
-                          _buildSummaryRow('Start:', _startLocation?.placeName ?? '-'),
-                          const SizedBox(height: 8),
-                          _buildSummaryRow('Destination:', _destinationLocation?.placeName ?? '-'),
-                          const SizedBox(height: 8),
-                          _buildSummaryRow(
-                            'Distance:',
-                            goalState.route != null
-                                ? '${goalState.route!.distanceInKm.toStringAsFixed(1)} km'
-                                : '-',
-                          ),
-                          const SizedBox(height: 8),
-                          _buildSummaryRow('Milestones:', '${goalState.milestones.length} cities'),
-                        ],
-                      ),
+                            const SizedBox(width: 12),
+                            Text(
+                              'Journey Summary',
+                              style: AppTextStyles.titleMedium.copyWith(
+                                fontWeight: FontWeight.bold,
+                                color: AppColors.textPrimary,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 20),
+                        Container(
+                          height: 1,
+                          color: AppColors.border.withValues(alpha: 0.3),
+                        ),
+                        const SizedBox(height: 20),
+                        _buildSummaryRow('Start Location', _startLocation?.placeName ?? '-'),
+                        const SizedBox(height: 16),
+                        _buildSummaryRow('Destination', _destinationLocation?.placeName ?? '-'),
+                        const SizedBox(height: 16),
+                        _buildSummaryRow(
+                          'Total Distance',
+                          goalState.route != null
+                              ? '${goalState.route!.distanceInKm.toStringAsFixed(1)} km'
+                              : '-',
+                        ),
+                        const SizedBox(height: 16),
+                        _buildSummaryRow('Milestone Cities', '${goalState.milestones.length}'),
+                      ],
                     ),
                   ),
 
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 20),
 
                   // Info message
                   Container(
-                    padding: const EdgeInsets.all(12),
+                    padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
                       color: AppColors.primary.withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(8),
-                      border: Border.all(color: AppColors.primary.withValues(alpha: 0.3)),
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(
+                        color: AppColors.primary.withValues(alpha: 0.3),
+                        width: 1,
+                      ),
                     ),
                     child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Icon(Icons.info_outline, color: AppColors.primary, size: 20),
+                        Container(
+                          width: 32,
+                          height: 32,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: AppColors.primary.withValues(alpha: 0.2),
+                          ),
+                          child: const Icon(
+                            Icons.info_outline,
+                            color: AppColors.primary,
+                            size: 18,
+                          ),
+                        ),
                         const SizedBox(width: 12),
                         Expanded(
-                          child: Text(
-                            'Your virtual progress will be tracked as you complete runs!',
-                            style: AppTextStyles.bodySmall,
+                          child: Padding(
+                            padding: const EdgeInsets.only(top: 4),
+                            child: Text(
+                              'Your virtual progress will be tracked as you complete runs. Each run brings you closer to your destination!',
+                              style: AppTextStyles.bodySmall.copyWith(
+                                color: AppColors.textPrimary,
+                                height: 1.5,
+                              ),
+                            ),
                           ),
                         ),
                       ],
@@ -919,22 +1192,28 @@ class _GoalCreationScreenState extends ConsumerState<GoalCreationScreen> {
 
   Widget _buildSummaryRow(String label, String value) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          label,
-          style: AppTextStyles.bodyMedium.copyWith(
-            color: AppColors.textSecondary,
+        Expanded(
+          flex: 2,
+          child: Text(
+            label,
+            style: AppTextStyles.bodyMedium.copyWith(
+              color: AppColors.textSecondary,
+              fontSize: 14,
+            ),
           ),
         ),
+        const SizedBox(width: 12),
         Expanded(
+          flex: 3,
           child: Text(
             value,
             style: AppTextStyles.bodyMedium.copyWith(
-              fontWeight: FontWeight.bold,
+              fontWeight: FontWeight.w600,
+              color: AppColors.textPrimary,
             ),
             textAlign: TextAlign.end,
-            overflow: TextOverflow.ellipsis,
           ),
         ),
       ],

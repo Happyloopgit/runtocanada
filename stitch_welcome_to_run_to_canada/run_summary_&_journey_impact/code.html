@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Run Summary &amp; Journey Impact</title>
+<!-- Google Fonts: Lexend -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Configuration -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#0d7ff2",
+                        "background-light": "#f5f7f8",
+                        "background-dark": "#101922",
+                        "surface-dark": "#1C252E",
+                        "surface-light": "#FFFFFF",
+                        "accent-yellow": "#FFC107",
+                        "accent-orange": "#FF9800",
+                    },
+                    fontFamily: {
+                        "display": ["Lexend", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "1rem", "lg": "1.5rem", "xl": "2rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        /* Custom scrollbar for cleaner look */
+        ::-webkit-scrollbar {
+            width: 0px;
+            background: transparent;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="relative flex h-full min-h-screen w-full flex-col bg-background-light dark:bg-background-dark font-display overflow-x-hidden text-slate-900 dark:text-white pb-24">
+<!-- Top App Bar -->
+<div class="flex items-center px-4 pt-6 pb-2 justify-between sticky top-0 z-50 bg-background-light/90 dark:bg-background-dark/90 backdrop-blur-md">
+<div class="flex size-12 shrink-0 items-center justify-center rounded-full active:bg-black/5 dark:active:bg-white/10 transition-colors cursor-pointer">
+<span class="material-symbols-outlined text-slate-900 dark:text-white">close</span>
+</div>
+<h2 class="text-slate-900 dark:text-white text-lg font-bold leading-tight tracking-tight flex-1 text-center">Run Summary</h2>
+<div class="flex size-12 items-center justify-center shrink-0">
+<button class="text-primary text-base font-bold leading-normal tracking-wide shrink-0">Done</button>
+</div>
+</div>
+<!-- Hero Headline & Meta -->
+<div class="flex flex-col items-center justify-center pt-2 pb-6 px-4">
+<h1 class="text-slate-900 dark:text-white tracking-tight text-[32px] font-bold leading-tight text-center">Great Run, Alex!</h1>
+<p class="text-slate-500 dark:text-[#90adcb] text-sm font-normal leading-normal mt-2 text-center flex items-center gap-1">
+<span class="material-symbols-outlined text-base">calendar_today</span>
+            Tuesday Morning Run • Oct 24
+        </p>
+</div>
+<!-- Journey Progress Card (Gamified Impact) -->
+<div class="px-4 mb-6">
+<div class="bg-surface-light dark:bg-surface-dark p-5 rounded-xl shadow-sm dark:shadow-none border border-slate-100 dark:border-slate-800 relative overflow-hidden group">
+<!-- Background decoration -->
+<div class="absolute top-0 right-0 w-32 h-32 bg-primary/10 rounded-full blur-3xl -mr-10 -mt-10 pointer-events-none"></div>
+<div class="flex flex-col gap-4 relative z-10">
+<div class="flex items-center justify-between">
+<div>
+<p class="text-slate-400 dark:text-[#90adcb] text-xs font-bold uppercase tracking-wider mb-1">Current Quest</p>
+<p class="text-slate-900 dark:text-white text-lg font-bold leading-tight">Journey to Vancouver</p>
+</div>
+<div class="size-10 rounded-full bg-primary/20 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">flag</span>
+</div>
+</div>
+<div class="flex items-end gap-1">
+<span class="text-primary text-3xl font-bold">+5.2 km</span>
+<span class="text-slate-500 dark:text-[#90adcb] text-sm font-medium mb-1.5 ml-1">closer to destination</span>
+</div>
+<!-- Progress Bar -->
+<div class="flex flex-col gap-2">
+<div class="flex justify-between text-xs font-medium text-slate-500 dark:text-[#90adcb]">
+<span>Toronto</span>
+<span>Vancouver</span>
+</div>
+<div class="h-3 w-full bg-slate-200 dark:bg-[#314d68] rounded-full overflow-hidden">
+<div class="h-full bg-gradient-to-r from-primary to-[#4dabf7] rounded-full relative" style="width: 65%;">
+<div class="absolute right-0 top-0 bottom-0 w-1 bg-white/50"></div>
+</div>
+</div>
+<p class="text-right text-xs text-slate-400 dark:text-[#90adcb]">1,248 km remaining</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Stats Grid -->
+<div class="grid grid-cols-3 gap-3 px-4 mb-6">
+<!-- Distance -->
+<div class="flex flex-col gap-1 items-center justify-center rounded-2xl p-4 bg-surface-light dark:bg-surface-dark border border-slate-100 dark:border-slate-800">
+<span class="material-symbols-outlined text-primary mb-1">distance</span>
+<p class="text-slate-900 dark:text-white tracking-tight text-xl font-bold leading-tight">5.20</p>
+<p class="text-slate-500 dark:text-[#90adcb] text-xs font-medium uppercase tracking-wide">km</p>
+</div>
+<!-- Time -->
+<div class="flex flex-col gap-1 items-center justify-center rounded-2xl p-4 bg-surface-light dark:bg-surface-dark border border-slate-100 dark:border-slate-800">
+<span class="material-symbols-outlined text-green-500 mb-1">timer</span>
+<p class="text-slate-900 dark:text-white tracking-tight text-xl font-bold leading-tight">32:15</p>
+<p class="text-slate-500 dark:text-[#90adcb] text-xs font-medium uppercase tracking-wide">Time</p>
+</div>
+<!-- Pace -->
+<div class="flex flex-col gap-1 items-center justify-center rounded-2xl p-4 bg-surface-light dark:bg-surface-dark border border-slate-100 dark:border-slate-800">
+<span class="material-symbols-outlined text-amber-500 mb-1">speed</span>
+<p class="text-slate-900 dark:text-white tracking-tight text-xl font-bold leading-tight">6'12"</p>
+<p class="text-slate-500 dark:text-[#90adcb] text-xs font-medium uppercase tracking-wide">/km</p>
+</div>
+</div>
+<!-- Milestone Unlocked -->
+<div class="px-4 mb-6">
+<div class="bg-gradient-to-br from-surface-light to-orange-50 dark:from-surface-dark dark:to-orange-900/10 p-5 rounded-xl border border-orange-200 dark:border-orange-500/30 flex items-center gap-4 relative overflow-hidden">
+<!-- Shine effect -->
+<div class="absolute -top-10 -right-10 w-24 h-24 bg-accent-orange/20 blur-2xl rounded-full"></div>
+<div class="size-14 shrink-0 rounded-full bg-gradient-to-br from-accent-yellow to-accent-orange flex items-center justify-center shadow-lg shadow-orange-500/20 text-white">
+<span class="material-symbols-outlined text-3xl">emoji_events</span>
+</div>
+<div class="flex-1 z-10">
+<p class="text-accent-orange font-bold text-xs uppercase tracking-wider mb-0.5">Achievement Unlocked</p>
+<h3 class="text-slate-900 dark:text-white font-bold text-lg leading-tight">Great Lakes Crosser</h3>
+<p class="text-slate-500 dark:text-[#90adcb] text-xs mt-1">You ran a total of 50km near water!</p>
+</div>
+</div>
+</div>
+<!-- Map Preview -->
+<div class="px-4 mb-8">
+<h3 class="text-slate-900 dark:text-white text-base font-bold mb-3 px-1">Route &amp; Locations</h3>
+<div class="relative h-48 w-full rounded-2xl overflow-hidden shadow-sm border border-slate-100 dark:border-slate-800">
+<!-- Map Image -->
+<img alt="Stylized dark map view showing city streets and a running route highlighted" class="h-full w-full object-cover opacity-80 dark:opacity-60" data-alt="Stylized dark map view showing city streets and a running route highlighted" data-location="Toronto" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCczWsOOajZyTjV981mrCkFBGjKFBwcZlZBm-Z4vuWCx1wYnrS8hKXY55jhKQD3isBN6IkGYkpCm1SmxuQcmY_Dhhs1D_8wV8oh65vwtjGNlD6oDNU2_HNOy4S0BwxpBGQMVi-vEge5rkXhjxiZZ7wCuHBaRajQQNMkrA8vxgCijnUz8PmoV3r8Er28VxlqvFtzOQZzw7IFsm2QskCkEkiykFzgUgFitt9JdPfyuQksrNb7E0LXcTwUyhepLeSrcNIXb19xyy0NMG8"/>
+<!-- Overlay Gradient -->
+<div class="absolute inset-0 bg-gradient-to-t from-background-light dark:from-background-dark via-transparent to-transparent opacity-80"></div>
+<!-- Route Overlay (Abstract) -->
+<div class="absolute inset-0 flex items-center justify-center">
+<svg class="w-full h-full p-8 drop-shadow-lg" preserveaspectratio="none" viewbox="0 0 100 50">
+<path d="M10,40 Q30,10 50,25 T90,15" fill="none" stroke="#0d7ff2" stroke-dasharray="5 2" stroke-linecap="round" stroke-width="3"></path>
+<circle cx="90" cy="15" fill="#0d7ff2" r="3" stroke="white" stroke-width="1.5"></circle>
+<circle cx="10" cy="40" fill="#FFFFFF" r="3" stroke="#0d7ff2" stroke-width="1.5"></circle>
+</svg>
+</div>
+<!-- Map Label -->
+<div class="absolute bottom-3 left-3 bg-surface-light/90 dark:bg-surface-dark/90 backdrop-blur px-3 py-1.5 rounded-lg flex items-center gap-2 border border-slate-200 dark:border-slate-700">
+<span class="material-symbols-outlined text-primary text-sm">location_on</span>
+<span class="text-xs font-bold text-slate-900 dark:text-white">Downtown Toronto</span>
+</div>
+</div>
+</div>
+<!-- Fixed Bottom Actions -->
+<div class="fixed bottom-0 left-0 right-0 p-4 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-lg border-t border-slate-200 dark:border-slate-800 z-40 flex gap-3">
+<button class="flex-1 flex items-center justify-center gap-2 bg-surface-light dark:bg-surface-dark text-slate-900 dark:text-white font-bold py-3.5 px-6 rounded-full border border-slate-200 dark:border-slate-700 active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-[20px]">map</span>
+            View Journey
+        </button>
+<button class="flex-1 flex items-center justify-center gap-2 bg-primary text-white font-bold py-3.5 px-6 rounded-full shadow-lg shadow-primary/25 active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-[20px]">ios_share</span>
+            Share Run
+        </button>
+</div>
+</body></html>

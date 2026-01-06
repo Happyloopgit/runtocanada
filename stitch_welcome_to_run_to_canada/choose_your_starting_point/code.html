@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Choose Starting Point - Run to Canada</title>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Theme Configuration -->
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#0d7ff2",
+              "background-light": "#f5f7f8",
+              "background-dark": "#101922",
+              "surface-dark": "#1c2a38", 
+              "surface-input": "#223649",
+            },
+            fontFamily: {
+              "display": ["Lexend", "sans-serif"]
+            },
+            borderRadius: {
+                "DEFAULT": "1rem", 
+                "lg": "2rem", 
+                "xl": "3rem", 
+                "full": "9999px"
+            },
+          },
+        },
+      }
+    </script>
+<style>
+        /* Custom scrollbar hiding for horizontal scroll areas */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-white font-display overflow-hidden h-screen flex flex-col">
+<!-- Top Navigation -->
+<div class="absolute top-0 left-0 w-full z-20 pt-safe">
+<div class="flex items-center p-4 justify-between bg-gradient-to-b from-black/60 to-transparent">
+<button class="text-white flex size-12 shrink-0 items-center justify-center rounded-full bg-black/20 backdrop-blur-sm hover:bg-black/40 transition-colors">
+<span class="material-symbols-outlined text-[24px]">arrow_back_ios_new</span>
+</button>
+<h2 class="text-white text-lg font-bold leading-tight tracking-[-0.015em] flex-1 text-center pr-12 drop-shadow-md">Start Your Journey</h2>
+</div>
+</div>
+<!-- Map Area (Taking up top 45% of screen) -->
+<div class="relative w-full h-[50vh] shrink-0 bg-surface-dark overflow-hidden group/map">
+<!-- Map Image -->
+<div class="absolute inset-0 bg-center bg-cover bg-no-repeat opacity-80" data-alt="Dark mode stylized map of a city street grid with blue accents" data-location="Current City Selection" style='background-image: url("https://placeholder.pics/svg/300"); filter: hue-rotate(200deg) brightness(0.7) contrast(1.2);'>
+</div>
+<!-- Gradient Overlay for smooth transition to bottom sheet -->
+<div class="absolute bottom-0 left-0 w-full h-24 bg-gradient-to-t from-background-dark to-transparent"></div>
+<!-- Center Pin Marker -->
+<div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex flex-col items-center justify-center -mt-8">
+<div class="relative">
+<div class="absolute -inset-4 bg-primary/30 rounded-full blur-xl animate-pulse"></div>
+<span class="material-symbols-outlined text-primary text-5xl drop-shadow-[0_4px_10px_rgba(13,127,242,0.6)] fill-1">location_on</span>
+</div>
+<div class="bg-white text-primary text-xs font-bold px-3 py-1 rounded-full shadow-lg mt-1 transform -translate-y-1">Start Point</div>
+</div>
+<!-- Floating Map Controls -->
+<div class="absolute bottom-8 right-4 flex flex-col gap-3">
+<button class="size-12 bg-surface-dark/90 backdrop-blur border border-white/10 text-primary rounded-full flex items-center justify-center shadow-lg active:scale-95 transition-transform">
+<span class="material-symbols-outlined">my_location</span>
+</button>
+</div>
+</div>
+<!-- Bottom Sheet / Control Panel -->
+<div class="flex-1 bg-background-dark relative -mt-6 rounded-t-lg z-10 flex flex-col shadow-[0_-10px_40px_rgba(0,0,0,0.5)] border-t border-white/5">
+<!-- Handle -->
+<div class="w-full flex items-center justify-center pt-3 pb-1">
+<div class="h-1 w-12 rounded-full bg-slate-600"></div>
+</div>
+<!-- Scrollable Content in Bottom Sheet -->
+<div class="flex-1 overflow-y-auto px-4 pb-24">
+<!-- Headline -->
+<div class="pt-2 pb-4">
+<h2 class="text-white tracking-tight text-[26px] font-bold leading-tight text-left">Where does your run begin?</h2>
+<p class="text-slate-400 text-sm mt-1">Choose a starting point to calculate your virtual progress.</p>
+</div>
+<!-- Search Bar -->
+<div class="py-2">
+<label class="flex flex-col h-14 w-full">
+<div class="flex w-full flex-1 items-stretch rounded-full h-full shadow-inner bg-surface-input border border-white/5 focus-within:border-primary/50 transition-colors">
+<div class="text-[#90adcb] flex items-center justify-center pl-4 pr-2">
+<span class="material-symbols-outlined">search</span>
+</div>
+<input class="flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-r-full text-white focus:outline-0 border-none bg-transparent placeholder:text-[#90adcb] px-2 text-base font-normal leading-normal" placeholder="Search city, street or landmark..."/>
+</div>
+</label>
+</div>
+<!-- Current Location Quick Action -->
+<button class="w-full mt-3 flex items-center gap-3 p-3 rounded-xl hover:bg-white/5 transition-colors group text-left">
+<div class="size-10 rounded-full bg-primary/20 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-colors">
+<span class="material-symbols-outlined text-[20px]">near_me</span>
+</div>
+<div class="flex flex-col">
+<span class="text-white font-semibold text-sm">Use Current Location</span>
+<span class="text-slate-400 text-xs">Accurate to 10 meters</span>
+</div>
+<span class="material-symbols-outlined text-slate-500 ml-auto text-[20px]">chevron_right</span>
+</button>
+<!-- Recent/Popular Locations -->
+<div class="mt-6">
+<div class="flex items-center justify-between mb-3 px-1">
+<h3 class="text-white text-sm font-bold tracking-wide uppercase text-opacity-80">Recent &amp; Popular</h3>
+<button class="text-primary text-xs font-medium">Clear All</button>
+</div>
+<!-- Horizontal Scroll List -->
+<div class="flex overflow-x-auto no-scrollbar gap-3 pb-2 -mx-4 px-4">
+<!-- Chip 1 (Active/Home) -->
+<button class="shrink-0 flex items-center gap-2 pl-3 pr-4 py-2.5 rounded-full bg-surface-input border border-primary/30 text-white whitespace-nowrap active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-primary text-[18px]">home</span>
+<span class="text-sm font-medium">Home</span>
+</button>
+<!-- Chip 2 -->
+<button class="shrink-0 flex items-center gap-2 pl-3 pr-4 py-2.5 rounded-full bg-surface-input border border-white/5 text-slate-300 hover:text-white whitespace-nowrap active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-slate-400 text-[18px]">history</span>
+<span class="text-sm font-medium">Downtown Park</span>
+</button>
+<!-- Chip 3 -->
+<button class="shrink-0 flex items-center gap-2 pl-3 pr-4 py-2.5 rounded-full bg-surface-input border border-white/5 text-slate-300 hover:text-white whitespace-nowrap active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-slate-400 text-[18px]">history</span>
+<span class="text-sm font-medium">Central Station</span>
+</button>
+<!-- Chip 4 -->
+<button class="shrink-0 flex items-center gap-2 pl-3 pr-4 py-2.5 rounded-full bg-surface-input border border-white/5 text-slate-300 hover:text-white whitespace-nowrap active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-slate-400 text-[18px]">trending_up</span>
+<span class="text-sm font-medium">Paris, FR</span>
+</button>
+</div>
+</div>
+<!-- Suggestion List (Vertical) -->
+<div class="mt-4 flex flex-col gap-1">
+<div class="p-3 rounded-xl hover:bg-white/5 transition-colors flex items-center gap-3">
+<div class="bg-white/10 rounded-full p-2">
+<span class="material-symbols-outlined text-slate-400 text-[20px]">location_city</span>
+</div>
+<div class="flex-1 border-b border-white/5 pb-3">
+<div class="text-white text-sm font-medium">New York City</div>
+<div class="text-slate-500 text-xs">New York, USA</div>
+</div>
+</div>
+<div class="p-3 rounded-xl hover:bg-white/5 transition-colors flex items-center gap-3">
+<div class="bg-white/10 rounded-full p-2">
+<span class="material-symbols-outlined text-slate-400 text-[20px]">park</span>
+</div>
+<div class="flex-1 border-b border-white/5 pb-3">
+<div class="text-white text-sm font-medium">Stanley Park</div>
+<div class="text-slate-500 text-xs">Vancouver, Canada</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Sticky Bottom CTA -->
+<div class="absolute bottom-0 left-0 w-full p-4 bg-gradient-to-t from-background-dark via-background-dark to-transparent">
+<button class="w-full h-14 bg-primary hover:bg-blue-600 active:scale-[0.98] transition-all rounded-full text-white font-bold text-lg shadow-lg shadow-primary/20 flex items-center justify-center gap-2">
+<span>Confirm Start Point</span>
+<span class="material-symbols-outlined">arrow_forward</span>
+</button>
+</div>
+</div>
+</body></html>
