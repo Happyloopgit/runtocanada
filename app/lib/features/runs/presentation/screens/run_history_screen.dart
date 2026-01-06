@@ -6,6 +6,7 @@ import '../../data/datasources/run_local_datasource.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_text_styles.dart';
 import '../../../../core/widgets/loading_indicator.dart';
+import '../../../../core/widgets/glass_card.dart';
 import 'run_detail_screen.dart';
 
 // Provider for run list
@@ -25,10 +26,19 @@ class RunHistoryScreen extends ConsumerWidget {
     final runsAsync = ref.watch(runListProvider);
 
     return Scaffold(
+      backgroundColor: AppColors.background,
       appBar: AppBar(
-        title: const Text('Run History'),
-        backgroundColor: AppColors.primary,
-        foregroundColor: Colors.white,
+        backgroundColor: AppColors.surface,
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => Navigator.pop(context),
+        ),
+        title: Text(
+          'Run History',
+          style: AppTextStyles.titleLarge,
+        ),
+        centerTitle: false,
       ),
       body: runsAsync.when(
         data: (runs) {
@@ -39,33 +49,36 @@ class RunHistoryScreen extends ConsumerWidget {
         },
         loading: () => const Center(child: LoadingIndicator()),
         error: (error, stack) => Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                Icons.error_outline,
-                size: 64,
-                color: AppColors.error,
-              ),
-              const SizedBox(height: 16),
-              Text(
-                'Error loading runs',
-                style: AppTextStyles.headlineSmall,
-              ),
-              const SizedBox(height: 8),
-              Text(
-                error.toString(),
-                style: AppTextStyles.bodyMedium.copyWith(
-                  color: AppColors.textSecondary,
+          child: Padding(
+            padding: const EdgeInsets.all(24.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.error_outline,
+                  size: 64,
+                  color: AppColors.error,
                 ),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 24),
-              ElevatedButton(
-                onPressed: () => ref.invalidate(runListProvider),
-                child: const Text('Retry'),
-              ),
-            ],
+                const SizedBox(height: 16),
+                Text(
+                  'Error loading runs',
+                  style: AppTextStyles.headlineSmall,
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  error.toString(),
+                  style: AppTextStyles.bodyMedium.copyWith(
+                    color: AppColors.textSecondary,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 24),
+                ElevatedButton(
+                  onPressed: () => ref.invalidate(runListProvider),
+                  child: const Text('Retry'),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -145,51 +158,67 @@ class RunHistoryScreen extends ConsumerWidget {
     );
     final totalRuns = runs.length;
 
-    return Card(
-      margin: const EdgeInsets.only(bottom: 16),
-      elevation: 2,
-      child: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Icon(
+    return PrimaryCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                width: 40,
+                height: 40,
+                decoration: BoxDecoration(
+                  color: Colors.white.withValues(alpha: 0.2),
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(
                   Icons.analytics,
-                  color: AppColors.primary,
-                  size: 28,
+                  color: Colors.white,
+                  size: 20,
                 ),
-                const SizedBox(width: 12),
-                Text(
-                  'Overall Statistics',
-                  style: AppTextStyles.headlineSmall,
+              ),
+              const SizedBox(width: 12),
+              Text(
+                'Overall Statistics',
+                style: AppTextStyles.titleMedium.copyWith(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w600,
                 ),
-              ],
-            ),
-            const SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                _buildSummaryStat(
-                  label: 'Total Runs',
-                  value: totalRuns.toString(),
-                  icon: Icons.directions_run,
-                ),
-                _buildSummaryStat(
-                  label: 'Total Distance',
-                  value: '${(totalDistance / 1000).toStringAsFixed(1)} km',
-                  icon: Icons.route,
-                ),
-                _buildSummaryStat(
-                  label: 'Total Time',
-                  value: _formatTotalDuration(totalDuration),
-                  icon: Icons.timer,
-                ),
-              ],
-            ),
-          ],
-        ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 20),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              _buildSummaryStat(
+                label: 'TOTAL RUNS',
+                value: totalRuns.toString(),
+                icon: Icons.directions_run,
+              ),
+              Container(
+                width: 1,
+                height: 40,
+                color: Colors.white.withValues(alpha: 0.2),
+              ),
+              _buildSummaryStat(
+                label: 'DISTANCE',
+                value: '${(totalDistance / 1000).toStringAsFixed(1)} km',
+                icon: Icons.route,
+              ),
+              Container(
+                width: 1,
+                height: 40,
+                color: Colors.white.withValues(alpha: 0.2),
+              ),
+              _buildSummaryStat(
+                label: 'TIME',
+                value: _formatTotalDuration(totalDuration),
+                icon: Icons.timer,
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
@@ -201,19 +230,22 @@ class RunHistoryScreen extends ConsumerWidget {
   }) {
     return Column(
       children: [
-        Icon(icon, color: AppColors.primary, size: 24),
+        Icon(icon, color: Colors.white, size: 24),
         const SizedBox(height: 8),
         Text(
           value,
-          style: AppTextStyles.headlineSmall.copyWith(
+          style: AppTextStyles.statsLarge.copyWith(
+            fontSize: 24,
             fontWeight: FontWeight.bold,
+            color: Colors.white,
           ),
         ),
         const SizedBox(height: 4),
         Text(
           label,
-          style: AppTextStyles.caption.copyWith(
-            color: AppColors.textSecondary,
+          style: AppTextStyles.labelSmall.copyWith(
+            color: Colors.white.withValues(alpha: 0.8),
+            letterSpacing: 1,
           ),
         ),
       ],
@@ -244,146 +276,193 @@ class _RunListItem extends StatelessWidget {
     final formattedDate = DateFormat('MMM dd, yyyy').format(run.startTime);
     final formattedTime = DateFormat('h:mm a').format(run.startTime);
 
-    return Card(
-      margin: const EdgeInsets.only(bottom: 12),
-      elevation: 1,
-      child: InkWell(
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => RunDetailScreen(run: run),
-            ),
-          );
-        },
-        borderRadius: BorderRadius.circular(12),
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Timeline with circular gradient icon (48px)
+          Column(
             children: [
-              // Header with date and time
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.calendar_today,
-                        size: 16,
-                        color: AppColors.primary,
-                      ),
-                      const SizedBox(width: 8),
-                      Text(
-                        formattedDate,
-                        style: AppTextStyles.bodyMedium.copyWith(
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
+              Container(
+                width: 48,
+                height: 48,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  gradient: LinearGradient(
+                    colors: [
+                      AppColors.primary,
+                      AppColors.primary.withValues(alpha: 0.7),
                     ],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
                   ),
-                  Text(
-                    formattedTime,
-                    style: AppTextStyles.bodyMedium.copyWith(
-                      color: AppColors.textSecondary,
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppColors.primary.withValues(alpha: 0.3),
+                      blurRadius: 12,
+                      offset: const Offset(0, 4),
                     ),
-                  ),
-                ],
+                  ],
+                ),
+                child: const Icon(
+                  Icons.directions_run,
+                  color: Colors.white,
+                  size: 24,
+                ),
               ),
-              const SizedBox(height: 16),
-
-              // Main stats row
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  _buildStat(
-                    icon: Icons.straighten,
-                    label: 'Distance',
-                    value: '${run.distanceInKm.toStringAsFixed(2)} km',
-                  ),
-                  Container(
-                    height: 40,
-                    width: 1,
-                    color: AppColors.divider,
-                  ),
-                  _buildStat(
-                    icon: Icons.timer,
-                    label: 'Duration',
-                    value: run.formattedDuration,
-                  ),
-                  Container(
-                    height: 40,
-                    width: 1,
-                    color: AppColors.divider,
-                  ),
-                  _buildStat(
-                    icon: Icons.speed,
-                    label: 'Pace',
-                    value: run.formattedAveragePace,
-                  ),
-                ],
-              ),
-
-              // Notes preview if available
-              if (run.notes != null && run.notes!.isNotEmpty) ...[
-                const SizedBox(height: 12),
-                Container(
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: AppColors.surface,
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: AppColors.border),
-                  ),
-                  child: Row(
-                    children: [
-                      Icon(
-                        Icons.note,
-                        size: 16,
-                        color: AppColors.textSecondary,
-                      ),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        child: Text(
-                          run.notes!,
-                          style: AppTextStyles.bodyMedium.copyWith(
-                            color: AppColors.textSecondary,
-                            fontStyle: FontStyle.italic,
-                          ),
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
+              // Timeline connector line
+              Container(
+                width: 2,
+                height: 20,
+                margin: const EdgeInsets.symmetric(vertical: 4),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      AppColors.border,
+                      AppColors.border.withValues(alpha: 0.0),
                     ],
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
                   ),
                 ),
-              ],
+              ),
             ],
           ),
-        ),
+          const SizedBox(width: 16),
+
+          // Run card content
+          Expanded(
+            child: GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => RunDetailScreen(run: run),
+                  ),
+                );
+              },
+              child: SolidCard(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Date and time header
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          formattedDate,
+                          style: AppTextStyles.bodyLarge.copyWith(
+                            fontWeight: FontWeight.w600,
+                            color: Colors.white,
+                          ),
+                        ),
+                        Text(
+                          formattedTime,
+                          style: AppTextStyles.bodySmall.copyWith(
+                            color: AppColors.textSecondary,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+
+                    // Main stats in 3 columns
+                    Row(
+                      children: [
+                        Expanded(
+                          child: _buildCompactStat(
+                            icon: Icons.route,
+                            label: 'Distance',
+                            value: '${run.distanceInKm.toStringAsFixed(2)} km',
+                          ),
+                        ),
+                        Expanded(
+                          child: _buildCompactStat(
+                            icon: Icons.timer,
+                            label: 'Duration',
+                            value: run.formattedDuration,
+                          ),
+                        ),
+                        Expanded(
+                          child: _buildCompactStat(
+                            icon: Icons.speed,
+                            label: 'Pace',
+                            value: run.formattedAveragePace,
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    // Notes preview if available
+                    if (run.notes != null && run.notes!.isNotEmpty) ...[
+                      const SizedBox(height: 12),
+                      Container(
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          color: AppColors.background.withValues(alpha: 0.5),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.note,
+                              size: 14,
+                              color: AppColors.textSecondary,
+                            ),
+                            const SizedBox(width: 8),
+                            Expanded(
+                              child: Text(
+                                run.notes!,
+                                style: AppTextStyles.bodySmall.copyWith(
+                                  color: AppColors.textSecondary,
+                                  fontStyle: FontStyle.italic,
+                                ),
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
 
-  Widget _buildStat({
+  Widget _buildCompactStat({
     required IconData icon,
     required String label,
     required String value,
   }) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Icon(icon, color: AppColors.primary, size: 20),
+        Row(
+          children: [
+            Icon(icon, color: AppColors.primary, size: 14),
+            const SizedBox(width: 4),
+            Text(
+              label,
+              style: AppTextStyles.labelSmall.copyWith(
+                color: AppColors.textSecondary,
+                fontSize: 10,
+              ),
+            ),
+          ],
+        ),
         const SizedBox(height: 4),
         Text(
           value,
           style: AppTextStyles.bodyMedium.copyWith(
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        const SizedBox(height: 2),
-        Text(
-          label,
-          style: AppTextStyles.caption.copyWith(
-            color: AppColors.textSecondary,
+            fontWeight: FontWeight.w600,
+            color: Colors.white,
           ),
         ),
       ],

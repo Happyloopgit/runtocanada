@@ -788,7 +788,7 @@ This sprint plan divides the entire implementation into logical, atomic, and seq
 
 **Dependencies:** Sprint 15, Sprint 16
 
-**Status:** ⏳ IN PROGRESS (Phase 1, 2, 3 Complete)
+**Status:** ⏳ IN PROGRESS (Phase 1-5 Complete, Phase 6 Pending)
 
 **Duration:** 1.5-2 weeks
 
@@ -860,6 +860,7 @@ Transform the app from functional prototype to polished product by implementing 
 - Session 022: Phase 1 - Foundation (typography, colors, theme)
 - Session 023: Phase 2 - Component Library & Auth Screens
 - Session 024: Phase 4 - Home Dashboard (complete rebuild)
+- Session 025: Phase 5 - Run Tracking & History (partial - 2 of 3 screen groups)
 
 **Accomplishments:**
 - ✅ Lexend typography system (20+ text styles)
@@ -875,10 +876,15 @@ Transform the app from functional prototype to polished product by implementing 
 - ✅ Next milestone card with orange gradient
 - ✅ Achievements carousel with horizontal scrolling
 - ✅ Time-based greeting and notification bell
+- ✅ Run Tracking screen with pulsing header, 84px distance, glassmorphic metrics, circular button dock
+- ✅ Run History screen with timeline view, 48px circular gradient icons, PrimaryCard summary
 - ✅ 0 analyzer issues across all changes
 
+**Remaining in Phase 5:**
+- ⏳ Goal Creation Flow screens (Choose Starting Point, Set Destination, Confirmation)
+
 **Next Steps:**
-- Phase 5: Run Tracking & History screens
+- Complete Phase 5: Goal Creation Flow redesign (Session 026)
 - Phase 6: Premium paywall and final polish
 
 ### Why This Sprint is Critical

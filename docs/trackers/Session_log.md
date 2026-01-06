@@ -2215,3 +2215,177 @@ This helps others who might encounter the same issue.
 
 **Last Updated:** 2026-01-06
 **Total Sessions:** 24
+
+### Session 025 - 2026-01-06
+
+**Sprint:** Sprint 16.5 - Design System Overhaul (Phase 5: Run Tracking & History)
+**Duration:** In Progress
+**Participants:** Development Team (with Claude Code)
+
+**Objectives:**
+- Rebuild Run Tracking screen with modern design system
+- Implement glassmorphic metric cards and pulsing header
+- Create bottom dock with circular button controls
+- Add faded map background for immersive experience
+
+**Work Completed:**
+- Rebuilt Run Tracking Screen (`run_tracking_screen.dart`):
+  - **Pulsing Header:** Animated "RUNNING..." text with green pulsing dot
+  - **Faded Map Background:** 30% opacity map overlay for context
+  - **Huge Distance Display:** 84px primary blue text for main metric
+  - **3-Column Glassmorphic Cards:** Time, Pace, Speed metrics with glass styling
+  - **Bottom Dock:** Redesigned controls with circular buttons
+    - Lock button (56px, left) - placeholder for screen lock
+    - Pause/Resume button (96px, center) - large primary action with gradient
+    - Stop button (56px, right) - red color for danger action
+  - **Transparent App Bar:** Extended body behind app bar for immersive feel
+  - **Circular Buttons:** Custom gradient buttons with glow shadows
+  - Removed old 2x2 stats grid layout
+  - Removed old stat card components
+  - Updated imports (removed unused custom_button.dart)
+- Fixed analyzer issues:
+  - Changed `glassBackground` → `glassOverlay`
+  - Changed `glassBorder` → `border`
+  - Removed unused import
+- Successfully ran flutter analyze: **0 issues found** ✅
+
+**Files Modified:**
+- Modified: `app/lib/features/runs/presentation/screens/run_tracking_screen.dart` - Complete redesign
+- Modified: `docs/trackers/Session_log.md` - This file
+
+**Issues Encountered:**
+- Undefined getters for glass colors → Fixed by using `AppColors.glassOverlay` and `AppColors.border`
+- Unused import warning → Fixed by removing custom_button.dart import
+- All issues resolved successfully ✅
+
+**Visual Improvements:**
+- Run tracking screen now has modern, immersive design
+- Pulsing "RUNNING..." header provides real-time feedback
+- Faded map background adds context without distraction
+- Huge 84px distance number is easily readable during runs
+- Glassmorphic metric cards create depth and polish
+- Bottom dock provides quick access to essential controls
+- Circular buttons with gradients match design system
+- 96px center pause button is easy to tap while running
+- Transparent app bar maximizes screen real estate
+
+**Next Steps:**
+- Complete Run History screen rebuild with timeline view
+- Rebuild Goal Creation flow screens
+- Continue with Phase 6: Premium & Polish
+- Test run tracking on physical device
+
+---
+
+**Last Updated:** 2026-01-06
+**Total Sessions:** 25
+
+**Run History Screen Redesign:**
+- Rebuilt Run History Screen (`run_history_screen.dart`):
+  - **Updated App Bar:** Dark surface color with modern typography
+  - **PrimaryCard Summary:** Gradient blue card showing overall statistics
+    - Total runs, distance, and time with white text on gradient
+    - Circular icon container with analytics icon
+    - Dividers between stats for visual separation
+  - **Timeline View:** Modern vertical timeline layout
+    - 48px circular gradient icons for each run (blue gradient with glow)
+    - Timeline connector lines fading downward
+    - Run cards using SolidCard component
+  - **Run List Items:** Compact and information-rich
+    - Date and time in header
+    - 3-column compact stats layout (Distance, Duration, Pace)
+    - Small icons with labels above values
+    - Notes preview in semi-transparent container
+  - **Visual Improvements:**
+    - Timeline creates clear chronological flow
+    - Circular gradient icons match design system
+    - Solid cards for run items provide good contrast
+    - Compact stats layout maximizes information density
+- Successfully ran flutter analyze: **0 issues found** ✅
+
+---
+
+**Last Updated:** 2026-01-06
+**Total Sessions:** 25 (updated)
+
+### Session 025 - FINAL SUMMARY - 2026-01-06
+
+**Sprint:** Sprint 16.5 - Design System Overhaul (Phase 5: Run Tracking & History - PARTIAL)
+**Duration:** ~2 hours
+**Participants:** Development Team (with Claude Code)
+
+**Objectives:**
+- Rebuild Run Tracking screen with modern design system
+- Rebuild Run History screen with timeline view
+- (Goal Creation Flow deferred to next session)
+
+**Work Completed:**
+
+#### 1. Run Tracking Screen Redesign ✅
+- **Pulsing Header:** Animated "RUNNING..." with green pulsing dot and opacity animation
+- **Faded Map Background:** 30% opacity LiveRouteMapWidget for immersive context
+- **Huge Distance Display:** 84px bright blue number with "KILOMETERS/MILES" label
+- **3-Column Glassmorphic Cards:** Time, Pace, Speed with glass overlay effect
+- **Bottom Dock:** Professional circular button controls
+  - Lock button (56px, left) - placeholder for screen lock feature
+  - Pause/Resume button (96px, center) - large primary action with blue gradient and glow
+  - Stop button (56px, right) - red color for stop action
+- **Transparent App Bar:** Extended body behind app bar for full-screen experience
+- **Removed:** Old 2x2 stats grid, old stat card components
+
+#### 2. Run History Screen Redesign ✅
+- **Modern App Bar:** Dark surface background with clean typography
+- **PrimaryCard Summary:** Gradient blue card showing overall statistics
+  - Total runs, distance, time with white text on gradient
+  - Circular analytics icon in semi-transparent circle
+  - White dividers between stats for visual separation
+- **Timeline View:** Vertical timeline with 48px circular gradient icons
+  - Blue gradient icons (primary → primary with 0.7 alpha) with glow shadow
+  - Fading connector lines (border → transparent) between runs
+  - SolidCard components for each run item
+- **Compact Run Cards:** Information-dense layout
+  - Date and time header (white text for date, secondary for time)
+  - 3-column compact stats (Distance, Duration, Pace)
+  - Small 14px icons with 10px labels above values
+  - Notes preview in semi-transparent background container
+- **Visual Flow:** Timeline creates clear chronological progression
+
+**Files Modified:**
+- Modified: `app/lib/features/runs/presentation/screens/run_tracking_screen.dart` - Complete redesign (585 lines)
+- Modified: `app/lib/features/runs/presentation/screens/run_history_screen.dart` - Timeline view (439 lines)
+- Modified: `docs/trackers/Session_log.md` - This file
+- Modified: `docs/SPRINT_16_5_DESIGN_SYSTEM.md` - Updated progress
+- Modified: `docs/03-sprint-plan.md` - Updated status
+
+**Issues Encountered:**
+- Initial undefined getters for glass colors → Fixed by using `AppColors.glassOverlay` and `AppColors.border`
+- Unused import warning → Fixed by removing custom_button.dart import
+- All issues resolved successfully ✅
+
+**Flutter Analyze Results:**
+- Run Tracking Screen: **0 issues found** ✅
+- Run History Screen: **0 issues found** ✅
+
+**Phase 5 Status:**
+- ✅ Run Tracking Screen - COMPLETE
+- ✅ Run History Screen - COMPLETE  
+- ⏳ Goal Creation Flow - DEFERRED to Session 026
+
+**Next Session (026):**
+- Complete Phase 5: Goal Creation Flow redesign
+  - Choose Starting Point screen
+  - Set Destination screen
+  - Confirmation screen
+- Then move to Phase 6: Premium & Polish
+
+**Key Achievements:**
+- Modern, professional design matching fitness app standards
+- Timeline pattern successfully implemented
+- Information density maximized while maintaining readability
+- Consistent use of design system components (PrimaryCard, SolidCard, GlassCard)
+- All code passes analyzer checks perfectly
+
+---
+
+**Last Updated:** 2026-01-06
+**Total Sessions:** 25

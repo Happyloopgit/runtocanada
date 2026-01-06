@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:run_to_canada/core/theme/app_colors.dart';
 import 'package:run_to_canada/core/theme/app_text_styles.dart';
-import 'package:run_to_canada/core/widgets/custom_button.dart';
 import 'package:run_to_canada/core/widgets/loading_indicator.dart';
 import 'package:run_to_canada/core/widgets/live_route_map_widget.dart';
 import 'package:run_to_canada/features/auth/presentation/providers/auth_providers.dart';
@@ -180,45 +179,6 @@ class _RunTrackingScreenState extends ConsumerState<RunTrackingScreen> {
     }
   }
 
-  Widget _buildStatCard({
-    required String label,
-    required String value,
-    required String unit,
-    required IconData icon,
-  }) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.border),
-      ),
-      child: Column(
-        children: [
-          Icon(icon, color: AppColors.primary, size: 24),
-          const SizedBox(height: 8),
-          Text(
-            value,
-            style: AppTextStyles.statsLarge,
-          ),
-          Text(
-            unit,
-            style: AppTextStyles.bodySmall.copyWith(
-              color: AppColors.textSecondary,
-            ),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            label,
-            style: AppTextStyles.caption.copyWith(
-              color: AppColors.textSecondary,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     if (_isInitializing) {
@@ -268,181 +228,316 @@ class _RunTrackingScreenState extends ConsumerState<RunTrackingScreen> {
         }
       },
       child: Scaffold(
+        backgroundColor: AppColors.background,
+        extendBodyBehindAppBar: true,
         appBar: AppBar(
-          title: const Text('Run Tracking'),
+          backgroundColor: Colors.transparent,
+          elevation: 0,
           leading: IconButton(
-            icon: const Icon(Icons.close),
+            icon: const Icon(Icons.close, color: Colors.white),
             onPressed: _handleCancel,
           ),
+          title: _buildPulsingHeader(status),
+          centerTitle: true,
         ),
-        body: SafeArea(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              children: [
-                // Status Indicator
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 8,
-                  ),
-                  decoration: BoxDecoration(
-                    color: status == RunStatus.running
-                        ? AppColors.success.withValues(alpha: 0.1)
-                        : AppColors.warning.withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(
-                        status == RunStatus.running
-                            ? Icons.play_circle_filled
-                            : Icons.pause_circle_filled,
-                        color: status == RunStatus.running
-                            ? AppColors.success
-                            : AppColors.warning,
-                        size: 20,
-                      ),
-                      const SizedBox(width: 8),
-                      Text(
-                        status == RunStatus.running ? 'Running' : 'Paused',
-                        style: AppTextStyles.bodyMedium.copyWith(
-                          color: status == RunStatus.running
-                              ? AppColors.success
-                              : AppColors.warning,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-
-                const SizedBox(height: 16),
-
-                // Live route map
-                LiveRouteMapWidget(
+        body: Stack(
+          children: [
+            // Faded map background (30% opacity)
+            Positioned.fill(
+              child: Opacity(
+                opacity: 0.3,
+                child: LiveRouteMapWidget(
                   routePoints: ref.read(runTrackingServiceProvider).routePoints,
-                  height: 250,
+                  height: double.infinity,
                   followCurrentPosition: true,
                 ),
+              ),
+            ),
 
-                const SizedBox(height: 24),
+            // Main content
+            SafeArea(
+              child: Column(
+                children: [
+                  const SizedBox(height: 80), // Space below app bar
 
-                // Main Display - Duration
-                Text(
-                  'Duration',
-                  style: AppTextStyles.bodyLarge.copyWith(
-                    color: AppColors.textSecondary,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  _formatDuration(stats.duration),
-                  style: AppTextStyles.statsLarge.copyWith(
-                    fontSize: 56,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-
-                const SizedBox(height: 24),
-
-                // Stats Grid
-                GridView.count(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 16,
-                  mainAxisSpacing: 16,
-                  childAspectRatio: 1.1,
-                  children: [
-                    _buildStatCard(
-                      label: 'Distance',
-                      value: useMetric
-                          ? stats.distanceInKm.toStringAsFixed(2)
-                          : stats.distanceInMiles.toStringAsFixed(2),
-                      unit: useMetric ? 'km' : 'mi',
-                      icon: Icons.directions_run,
-                    ),
-                    _buildStatCard(
-                      label: 'Pace',
-                      value: _formatPace(stats.pace, useMetric),
-                      unit: useMetric ? 'min/km' : 'min/mi',
-                      icon: Icons.speed,
-                    ),
-                    _buildStatCard(
-                      label: 'Speed',
-                      value: _formatSpeed(stats.speed, useMetric),
-                      unit: useMetric ? 'km/h' : 'mph',
-                      icon: Icons.flash_on,
-                    ),
-                    _buildStatCard(
-                      label: 'Max Speed',
-                      value: _formatSpeed(stats.maxSpeed, useMetric),
-                      unit: useMetric ? 'km/h' : 'mph',
-                      icon: Icons.flash_on_outlined,
-                    ),
-                  ],
-                ),
-
-                const SizedBox(height: 16),
-
-                // Route Points Count Indicator
-                Container(
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: AppColors.surface,
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: AppColors.border),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const Icon(
-                        Icons.route,
-                        size: 16,
-                        color: AppColors.primary,
-                      ),
-                      const SizedBox(width: 8),
-                      Text(
-                        'Route Points: ${stats.routePointsCount}',
-                        style: AppTextStyles.caption.copyWith(
-                          color: AppColors.textSecondary,
+                  // Huge distance display (84px)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                    child: Column(
+                      children: [
+                        Text(
+                          useMetric
+                              ? stats.distanceInKm.toStringAsFixed(2)
+                              : stats.distanceInMiles.toStringAsFixed(2),
+                          style: AppTextStyles.displayXL.copyWith(
+                            fontSize: 84,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.primary,
+                            height: 1.0,
+                          ),
                         ),
-                      ),
-                    ],
+                        Text(
+                          useMetric ? 'KILOMETERS' : 'MILES',
+                          style: AppTextStyles.labelLarge.copyWith(
+                            color: AppColors.textSecondary,
+                            letterSpacing: 2,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  const SizedBox(height: 32),
+
+                  // 3-column metric cards with glassmorphism
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: _buildGlassMetricCard(
+                            label: 'TIME',
+                            value: _formatDuration(stats.duration),
+                            icon: Icons.timer_outlined,
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: _buildGlassMetricCard(
+                            label: 'PACE',
+                            value: _formatPace(stats.pace, useMetric),
+                            unit: useMetric ? 'min/km' : 'min/mi',
+                            icon: Icons.speed,
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: _buildGlassMetricCard(
+                            label: 'SPEED',
+                            value: _formatSpeed(stats.speed, useMetric),
+                            unit: useMetric ? 'km/h' : 'mph',
+                            icon: Icons.flash_on,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  const Spacer(),
+
+                  // Bottom dock with pause button
+                  _buildBottomDock(status),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPulsingHeader(RunStatus status) {
+    return TweenAnimationBuilder<double>(
+      tween: Tween(begin: 0.6, end: 1.0),
+      duration: const Duration(milliseconds: 1000),
+      curve: Curves.easeInOut,
+      builder: (context, value, child) {
+        return Opacity(
+          opacity: status == RunStatus.running ? value : 1.0,
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (status == RunStatus.running)
+                Container(
+                  width: 8,
+                  height: 8,
+                  decoration: const BoxDecoration(
+                    color: AppColors.success,
+                    shape: BoxShape.circle,
                   ),
                 ),
-
-                const SizedBox(height: 24),
-
-                // Control Buttons
-                Row(
-                  children: [
-                    Expanded(
-                      child: CustomButton(
-                        text: status == RunStatus.running ? 'Pause' : 'Resume',
-                        onPressed: _handlePauseResume,
-                        icon: status == RunStatus.running
-                            ? Icons.pause
-                            : Icons.play_arrow,
-                        isOutlined: true,
-                      ),
-                    ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: CustomButton(
-                        text: 'Stop',
-                        onPressed: _handleStop,
-                        icon: Icons.stop,
-                        backgroundColor: AppColors.error,
-                      ),
-                    ),
-                  ],
+              if (status == RunStatus.running) const SizedBox(width: 8),
+              Text(
+                status == RunStatus.running ? 'RUNNING...' : 'PAUSED',
+                style: AppTextStyles.labelLarge.copyWith(
+                  color: status == RunStatus.running
+                      ? AppColors.success
+                      : AppColors.warning,
+                  letterSpacing: 2,
+                  fontWeight: FontWeight.w600,
                 ),
-              ],
+              ),
+            ],
+          ),
+        );
+      },
+      onEnd: () {
+        if (status == RunStatus.running && mounted) {
+          setState(() {}); // Restart animation
+        }
+      },
+    );
+  }
+
+  Widget _buildGlassMetricCard({
+    required String label,
+    required String value,
+    String? unit,
+    required IconData icon,
+  }) {
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
+      decoration: BoxDecoration(
+        color: AppColors.glassOverlay,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: AppColors.border,
+          width: 1,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.1),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, color: AppColors.primary, size: 20),
+          const SizedBox(height: 8),
+          Text(
+            value,
+            style: AppTextStyles.statsLarge.copyWith(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
             ),
           ),
+          if (unit != null)
+            Text(
+              unit,
+              style: AppTextStyles.labelSmall.copyWith(
+                color: AppColors.textSecondary,
+                fontSize: 9,
+              ),
+            ),
+          const SizedBox(height: 4),
+          Text(
+            label,
+            style: AppTextStyles.labelSmall.copyWith(
+              color: AppColors.textSecondary,
+              letterSpacing: 1,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildBottomDock(RunStatus status) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+      decoration: BoxDecoration(
+        color: AppColors.surface.withValues(alpha: 0.95),
+        borderRadius: const BorderRadius.vertical(
+          top: Radius.circular(24),
+        ),
+        border: Border(
+          top: BorderSide(
+            color: AppColors.border,
+            width: 1,
+          ),
+        ),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          // Lock button (left)
+          _buildCircularButton(
+            icon: Icons.lock_outline,
+            size: 56,
+            onPressed: () {
+              // TODO: Implement screen lock functionality
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Screen lock feature coming soon'),
+                  duration: Duration(seconds: 2),
+                ),
+              );
+            },
+          ),
+
+          // Large pause/resume button (center, 96px)
+          _buildCircularButton(
+            icon: status == RunStatus.running ? Icons.pause : Icons.play_arrow,
+            size: 96,
+            isPrimary: true,
+            onPressed: _handlePauseResume,
+          ),
+
+          // Stop button (right) - changed from camera to stop
+          _buildCircularButton(
+            icon: Icons.stop,
+            size: 56,
+            color: AppColors.error,
+            onPressed: _handleStop,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildCircularButton({
+    required IconData icon,
+    required double size,
+    bool isPrimary = false,
+    Color? color,
+    required VoidCallback onPressed,
+  }) {
+    final buttonColor = color ?? (isPrimary ? AppColors.primary : AppColors.surface);
+    final iconColor = isPrimary || color != null ? Colors.white : AppColors.textPrimary;
+
+    return GestureDetector(
+      onTap: onPressed,
+      child: Container(
+        width: size,
+        height: size,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          gradient: isPrimary
+              ? LinearGradient(
+                  colors: [AppColors.primary, AppColors.primaryDark],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                )
+              : null,
+          color: isPrimary ? null : buttonColor,
+          border: Border.all(
+            color: isPrimary ? Colors.transparent : AppColors.border,
+            width: 1,
+          ),
+          boxShadow: isPrimary
+              ? [
+                  BoxShadow(
+                    color: AppColors.primary.withValues(alpha: 0.4),
+                    blurRadius: 20,
+                    offset: const Offset(0, 8),
+                  ),
+                ]
+              : [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.1),
+                    blurRadius: 10,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
+        ),
+        child: Icon(
+          icon,
+          color: iconColor,
+          size: size * 0.4,
         ),
       ),
     );

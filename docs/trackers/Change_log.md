@@ -1266,3 +1266,8 @@ Completed Phase 2 of the Design System Overhaul sprint, creating a comprehensive
 **Last Updated:** 2026-01-06
 **Total Changes:** 131 (Session 023: +8)
 **Last Session:** 023 (Design System Overhaul - Phase 2)
+| 025 | 2026-01-06 | Sprint 16.5 | app/lib/features/runs/presentation/screens/run_tracking_screen.dart | Design System | Complete redesign: pulsing header, faded map background, 84px distance display, glassmorphic metrics, circular button dock | [Session 025](Session_log.md#session-025---final-summary---2026-01-06) |
+| 025 | 2026-01-06 | Sprint 16.5 | app/lib/features/runs/presentation/screens/run_history_screen.dart | Design System | Complete redesign: timeline view with 48px circular gradient icons, PrimaryCard summary, SolidCard run items | [Session 025](Session_log.md#session-025---final-summary---2026-01-06) |
+| 025 | 2026-01-06 | Sprint 16.5 | docs/03-sprint-plan.md | Documentation | Updated Sprint 16.5 status to Phase 1-5 (partial) complete | [Session 025](Session_log.md#session-025---final-summary---2026-01-06) |
+| 025 | 2026-01-06 | Sprint 16.5 | docs/SPRINT_16_5_DESIGN_SYSTEM.md | Documentation | Updated Phase 5 progress (Run Tracking ✅, Run History ✅, Goal Creation pending) | [Session 025](Session_log.md#session-025---final-summary---2026-01-06) |
+| 025 | 2026-01-06 | Sprint 16.5 | docs/trackers/Session_log.md | Documentation | Added Session 025 final summary | [Session 025](Session_log.md#session-025---final-summary---2026-01-06) |
