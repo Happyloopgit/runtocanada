@@ -6,11 +6,11 @@ This document tracks all bugs discovered and their resolution status.
 
 | Status | Count |
 |--------|-------|
-| Open | 0 |
+| Open | 1 |
 | In Progress | 0 |
 | Fixed | 0 |
 | Closed | 3 |
-| **Total** | **3** |
+| **Total** | **4** |
 
 ---
 
@@ -18,7 +18,7 @@ This document tracks all bugs discovered and their resolution status.
 
 | Bug ID | Priority | Sprint | Component | Description | Discovered | Assigned | Reference |
 |--------|----------|--------|-----------|-------------|------------|----------|-----------|
-| - | - | - | - | No open bugs | - | - | - |
+| BUG-004 | High | Sprint 2 | Google Sign-In / Android | Google Sign-In fails on Android with API Exception 10 (Developer Console configuration issue) | 2026-01-06 | - | [Session 022](#bug-004-google-sign-in-failing-on-android-with-api-exception-10) |
 
 ---
 
@@ -518,7 +518,94 @@ When reporting bugs via feedback:
 
 ---
 
-**Last Updated:** 2026-01-05
-**Total Bugs Logged:** 3
+### BUG-004: Google Sign-In Failing on Android with API Exception 10
+
+**Priority:** High
+
+**Status:** Open
+
+**Sprint:** Sprint 2 - Firebase Authentication Logic
+
+**Component:** Google Sign-In / Android Configuration
+
+**Description:**
+
+- **What happened:** When user clicks "Continue with Google" button on login/signup screens, the app shows an error message: "An unexpected error occurred: PlatformException (sign_in_failed, com.google.android.gms.common.api.ApiException: 10, null, null)"
+
+- **Expected behavior:**
+  - Google Sign-In dialog should appear
+  - User should be able to select Google account
+  - User should be authenticated and logged into the app
+
+- **Error Details:**
+  ```
+  PlatformException (sign_in_failed, com.google.android.gms.common.api.ApiException: 10, null, null)
+  ```
+
+- **Root Cause:** API Exception code 10 from Google Play Services indicates a configuration error. This typically means:
+  - SHA-1 fingerprint not registered in Firebase Console for debug builds
+  - OAuth 2.0 client ID not configured correctly in Google Cloud Console
+  - Package name mismatch between app and Firebase configuration
+  - google-services.json may need to be regenerated
+
+- **Steps to reproduce:**
+  1. Open app on Android device using `flutter run`
+  2. Navigate to Login or Signup screen
+  3. Tap "Continue with Google" button
+  4. Observe error message instead of Google account selector
+
+- **Environment:**
+  - Platform: Android
+  - Build Type: Debug build (`flutter run`)
+  - Device: Physical Android device
+  - App Version: Development build (Session 022)
+  - Firebase Project: runtocanada
+  - Package Name: com.runtocanada.app
+
+- **Impact:**
+  - **High Priority** - Blocks Google Sign-In authentication flow
+  - Users cannot sign in or sign up using Google accounts
+  - Email/password authentication still works as workaround
+  - Prevents testing of Google Sign-In user flow
+
+- **Known Information:**
+  - Google Sign-In was previously configured in Session 018
+  - iOS Google Sign-In configuration was fixed in Session 018
+  - Android configuration likely needs SHA-1 fingerprint registration
+  - Debug and release builds use different signing keys
+
+- **Required Fix:**
+  1. Get SHA-1 fingerprint for debug keystore:
+     ```bash
+     cd android
+     ./gradlew signingReport
+     ```
+  2. Add SHA-1 fingerprint to Firebase Console:
+     - Go to Project Settings → Your Android App
+     - Add debug SHA-1 fingerprint
+  3. Download new google-services.json
+  4. Replace existing google-services.json file
+  5. Rebuild and test
+
+- **Workaround:**
+  - Use email/password authentication instead of Google Sign-In
+  - Issue only affects Google Sign-In, not other auth methods
+
+**Discovered:** 2026-01-06 (Session 022 - Design System Testing)
+
+**Assigned:** Unassigned
+
+**Reference:** [Session 022](Session_log.md#session-022---2026-01-06)
+
+**Notes:**
+- This is a configuration issue, not a code issue
+- Will be fixed separately in a future session
+- Does not block design system implementation work
+- Email/password auth remains fully functional
+
+---
+
+**Last Updated:** 2026-01-06
+**Total Bugs Logged:** 4
 **Bugs Fixed:** 3
-**Open Bugs:** 0
+**Open Bugs:** 1

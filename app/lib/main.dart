@@ -39,13 +39,13 @@ void main() async {
     DeviceOrientation.portraitDown,
   ]);
 
-  // Set system UI overlay style
+  // Set system UI overlay style for dark mode
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
-      statusBarIconBrightness: Brightness.dark,
-      systemNavigationBarColor: Colors.white,
-      systemNavigationBarIconBrightness: Brightness.dark,
+      statusBarIconBrightness: Brightness.light, // Light icons for dark mode
+      systemNavigationBarColor: Color(0xFF101922), // Dark background
+      systemNavigationBarIconBrightness: Brightness.light,
     ),
   );
 
@@ -67,10 +67,10 @@ class MyApp extends StatelessWidget {
       title: AppConstants.appName,
       debugShowCheckedModeBanner: false,
 
-      // Theme
-      theme: AppTheme.lightTheme,
+      // Theme - Dark mode as primary (designer's vision)
+      theme: AppTheme.darkTheme,
       darkTheme: AppTheme.darkTheme,
-      themeMode: ThemeMode.light, // TODO: Add theme mode provider in future
+      themeMode: ThemeMode.dark, // Dark mode first approach
 
       // Routing
       initialRoute: RouteConstants.login,

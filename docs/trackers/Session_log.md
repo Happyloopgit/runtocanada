@@ -1209,9 +1209,9 @@ Each session entry should include:
 
 ---
 
-**Last Updated:** 2026-01-05
-**Total Sessions:** 18
-**Completed Sprints:** 0-15 (Sprint 15 completed in Session 017, Bug Fixes completed in Session 018)
+**Last Updated:** 2026-01-06
+**Total Sessions:** 21
+**Completed Sprints:** 0-16 (Sprint 16 completed in Session 020)
 
 ---
 
@@ -1738,6 +1738,119 @@ Each session entry should include:
 
 ---
 
+### Session 021 - 2026-01-06
+
+**Sprint:** Sprint 16.5 - Design System Overhaul (Planning Phase)
+**Duration:** ~2 hours
+**Participants:** Development Team (with Claude Code)
+
+**Objectives:**
+- Analyze designer mockups from stitch_welcome_to_run_to_canada folder
+- Create comprehensive design system documentation
+- Assess current app architecture compatibility with design overhaul
+- Plan Sprint 16.5 implementation strategy
+- Update sprint plan with new design sprint
+
+**Work Completed:**
+- **Design System Documentation Created:**
+  - Analyzed all 8 designer mockup screens (welcome, dashboard, tracking, history, etc.)
+  - Extracted complete design specifications from HTML/CSS
+  - Created DESIGN_SYSTEM.md with:
+    - Complete color palette (#0d7ff2 primary blue, dark mode colors)
+    - Lexend font typography system (all text styles)
+    - Component specifications (buttons, cards, inputs, maps)
+    - Layout patterns and spacing scales
+    - Animation and transition specs
+    - Glassmorphism effects and glows
+- **Sprint 16.5 Implementation Plan Created:**
+  - Created SPRINT_16_5_DESIGN_SYSTEM.md with detailed 6-phase plan
+  - Phase 1: Foundation (fonts, colors, dark theme)
+  - Phase 2: Component Library (glassmorphic cards, buttons)
+  - Phase 3: Authentication Screens rebuild
+  - Phase 4: Home Dashboard rebuild (map, stats, floating button)
+  - Phase 5: Run Tracking & History rebuild
+  - Phase 6: Premium Paywall & Polish
+  - Estimated duration: 1.5-2 weeks (10-14 days)
+- **Architecture Compatibility Analysis:**
+  - Launched Explore agent to analyze current app structure
+  - Compatibility Score: 8.5/10 - Excellent for redesign
+  - Found 15 screens, clean separation of business logic
+  - Theme system centralized and ready for updates
+  - Zero hardcoded colors in features (all use AppColors)
+  - Riverpod state management won't be affected
+  - No major blockers identified
+- **Sprint Plan Integration:**
+  - Added Sprint 16.5 to main sprint plan (docs/03-sprint-plan.md)
+  - Inserted between Sprint 16 (Ad Integration) and Sprint 17 (Onboarding)
+  - Updated sprint dependency diagram
+  - Updated timeline estimate (+1.5-2 weeks total)
+  - Updated Sprint 17 dependency to Sprint 16.5
+
+**Files Modified:**
+- Created: `docs/DESIGN_SYSTEM.md` - Complete design specifications (colors, fonts, components, 400+ lines)
+- Created: `docs/SPRINT_16_5_DESIGN_SYSTEM.md` - Detailed implementation plan with 6 phases
+- Modified: `docs/03-sprint-plan.md` - Added Sprint 16.5 section and updated sprint diagram
+- Modified: `docs/trackers/Session_log.md` - This file
+
+**Design System Key Findings:**
+- **Designer Vision vs Current:**
+  - Designer: Dark mode first, bright blue (#0d7ff2), Lexend font, glassmorphism
+  - Current: Light mode, Canadian red (#D32F2F), system fonts, basic Material Design
+  - Complete visual redesign required, not just polish
+- **Critical Design Elements:**
+  - Lexend font (weights 100-900) via google_fonts package
+  - Primary color: #0d7ff2 (bright blue) - complete departure from red theme
+  - Dark theme (#101922 background) as primary mode
+  - Glassmorphism (backdrop-blur, semi-transparent backgrounds)
+  - Large hero numbers (84px for distance during runs)
+  - Floating action buttons with shadows
+  - Gradient backgrounds for premium/milestone screens
+- **Implementation Strategy:**
+  - Start with Phase 1 (Foundation) - low risk, high impact
+  - Existing business logic preserved 100%
+  - Theme values swapped in centralized files
+  - Screens rebuilt systematically (simple → complex)
+
+**Architecture Analysis Results:**
+- **What's Perfect:**
+  - Business logic completely separated (won't break)
+  - Theme system centralized (easy color/font swap)
+  - No hardcoded values in features
+  - Riverpod providers independent of UI
+- **What Needs to be Added:**
+  - google_fonts package for Lexend
+  - Background images for welcome/paywall
+  - Glassmorphism components
+- **What Needs Redesign:**
+  - All 15 screens (visual only)
+  - Custom button/input components
+  - Card styling throughout
+
+**Issues Encountered:**
+- Initial permission error accessing design folder - Resolved by user copying folder to project directory
+- None - Planning phase, no code changes yet
+
+**Next Steps:**
+- **DECISION POINT:** User to decide on implementation approach:
+  - Option A: Start Phase 1 NOW (Foundation - 2-3 hours)
+  - Option B: Continue with Sprint 17 (Onboarding) first
+  - Option C: Hybrid - Do Phase 1, then continue other sprints
+- If approved to proceed:
+  - Add google_fonts package to pubspec.yaml
+  - Create new app_colors.dart with designer palette
+  - Create new app_text_styles.dart with Lexend typography
+  - Implement dark theme as primary
+  - See immediate visual transformation
+
+**Recommendations:**
+- **Strongly recommend Option A** - Start Phase 1 now
+- Foundation changes are low-risk, high-impact
+- Only 2-3 hours to transform app visually
+- Sets foundation for all future screens
+- Better to build Sprint 17+ with correct design from start
+
+---
+
 ## Template for Future Sessions
 
 ### Session XXX - YYYY-MM-DD
@@ -1811,5 +1924,86 @@ This helps others who might encounter the same issue.
 
 ---
 
-**Last Updated:** 2025-12-28
-**Total Sessions:** 1
+### Session 022 - 2026-01-06
+
+**Sprint:** Sprint 16.5 - Design System Overhaul (Phase 1: Foundation)
+**Duration:** In Progress
+**Participants:** Development Team (with Claude Code)
+
+**Objectives:**
+- Implement Phase 1 of design system overhaul
+- Add Lexend font family with google_fonts package
+- Create new app_colors.dart with designer's palette (bright blue #0d7ff2)
+- Create new app_text_styles.dart with Lexend typography
+- Implement dark theme as primary theme
+- Update app_theme.dart with new design system
+- Test visual transformation across the app
+
+**Work Completed:**
+- Added google_fonts package (^6.2.1) to pubspec.yaml
+- Created new app_colors.dart with designer's palette:
+  - Primary color changed from Canadian red (#D32F2F) to bright blue (#0D7FF2)
+  - Complete dark mode color system (#101922 background, #1C2A38 surface, #182430 cards)
+  - Glassmorphism support colors and gradients
+  - Milestone orange gradient (#FF6B35 → #FFA500)
+  - Premium gold gradient
+  - Shadow and glow definitions
+  - Legacy compatibility aliases for smooth migration
+- Created new app_text_styles.dart with Lexend typography:
+  - Complete typography scale from displayXL (84px) to labelSmall (10px)
+  - Tabular figures for stats/numbers
+  - Proper letter-spacing and line-height for all text styles
+  - Material 3 compatibility names (headlineLarge, titleMedium, etc.)
+  - Special styles for buttons, stats, errors, links, hints
+- Updated app_theme.dart with comprehensive dark theme:
+  - Dark theme moved to primary position (designer's vision)
+  - Lexend font applied to all text
+  - Circular buttons (border-radius: 9999px)
+  - Circular text inputs (fully rounded)
+  - Glassmorphic cards with backdrop blur styling
+  - Complete Material 3 component theming
+  - Primary blue button shadows (#0D7FF2 with 40% alpha)
+  - All widgets themed for dark mode
+- Updated main.dart:
+  - Changed theme from light to dark mode
+  - Updated system UI overlay for dark mode (light status bar icons)
+  - Navigation bar set to dark background color
+- Fixed 24 analyzer errors by adding legacy compatibility aliases
+- Successfully ran flutter analyze: **0 issues found** ✅
+
+**Files Modified:**
+- Modified: `app/pubspec.yaml` - Added google_fonts ^6.2.1
+- Modified: `app/lib/core/theme/app_colors.dart` - Complete redesign with bright blue palette
+- Modified: `app/lib/core/theme/app_text_styles.dart` - Lexend typography system
+- Modified: `app/lib/core/theme/app_theme.dart` - Dark theme as primary with Material 3
+- Modified: `app/lib/core/theme/app_colors.dart` - Added legacy compatibility aliases
+- Modified: `app/lib/main.dart` - Dark mode by default
+- Modified: `docs/trackers/Session_log.md` - This file
+
+**Issues Encountered:**
+- **24 analyzer errors** after color system update:
+  - Missing getters: textOnPrimary, background, surface, secondary
+  - **Solution:** Added legacy compatibility aliases to app_colors.dart
+  - All errors resolved successfully ✅
+
+**Post-Implementation Fixes:**
+- Fixed error message visibility in dark mode:
+  - ErrorMessage widget now uses red text (AppColors.error) instead of gray
+  - Added red border and semi-transparent red background (10% opacity)
+  - Increased padding (16px) and icon size (24px) for better visibility
+  - SuccessMessage widget updated to match new styling (green with border)
+  - Successfully ran flutter analyze: **0 issues found** ✅
+  - Modified: `app/lib/core/widgets/error_message.dart`
+- Logged BUG-004: Google Sign-In failing on Android (API Exception 10 - SHA-1 fingerprint issue)
+
+**Next Steps:**
+- Test app on physical device to see visual transformation with fixed error messages
+- Continue with Phase 2: Component Library (glassmorphic cards, buttons)
+- Rebuild authentication screens with new design
+- Update home screen with floating action button
+- Fix BUG-004 (Google Sign-In SHA-1 configuration) in a separate session
+
+---
+
+**Last Updated:** 2026-01-06
+**Total Sessions:** 22

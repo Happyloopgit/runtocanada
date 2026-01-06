@@ -782,11 +782,92 @@ This sprint plan divides the entire implementation into logical, atomic, and seq
 
 ---
 
+## Sprint 16.5: Design System Overhaul 🎨
+
+**Goal:** Implement complete design system from designer mockups - transform app visual identity
+
+**Dependencies:** Sprint 15, Sprint 16
+
+**Status:** 🚧 READY TO START
+
+**Duration:** 1.5-2 weeks
+
+### Overview
+
+Transform the app from functional prototype to polished product by implementing the professional design system provided by the designer. This includes:
+- Complete visual redesign (dark mode, new colors, modern typography)
+- New component library (glassmorphism, custom buttons, cards)
+- All screens rebuilt to match designer mockups pixel-perfect
+
+### High-Level Tasks Summary
+
+**Phase 1: Foundation (Days 1-2)**
+- [ ] Add Lexend font via google_fonts package
+- [ ] Create new app_colors.dart with designer palette (#0d7ff2 primary blue)
+- [ ] Create new app_text_styles.dart with Lexend typography
+- [ ] Implement dark theme as primary theme
+
+**Phase 2: Component Library (Days 3-4)**
+- [ ] Create glassmorphic card/container components
+- [ ] Create new button system (primary, secondary, FAB)
+- [ ] Create custom input components (search bar, text fields)
+- [ ] Create progress indicators with glow effects
+
+**Phase 3: Authentication Screens (Days 5-6)**
+- [ ] Rebuild Welcome/Splash screen with background image
+- [ ] Rebuild Login screen with new design
+- [ ] Rebuild Signup screen with new design
+
+**Phase 4: Home Dashboard (Days 7-9)**
+- [ ] Create user avatar with level badge
+- [ ] Create immersive map card (4:3 aspect ratio)
+- [ ] Create 2-column stats grid
+- [ ] Create next milestone card with photo
+- [ ] Create achievement carousel
+- [ ] Create floating "Start Run" action button
+
+**Phase 5: Run Tracking & History (Days 10-12)**
+- [ ] Rebuild Run Tracking screen (huge distance display, glassmorphic metrics)
+- [ ] Rebuild Run History with timeline view and milestone photos
+- [ ] Rebuild Goal Creation flow screens
+
+**Phase 6: Premium & Polish (Days 13-14)**
+- [ ] Rebuild Premium Paywall with background image
+- [ ] Implement all animations and transitions
+- [ ] Final polish and testing
+
+### Reference Materials
+
+- **Detailed Sprint Plan:** `/docs/SPRINT_16_5_DESIGN_SYSTEM.md` (Complete task breakdown)
+- **Design System Specs:** `/docs/DESIGN_SYSTEM.md` (Colors, typography, components)
+- **Designer Mockups:** `/stitch_welcome_to_run_to_canada/` (8 screen designs)
+
+### Acceptance Criteria
+
+- [ ] All screens match designer mockups pixel-perfect
+- [ ] Dark mode is primary theme and looks stunning
+- [ ] Lexend font applied throughout app
+- [ ] Component library reusable and documented
+- [ ] All animations smooth (60fps)
+- [ ] Works flawlessly on iOS and Android
+
+### Why This Sprint is Critical
+
+The designer provided a significantly more polished visual direction than our current implementation. Implementing this NOW (before Sprint 17) ensures:
+1. New features built with correct design from start
+2. No rework needed later
+3. Professional appearance for beta testing and launch
+4. Sprint 18 (Polish) focuses on refinement, not redesign
+
+**See `/docs/SPRINT_16_5_DESIGN_SYSTEM.md` for complete task breakdown and implementation guide.**
+
+---
+
 ## Sprint 17: Onboarding & Tutorial
 
 **Goal:** Create first-time user onboarding experience
 
-**Dependencies:** Sprint 14
+**Dependencies:** Sprint 16.5 (updated - depends on new design system)
 
 ### Tasks:
 - [ ] Design onboarding flow (3-4 screens)
@@ -1472,9 +1553,11 @@ Sprint 15: Premium & Paywall
   ↓
 Sprint 16: Ad Integration
   ↓
+Sprint 16.5: Design System Overhaul 🎨 ← NEW! (CRITICAL - Visual Redesign)
+  ↓
 Sprint 17: Onboarding
   ↓
-Sprint 17.5: Health Data Integration (Wearables Support) ← NEW!
+Sprint 17.5: Health Data Integration (Wearables Support)
   ↓
 Sprint 18: Polish & Testing
   ↓
@@ -1491,11 +1574,11 @@ Sprint 24: Post-Launch Monitoring
 
 ### Total Timeline Estimate
 
-- **Development Sprints (0-17.5):** ~11-13 weeks
+- **Development Sprints (0-17.5):** ~13-15 weeks (includes Sprint 16.5: 1.5-2 weeks)
 - **Store Submission & Beta (18-22):** ~3-4 weeks
 - **Launch & Post-Launch (23-24):** Ongoing
 
-**Total to Launch:** ~14-17 weeks (3.5-4 months)
+**Total to Launch:** ~16-19 weeks (4-4.5 months)
 
 ---
 
