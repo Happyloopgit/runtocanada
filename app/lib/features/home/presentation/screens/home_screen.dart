@@ -12,7 +12,8 @@ import 'package:run_to_canada/features/premium/presentation/providers/premium_pr
 import 'package:run_to_canada/features/home/presentation/widgets/journey_map_card.dart';
 import 'package:run_to_canada/features/home/presentation/widgets/journey_stats_grid.dart';
 import 'package:run_to_canada/features/home/presentation/widgets/next_milestone_card.dart';
-import 'package:run_to_canada/features/home/presentation/widgets/achievements_carousel.dart';
+import 'package:run_to_canada/features/home/presentation/widgets/empty_goal_state.dart';
+import 'package:run_to_canada/features/home/presentation/providers/home_providers.dart';
 
 /// Home screen - main dashboard
 class HomeScreen extends ConsumerWidget {
@@ -177,127 +178,176 @@ class HomeScreen extends ConsumerWidget {
   }
 
   Widget _buildModernDashboard(BuildContext context, WidgetRef ref, dynamic user) {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Journey Title
-          Text(
-            'Toronto to Vancouver',
-            style: AppTextStyles.headlineMedium.copyWith(
-              color: AppColors.textPrimaryDark,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(height: 16),
+    final homeDataAsync = ref.watch(homeScreenDataProvider);
 
-          // Journey Map Card
-          JourneyMapCard(
-            currentCity: 'Journey',
-            dayNumber: 14,
-            mapWidget: Container(
-              color: AppColors.surfaceDark,
-              child: const Center(
-                child: Icon(
-                  Icons.map,
-                  size: 64,
-                  color: AppColors.primary,
-                ),
-              ),
-            ),
-            onTap: () {
-              AppRouter.navigateTo(context, RouteConstants.journeyMap);
-            },
-          ),
-          const SizedBox(height: 20),
-
-          // Stats Grid
-          const JourneyStatsGrid(
-            coveredDistance: 1200,
-            remainingDistance: 3200,
-            unit: 'km',
-            weeklyTrend: 5.2,
-            estimatedArrival: null,
-          ),
-          const SizedBox(height: 24),
-
-          // Next Milestone
-          const NextMilestoneCard(
-            milestoneName: 'Lake Superior',
-            distanceRemaining: 120,
-            unit: 'km',
-            estimatedRunsLeft: 2,
-            photoUrl: null,
-          ),
-          const SizedBox(height: 24),
-
-          // Recent Achievements
-          AchievementsCarousel(
-            achievements: const [
-              Achievement(
-                icon: Icons.speed,
-                title: 'Fastest 5K',
-                subtitle: 'Yesterday',
-                gradient: Achievement.purpleGradient,
-              ),
-              Achievement(
-                icon: Icons.local_fire_department,
-                title: '3 Day Streak',
-                subtitle: 'Active',
-                gradient: Achievement.orangeGradient,
-              ),
+    return homeDataAsync.when(
+      data: (homeData) {
+        // Show empty state if no active goal
+        if (!homeData.hasActiveGoal) {
+          return Column(
+            children: [
+              const Expanded(child: EmptyGoalState()),
+              const SizedBox(height: 24),
+              // Banner Ad (only shown to free users)
+              if (!user.hasActivePremium) const BannerAdWidget(),
             ],
-            onViewAll: () {
-              // TODO: Navigate to achievements screen
-            },
-          ),
-          const SizedBox(height: 24),
+          );
+        }
 
-          // Quick Actions
-          CustomButton(
-            text: 'Start Run',
-            onPressed: () async {
-              final canStart = await ref.read(canStartRunProvider.future);
-              if (!canStart && context.mounted) {
-                AppRouter.navigateTo(context, RouteConstants.paywall);
-              } else if (context.mounted) {
-                AppRouter.navigateTo(context, RouteConstants.runTracking);
-              }
-            },
-            icon: Icons.play_arrow,
-          ),
-          const SizedBox(height: 12),
+        // Show dashboard with real goal data
+        return SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Journey Title - Real goal name
+              if (homeData.goalTitle != null)
+                Text(
+                  homeData.goalTitle!,
+                  style: AppTextStyles.headlineMedium.copyWith(
+                    color: AppColors.textPrimaryDark,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              const SizedBox(height: 16),
 
-          CustomButton(
-            text: 'View Run History',
-            onPressed: () {
-              AppRouter.navigateTo(context, RouteConstants.runHistory);
-            },
-            icon: Icons.history,
-            isOutlined: true,
-          ),
-          const SizedBox(height: 12),
+              // Journey Map Card
+              JourneyMapCard(
+                currentCity: 'Journey',
+                dayNumber: _calculateDayNumber(homeData.activeGoal?.createdAt),
+                mapWidget: Container(
+                  color: AppColors.surfaceDark,
+                  child: const Center(
+                    child: Icon(
+                      Icons.map,
+                      size: 64,
+                      color: AppColors.primary,
+                    ),
+                  ),
+                ),
+                onTap: () {
+                  AppRouter.navigateTo(context, RouteConstants.journeyMap);
+                },
+              ),
+              const SizedBox(height: 20),
 
-          CustomButton(
-            text: 'Create New Goal',
-            onPressed: () async {
-              final canCreate = await ref.read(canCreateGoalProvider.future);
-              if (!canCreate && context.mounted) {
-                AppRouter.navigateTo(context, RouteConstants.paywall);
-              } else if (context.mounted) {
-                AppRouter.navigateTo(context, RouteConstants.goalCreation);
-              }
-            },
-            icon: Icons.flag,
-            isOutlined: true,
-          ),
-          const SizedBox(height: 24),
+              // Stats Grid - Real data from goal progress
+              JourneyStatsGrid(
+                coveredDistance: homeData.coveredDistanceKm,
+                remainingDistance: homeData.remainingDistanceKm,
+                unit: 'km', // TODO: Get from user settings
+                weeklyTrend: null, // No trend data yet
+                estimatedArrival: null, // TODO: Calculate based on average pace
+              ),
+              const SizedBox(height: 24),
 
-          // Banner Ad (only shown to free users)
-          if (!user.hasActivePremium) const BannerAdWidget(),
-        ],
+              // Next Milestone - Real next milestone data
+              if (homeData.nextMilestone != null)
+                NextMilestoneCard(
+                  milestoneName: homeData.nextMilestone!.cityName,
+                  distanceRemaining: _calculateDistanceToMilestone(
+                    homeData.nextMilestone!.distanceFromStart,
+                    homeData.progressStats?['currentProgress'] as double? ?? 0.0,
+                  ),
+                  unit: 'km',
+                  estimatedRunsLeft: _estimateRunsToMilestone(
+                    homeData.nextMilestone!.distanceFromStart,
+                    homeData.progressStats?['currentProgress'] as double? ?? 0.0,
+                  ),
+                  photoUrl: homeData.nextMilestone!.photoUrl,
+                ),
+              if (homeData.nextMilestone != null) const SizedBox(height: 24),
+
+              // Recent Achievements - TODO: Implement real achievements system
+              // For now, hide achievements section until implemented
+              // AchievementsCarousel(
+              //   achievements: const [],
+              //   onViewAll: () {},
+              // ),
+
+              // Quick Actions
+              CustomButton(
+                text: 'Start Run',
+                onPressed: () async {
+                  final canStart = await ref.read(canStartRunProvider.future);
+                  if (!canStart && context.mounted) {
+                    AppRouter.navigateTo(context, RouteConstants.paywall);
+                  } else if (context.mounted) {
+                    AppRouter.navigateTo(context, RouteConstants.runTracking);
+                  }
+                },
+                icon: Icons.play_arrow,
+              ),
+              const SizedBox(height: 12),
+
+              CustomButton(
+                text: 'View Run History',
+                onPressed: () {
+                  AppRouter.navigateTo(context, RouteConstants.runHistory);
+                },
+                icon: Icons.history,
+                isOutlined: true,
+              ),
+              const SizedBox(height: 12),
+
+              CustomButton(
+                text: 'Create New Goal',
+                onPressed: () async {
+                  final canCreate = await ref.read(canCreateGoalProvider.future);
+                  if (!canCreate && context.mounted) {
+                    AppRouter.navigateTo(context, RouteConstants.paywall);
+                  } else if (context.mounted) {
+                    AppRouter.navigateTo(context, RouteConstants.goalCreation);
+                  }
+                },
+                icon: Icons.flag,
+                isOutlined: true,
+              ),
+              const SizedBox(height: 24),
+
+              // Banner Ad (only shown to free users)
+              if (!user.hasActivePremium) const BannerAdWidget(),
+            ],
+          ),
+        );
+      },
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (error, stack) => Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(Icons.error_outline, size: 48, color: AppColors.error),
+            const SizedBox(height: 16),
+            Text('Error loading dashboard', style: AppTextStyles.bodyLarge),
+            const SizedBox(height: 8),
+            Text(
+              error.toString(),
+              style: AppTextStyles.bodySmall.copyWith(color: AppColors.textSecondaryDark),
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
       ),
     );
+  }
+
+  /// Calculate day number since goal creation
+  int _calculateDayNumber(DateTime? createdAt) {
+    if (createdAt == null) return 1;
+    final daysSinceCreation = DateTime.now().difference(createdAt).inDays;
+    return daysSinceCreation + 1; // Day 1 on creation day
+  }
+
+  /// Calculate distance to next milestone in km
+  double _calculateDistanceToMilestone(double milestoneDistance, double currentProgress) {
+    final distanceRemaining = (milestoneDistance - currentProgress).clamp(0.0, double.infinity);
+    return distanceRemaining / 1000; // Convert meters to km
+  }
+
+  /// Estimate number of runs needed to reach milestone (assuming 5km per run)
+  int _estimateRunsToMilestone(double milestoneDistance, double currentProgress) {
+    const averageRunDistance = 5000.0; // 5km in meters
+    final distanceRemaining = (milestoneDistance - currentProgress).clamp(0.0, double.infinity);
+    return (distanceRemaining / averageRunDistance).ceil().clamp(1, 999);
   }
 }

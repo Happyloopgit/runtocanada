@@ -27,6 +27,7 @@ class GeocodingResult {
 
     String? country;
     String? region;
+    String? place;
 
     if (context != null) {
       for (final item in context) {
@@ -35,16 +36,25 @@ class GeocodingResult {
           country = item['text'] as String?;
         } else if (id.startsWith('region')) {
           region = item['text'] as String?;
+        } else if (id.startsWith('place')) {
+          place = item['text'] as String?;
         }
       }
     }
 
+    // For reverse geocoding, if the result IS a place (city/town), use its text as the place name
+    // Otherwise use the text field or fall back to extracted place from context
+    final placeType = (json['place_type'] as List?)?.first as String?;
+    final cityName = placeType == 'place'
+        ? (json['text'] as String?)
+        : (place ?? json['text'] as String?);
+
     return GeocodingResult(
       placeName: json['place_name'] as String,
-      address: json['text'] as String?,
+      address: cityName,
       latitude: (coordinates[1] as num).toDouble(),
       longitude: (coordinates[0] as num).toDouble(),
-      placeType: (json['place_type'] as List?)?.first as String?,
+      placeType: placeType,
       country: country,
       region: region,
     );

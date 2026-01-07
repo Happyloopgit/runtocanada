@@ -51,6 +51,19 @@ class RunTrackingService {
   Stream<RunStatus> get statusStream => _statusController.stream;
   Stream<RunStats> get statsStream => _statsController.stream;
 
+  /// Get initial stats (for when stream hasn't emitted yet)
+  RunStats getInitialStats() {
+    return RunStats(
+      distance: 0.0,
+      duration: 0,
+      pace: 0.0,
+      speed: 0.0,
+      maxSpeed: 0.0,
+      elevationGain: 0.0,
+      routePointsCount: 0,
+    );
+  }
+
   /// Start a new run
   Future<void> startRun(String userId) async {
     if (_status != RunStatus.idle) {

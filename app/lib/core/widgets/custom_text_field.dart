@@ -6,6 +6,7 @@ class CustomTextField extends StatefulWidget {
   final String label;
   final String? hint;
   final TextEditingController? controller;
+  final FocusNode? focusNode;
   final TextInputType keyboardType;
   final bool obscureText;
   final String? Function(String?)? validator;
@@ -23,6 +24,7 @@ class CustomTextField extends StatefulWidget {
     required this.label,
     this.hint,
     this.controller,
+    this.focusNode,
     this.keyboardType = TextInputType.text,
     this.obscureText = false,
     this.validator,
@@ -53,6 +55,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
   Widget build(BuildContext context) {
     return TextFormField(
       controller: widget.controller,
+      focusNode: widget.focusNode,
       keyboardType: widget.keyboardType,
       obscureText: _obscureText,
       validator: widget.validator,

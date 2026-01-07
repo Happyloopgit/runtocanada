@@ -192,26 +192,17 @@ class _RunTrackingScreenState extends ConsumerState<RunTrackingScreen> {
       );
     }
 
+    // Use synchronous status and listen to streams for updates
+    final trackingService = ref.watch(runTrackingServiceProvider);
     final statusAsync = ref.watch(runStatusProvider);
     final statsAsync = ref.watch(runStatsProvider);
 
-    return statusAsync.when(
-      data: (status) => statsAsync.when(
-        data: (stats) => _buildTrackingUI(context, status, stats, useMetric: true),
-        loading: () => const Scaffold(
-          body: Center(child: LoadingIndicator()),
-        ),
-        error: (error, stack) => Scaffold(
-          body: Center(child: Text('Error loading stats: $error')),
-        ),
-      ),
-      loading: () => const Scaffold(
-        body: Center(child: LoadingIndicator()),
-      ),
-      error: (error, stack) => Scaffold(
-        body: Center(child: Text('Error loading status: $error')),
-      ),
-    );
+    // Get current values synchronously to avoid loading state
+    // Use stream values if available, otherwise fall back to synchronous getters
+    final currentStatus = statusAsync.valueOrNull ?? trackingService.status;
+    final currentStats = statsAsync.valueOrNull ?? trackingService.getInitialStats();
+
+    return _buildTrackingUI(context, currentStatus, currentStats, useMetric: true);
   }
 
   Widget _buildTrackingUI(
