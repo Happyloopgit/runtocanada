@@ -39,13 +39,13 @@ void main() async {
     DeviceOrientation.portraitDown,
   ]);
 
-  // Set system UI overlay style for dark mode
+  // Set system UI overlay style (will be overridden by theme)
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
-      statusBarIconBrightness: Brightness.light, // Light icons for dark mode
-      systemNavigationBarColor: Color(0xFF101922), // Dark background
-      systemNavigationBarIconBrightness: Brightness.light,
+      statusBarIconBrightness: Brightness.dark, // Dark icons for light mode
+      systemNavigationBarColor: Colors.white, // Light background
+      systemNavigationBarIconBrightness: Brightness.dark,
     ),
   );
 
@@ -67,10 +67,10 @@ class MyApp extends ConsumerWidget {
       title: AppConstants.appName,
       debugShowCheckedModeBanner: false,
 
-      // Theme - Dark mode as primary (designer's vision)
-      theme: AppTheme.darkTheme,
+      // Theme - Light theme default with dark theme support
+      theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
-      themeMode: ThemeMode.dark, // Dark mode first approach
+      themeMode: ThemeMode.system, // Respects user's device settings
 
       // Routing - start with initial screen (checks onboarding status)
       initialRoute: RouteConstants.initialRoute,

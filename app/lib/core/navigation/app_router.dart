@@ -4,10 +4,11 @@ import 'package:run_to_canada/core/navigation/page_transitions.dart';
 import 'package:run_to_canada/features/auth/presentation/screens/forgot_password_screen.dart';
 import 'package:run_to_canada/features/auth/presentation/screens/login_screen.dart';
 import 'package:run_to_canada/features/auth/presentation/screens/signup_screen.dart';
-import 'package:run_to_canada/features/home/presentation/screens/home_screen.dart';
+import 'package:run_to_canada/core/navigation/bottom_nav_shell.dart';
 import 'package:run_to_canada/features/runs/presentation/screens/run_tracking_screen.dart';
 import 'package:run_to_canada/features/maps/presentation/screens/map_demo_screen.dart';
 import 'package:run_to_canada/features/goals/presentation/screens/goal_creation_screen.dart';
+import 'package:run_to_canada/features/goals/presentation/screens/goals_list_screen.dart';
 import 'package:run_to_canada/features/goals/presentation/screens/journey_map_screen.dart';
 import 'package:run_to_canada/features/profile/presentation/screens/profile_screen.dart';
 import 'package:run_to_canada/features/settings/presentation/screens/settings_screen.dart';
@@ -49,10 +50,10 @@ class AppRouter {
           slideUp: true,
         );
 
-      // Home screen - fade in (usually first screen after auth)
+      // Home screen - fade in (now uses bottom nav shell)
       case RouteConstants.home:
         return PageTransitions.fadeIn(
-          page: const HomeScreen(),
+          page: const BottomNavShell(),
           settings: settings,
         );
 
@@ -74,6 +75,13 @@ class AppRouter {
       case RouteConstants.goalCreation:
         return PageTransitions.slideFromBottom(
           page: const GoalCreationScreen(),
+          settings: settings,
+        );
+
+      // Goals list - slide from right (list view)
+      case RouteConstants.goalsList:
+        return PageTransitions.slideFromRight(
+          page: const GoalsListScreen(),
           settings: settings,
         );
 

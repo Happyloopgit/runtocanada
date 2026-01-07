@@ -15,6 +15,7 @@ class RouteConstants {
   // Journey Routes
   static const String journeyMap = '/journey-map';
   static const String goalCreation = '/goal-creation';
+  static const String goalsList = '/goals-list';
   static const String milestoneDetail = '/milestone-detail';
 
   // History Routes
