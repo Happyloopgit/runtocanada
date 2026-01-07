@@ -1,3 +1,4 @@
+import 'dart:math' as math;
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
 import 'package:run_to_canada/app/env.dart';
 
@@ -76,14 +77,54 @@ class MapboxService {
       if (lng > maxLng) maxLng = lng;
     }
 
-    // Center point
+    // Calculate center point
     final centerLat = (minLat + maxLat) / 2;
     final centerLng = (minLng + maxLng) / 2;
 
-    return getCameraOptions(
-      latitude: centerLat,
-      longitude: centerLng,
-      zoom: 12.0,
+    // Calculate appropriate zoom level based on bounds size
+    // Formula: zoom = log2(360 / longitudeSpan) - accounting for screen width
+    final latSpan = maxLat - minLat;
+    final lngSpan = maxLng - minLng;
+
+    // Use the larger span to ensure both dimensions fit
+    final maxSpan = math.max(latSpan, lngSpan);
+
+    // Calculate zoom - lower number = more zoomed out
+    // Increase padding factor to ensure ENTIRE route is visible without manual zooming
+    final paddingFactor = 2.5; // Aggressive padding to guarantee full route visibility
+    final adjustedSpan = maxSpan * paddingFactor;
+
+    // Mapbox zoom formula (simplified): larger span = smaller zoom number
+    double zoom;
+    if (adjustedSpan > 180) {
+      zoom = 1.0; // World view
+    } else if (adjustedSpan > 90) {
+      zoom = 2.0;
+    } else if (adjustedSpan > 45) {
+      zoom = 3.0;
+    } else if (adjustedSpan > 20) {
+      zoom = 4.0;
+    } else if (adjustedSpan > 10) {
+      zoom = 5.0;
+    } else if (adjustedSpan > 5) {
+      zoom = 6.0;
+    } else if (adjustedSpan > 2.5) {
+      zoom = 7.0;
+    } else if (adjustedSpan > 1.25) {
+      zoom = 8.0;
+    } else if (adjustedSpan > 0.6) {
+      zoom = 9.0;
+    } else if (adjustedSpan > 0.3) {
+      zoom = 10.0;
+    } else if (adjustedSpan > 0.15) {
+      zoom = 11.0;
+    } else {
+      zoom = 12.0;
+    }
+
+    return CameraOptions(
+      center: Point(coordinates: Position(centerLng, centerLat)),
+      zoom: zoom,
     );
   }
 

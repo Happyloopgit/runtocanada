@@ -125,6 +125,17 @@ class DirectionsService {
         throw Exception('Directions API error: ${response.statusCode}');
       }
     } on DioException catch (e) {
+      // If 422 error (intercontinental route or no road available),
+      // fall back to great circle distance with straight line
+      if (e.response?.statusCode == 422) {
+        return _createGreatCircleRoute(
+          startLng: startLng,
+          startLat: startLat,
+          endLng: endLng,
+          endLat: endLat,
+        );
+      }
+
       if (e.response?.statusCode == 401) {
         throw Exception('Invalid Mapbox access token');
       }
@@ -132,6 +143,66 @@ class DirectionsService {
     } catch (e) {
       throw Exception('Failed to get route: $e');
     }
+  }
+
+  /// Create a route using great circle distance (as the crow flies)
+  /// Used for intercontinental routes where driving directions are not available
+  DirectionsRoute _createGreatCircleRoute({
+    required double startLng,
+    required double startLat,
+    required double endLng,
+    required double endLat,
+  }) {
+    // Calculate great circle distance
+    final distance = _calculateDistance(startLat, startLng, endLat, endLng);
+
+    // Create straight line with intermediate points for better visualization
+    final intermediatePoints = _generateIntermediatePoints(
+      startLng: startLng,
+      startLat: startLat,
+      endLng: endLng,
+      endLat: endLat,
+      numPoints: 50, // 50 intermediate points for smooth line
+    );
+
+    // Estimate duration assuming average running pace of 6 km/h
+    final durationInHours = (distance / 1000) / 6; // distance in km / speed
+    final duration = durationInHours * 3600; // convert to seconds
+
+    return DirectionsRoute(
+      distance: distance,
+      duration: duration,
+      coordinates: intermediatePoints,
+      geometry: null,
+    );
+  }
+
+  /// Generate intermediate points along a straight line (linear interpolation)
+  /// For true great circle, would need spherical interpolation, but this is good enough for visualization
+  List<DirectionsCoordinate> _generateIntermediatePoints({
+    required double startLng,
+    required double startLat,
+    required double endLng,
+    required double endLat,
+    required int numPoints,
+  }) {
+    final points = <DirectionsCoordinate>[];
+
+    // Add start point
+    points.add(DirectionsCoordinate(longitude: startLng, latitude: startLat));
+
+    // Generate intermediate points using linear interpolation
+    for (int i = 1; i < numPoints; i++) {
+      final fraction = i / numPoints;
+      final lng = startLng + (endLng - startLng) * fraction;
+      final lat = startLat + (endLat - startLat) * fraction;
+      points.add(DirectionsCoordinate(longitude: lng, latitude: lat));
+    }
+
+    // Add end point
+    points.add(DirectionsCoordinate(longitude: endLng, latitude: endLat));
+
+    return points;
   }
 
   /// Get route between multiple waypoints

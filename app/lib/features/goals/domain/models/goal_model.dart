@@ -124,9 +124,8 @@ class GoalModel extends HiveObject {
       milestones: (data['milestones'] as List)
           .map((m) => MilestoneModel.fromJson(m as Map<String, dynamic>))
           .toList(),
-      routePolyline: (data['routePolyline'] as List)
-          .map((e) => (e as num).toDouble())
-          .toList(),
+      // routePolyline not synced - empty list, will be regenerated from start/destination
+      routePolyline: [],
       isActive: data['isActive'] as bool? ?? true,
       isCompleted: data['isCompleted'] as bool? ?? false,
       completedAt: data['completedAt'] != null
@@ -147,7 +146,7 @@ class GoalModel extends HiveObject {
       'totalDistance': totalDistance,
       'currentProgress': currentProgress,
       'milestones': milestones.map((m) => m.toJson()).toList(),
-      'routePolyline': routePolyline,
+      // routePolyline excluded - too large for Firestore, regenerate from start/destination
       'isActive': isActive,
       'isCompleted': isCompleted,
       'completedAt': completedAt?.toIso8601String(),

@@ -18,48 +18,51 @@ class MilestoneGenerationService {
   /// [targetMilestoneCount] - Desired number of milestones (default: auto-calculated)
   ///
   /// Returns a list of [MilestoneModel] objects
+  /// Uses adaptive spacing: starts small for quick wins, gradually increases
   Future<List<MilestoneModel>> generateMilestones({
     required DirectionsRoute route,
     int? targetMilestoneCount,
   }) async {
     final milestones = <MilestoneModel>[];
 
-    // Calculate how many milestones to generate
-    final milestoneCount = targetMilestoneCount ?? _calculateMilestoneCount(route.distanceInKm);
+    // Generate adaptive milestone distances (in meters)
+    final milestoneDistances = _generateAdaptiveMilestoneDistances(route.distance);
 
-    if (milestoneCount == 0) {
+    if (milestoneDistances.isEmpty) {
       return milestones;
     }
 
-    // Calculate distance between milestones
-    final distanceBetweenMilestones = route.distance / (milestoneCount + 1);
-
     // Generate milestone points along the route
-    for (int i = 1; i <= milestoneCount; i++) {
-      final targetDistance = distanceBetweenMilestones * i;
+    for (int i = 0; i < milestoneDistances.length; i++) {
+      final targetDistance = milestoneDistances[i];
       final coordinate = _findCoordinateAtDistance(route, targetDistance);
 
       if (coordinate != null) {
         // Reverse geocode to get location name
+        // Priority: place (city/town) > locality > address components
+        // Exclude 'region' to avoid getting state names
         final geocodingResult = await _geocodingService.reverseGeocode(
           latitude: coordinate.latitude,
           longitude: coordinate.longitude,
-          types: ['place', 'locality', 'region'],
+          types: ['place', 'locality'], // Removed 'region' to avoid state names
         );
 
         // Create location model
+        // Use address field (which contains city name for 'place' type) or fall back
+        final cityName = geocodingResult?.address ?? geocodingResult?.region;
+        final milestoneNumber = i + 1; // 1-indexed for display
         final location = LocationModel(
-          placeName: geocodingResult?.placeName ?? 'Milestone $i',
+          placeName: cityName ?? 'Milestone $milestoneNumber',
           latitude: coordinate.latitude,
           longitude: coordinate.longitude,
           address: geocodingResult?.fullName,
-          city: geocodingResult?.region,
+          city: cityName,
           country: geocodingResult?.country,
         );
 
         // Create milestone
         final milestone = MilestoneModel(
-          id: 'milestone_$i',
+          id: 'milestone_$milestoneNumber',
           location: location,
           distanceFromStart: targetDistance,
           isReached: false,
@@ -73,23 +76,45 @@ class MilestoneGenerationService {
     return milestones;
   }
 
-  /// Calculate optimal number of milestones based on route distance
-  int _calculateMilestoneCount(double distanceInKm) {
-    if (distanceInKm < 50) {
-      return 0; // No milestones for very short routes
-    } else if (distanceInKm < 100) {
-      return 1; // 1 milestone for short routes
-    } else if (distanceInKm < 250) {
-      return 2; // 2 milestones for medium routes
-    } else if (distanceInKm < 500) {
-      return 3; // 3 milestones for medium-long routes
-    } else if (distanceInKm < 1000) {
-      return 5; // 5 milestones for long routes
-    } else if (distanceInKm < 2000) {
-      return 7; // 7 milestones for very long routes
-    } else {
-      return 10; // 10 milestones for ultra-long routes
+  /// Generate adaptive milestone distances that start small and gradually increase
+  /// Psychology: Quick early wins motivate users, larger gaps acceptable later
+  ///
+  /// Example for 1743km route:
+  /// - Milestone 1: 50km (quick first achievement!)
+  /// - Milestone 2: 100km (+50km gap)
+  /// - Milestone 3: 175km (+75km gap)
+  /// - Milestone 4: 275km (+100km gap)
+  /// - And so on with gradually increasing gaps
+  List<double> _generateAdaptiveMilestoneDistances(double totalDistance) {
+    final distances = <double>[];
+    final distanceInKm = totalDistance / 1000;
+
+    // No milestones for very short routes
+    if (distanceInKm < 25) {
+      return distances;
     }
+
+    // Starting parameters
+    double currentDistance = 0;
+    double initialGap = 50000; // Start with 50km gap (in meters)
+    double gapIncrement = 25000; // Increase gap by 25km each time (slower growth)
+    double currentGap = initialGap;
+
+    // Generate milestones until we reach the total distance
+    while (currentDistance + currentGap < totalDistance) {
+      currentDistance += currentGap;
+      distances.add(currentDistance);
+
+      // Gradually increase the gap for next milestone
+      currentGap += gapIncrement;
+
+      // Cap maximum gap at 250km to keep it reasonable
+      if (currentGap > 250000) {
+        currentGap = 250000;
+      }
+    }
+
+    return distances;
   }
 
   /// Find coordinate at a specific distance along the route

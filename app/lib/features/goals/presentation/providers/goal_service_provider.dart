@@ -3,7 +3,7 @@ import '../../data/datasources/goal_local_datasource.dart';
 import '../../data/services/goal_service.dart';
 import '../../../../core/data/providers/sync_providers.dart';
 
-/// Provider for GoalLocalDataSource
+/// Provider for GoalLocalDataSource (exported for use in screens)
 final goalLocalDataSourceProvider = Provider<GoalLocalDataSource>((ref) {
   return GoalLocalDataSource();
 });
