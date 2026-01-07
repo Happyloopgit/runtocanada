@@ -1,4 +1,7 @@
+import 'dart:async';
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart' as widgets; // For Visibility widget (avoids conflict with Mapbox)
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart' hide Position;
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
@@ -14,10 +17,19 @@ import '../../../../core/widgets/error_message.dart';
 import '../../../../core/widgets/glass_card.dart';
 import '../../domain/models/location_model.dart';
 import '../providers/goal_creation_provider.dart';
+import '../providers/goals_list_provider.dart';
+import '../../data/datasources/goal_local_datasource.dart';
+import '../../../home/presentation/providers/home_providers.dart' hide activeGoalProvider;
+import '../../../auth/presentation/providers/auth_providers.dart';
 
 /// Provider for GeocodingService
 final geocodingServiceProvider = Provider<GeocodingService>((ref) {
   return GeocodingService();
+});
+
+/// Provider for GoalLocalDataSource (local to this screen)
+final _goalLocalDataSourceProvider = Provider<GoalLocalDataSource>((ref) {
+  return GoalLocalDataSource();
 });
 
 /// Provider for location service
@@ -46,25 +58,45 @@ class _GoalCreationScreenState extends ConsumerState<GoalCreationScreen> {
   // UI state
   bool _isLoadingCurrentLocation = false;
   bool _isSearching = false;
-  String _searchQuery = '';
   List<GeocodingResult> _searchResults = [];
   String? _errorMessage;
+  bool _isSearchFieldFocused = false; // Track search field focus
 
-  // Map controller
-  MapboxMap? _mapController;
+  // PERSISTENT MAP CONTROLLER - Single instance across all steps (Issue #41 fix)
+  MapboxMap? _persistentMapController;
   CircleAnnotationManager? _circleManager;
+  PolylineAnnotationManager? _polylineManager;
+  bool _mapInitialized = false;
 
   // Mapbox service instance
   final _mapboxService = MapboxService();
 
   // Text controllers
   final _goalNameController = TextEditingController();
+  final _searchFocusNode = FocusNode(); // Focus node for search field
+
+  // Debounce timer for search
+  Timer? _searchDebounceTimer;
+
+  @override
+  void initState() {
+    super.initState();
+    // Listen to search field focus changes
+    _searchFocusNode.addListener(() {
+      setState(() {
+        _isSearchFieldFocused = _searchFocusNode.hasFocus;
+      });
+    });
+  }
 
   @override
   void dispose() {
     _goalNameController.dispose();
+    _searchFocusNode.dispose();
+    _searchDebounceTimer?.cancel();
     _circleManager = null;
-    _mapController = null;
+    _polylineManager = null;
+    _persistentMapController = null;
     super.dispose();
   }
 
@@ -110,7 +142,7 @@ class _GoalCreationScreenState extends ConsumerState<GoalCreationScreen> {
           _isLoadingCurrentLocation = false;
         });
 
-        _updateMap();
+        _updateMapForCurrentStep();
       }
     } catch (e) {
       setState(() {
@@ -125,14 +157,12 @@ class _GoalCreationScreenState extends ConsumerState<GoalCreationScreen> {
     if (query.trim().isEmpty) {
       setState(() {
         _searchResults = [];
-        _searchQuery = '';
       });
       return;
     }
 
     setState(() {
       _isSearching = true;
-      _searchQuery = query;
       _errorMessage = null;
     });
 
@@ -149,12 +179,16 @@ class _GoalCreationScreenState extends ConsumerState<GoalCreationScreen> {
         query: query,
         limit: 5,
         proximity: proximity,
-        types: ['place', 'region', 'country', 'locality'],
+        types: ['place', 'region', 'country'],
       );
 
       setState(() {
         _searchResults = results;
         _isSearching = false;
+        // Show message if no results found
+        if (results.isEmpty) {
+          _errorMessage = 'No locations found for "$query". Try a different search.';
+        }
       });
     } catch (e) {
       setState(() {
@@ -167,6 +201,9 @@ class _GoalCreationScreenState extends ConsumerState<GoalCreationScreen> {
 
   /// Select a location from search results
   void _selectLocation(GeocodingResult result) {
+    // Unfocus search field to dismiss keyboard and show map
+    _searchFocusNode.unfocus();
+
     setState(() {
       final location = LocationModel(
         latitude: result.latitude,
@@ -184,18 +221,28 @@ class _GoalCreationScreenState extends ConsumerState<GoalCreationScreen> {
       }
 
       _searchResults = [];
-      _searchQuery = '';
+      _isSearchFieldFocused = false; // Show map after selection
     });
 
-    _updateMap();
+    _updateMapForCurrentStep();
   }
 
-  /// Update map with selected locations
-  void _updateMap() {
-    if (_mapController == null) return;
+  /// Update map state for current step (Issue #41 fix)
+  /// Instead of recreating maps, we update the single persistent instance
+  void _updateMapForCurrentStep() async {
+    print('🗺️ DEBUG: _updateMapForCurrentStep CALLED - Step: $_currentStep, MapInit: $_mapInitialized, Controller: ${_persistentMapController != null}, CircleMgr: ${_circleManager != null}, PolylineMgr: ${_polylineManager != null}');
+
+    if (!_mapInitialized || _persistentMapController == null) {
+      print('❌ DEBUG: RETURNING EARLY - Map not initialized or controller null');
+      return;
+    }
+
+    final goalState = ref.read(goalCreationProvider);
+    print('🛣️ DEBUG: Route data - Exists: ${goalState.route != null}, Coordinates: ${goalState.route?.coordinates.length ?? 0}, IsCalculating: ${goalState.isCalculatingRoute}');
 
     // Clear existing annotations
-    _circleManager?.deleteAll();
+    await _circleManager?.deleteAll();
+    await _polylineManager?.deleteAll();
 
     // Add markers for selected locations
     final annotations = <CircleAnnotationOptions>[];
@@ -219,39 +266,133 @@ class _GoalCreationScreenState extends ConsumerState<GoalCreationScreen> {
     }
 
     if (annotations.isNotEmpty) {
-      _circleManager?.createMulti(annotations);
+      await _circleManager?.createMulti(annotations);
+      print('📍 DEBUG: Created ${annotations.length} markers (start: ${_startLocation != null}, dest: ${_destinationLocation != null})');
     }
 
-    // Fit camera to show both locations
-    if (_startLocation != null && _destinationLocation != null) {
-      final cameraOptions = _mapboxService.getBoundsCameraOptions(
-        coordinates: [
-          Position(_startLocation!.longitude, _startLocation!.latitude),
-          Position(_destinationLocation!.longitude, _destinationLocation!.latitude),
-        ],
-        padding: MbxEdgeInsets(
-          top: 80.0,
-          left: 80.0,
-          bottom: 80.0,
-          right: 80.0,
-        ),
+    // Steps 2 & 3: Show route polyline if available
+    if (_currentStep >= 2 && goalState.route != null && goalState.route!.coordinates.isNotEmpty) {
+      print('DEBUG: Drawing route with ${goalState.route!.coordinates.length} coordinates on persistent map');
+
+      final positions = goalState.route!.coordinates
+          .map((coord) => Position(coord.longitude, coord.latitude))
+          .toList();
+
+      final lineString = LineString(coordinates: positions);
+      final lineColor = Colors.blue.toARGB32();
+
+      final polylineOptions = PolylineAnnotationOptions(
+        geometry: lineString,
+        lineColor: lineColor,
+        lineWidth: 8.0,
       );
 
-      _mapController?.flyTo(cameraOptions, null);
+      final annotation = await _polylineManager?.create(polylineOptions);
+      print('DEBUG: Polyline created on persistent map: $annotation');
+
+      // FIT CAMERA TO SHOW ENTIRE ROUTE using Mapbox's built-in API
+      print('📸 DEBUG: Fitting camera to show entire route with ${positions.length} points');
+
+      // Calculate bounds from all route coordinates
+      double minLat = positions.first.lat.toDouble();
+      double maxLat = positions.first.lat.toDouble();
+      double minLng = positions.first.lng.toDouble();
+      double maxLng = positions.first.lng.toDouble();
+
+      for (final pos in positions) {
+        final lat = pos.lat.toDouble();
+        final lng = pos.lng.toDouble();
+        if (lat < minLat) minLat = lat;
+        if (lat > maxLat) maxLat = lat;
+        if (lng < minLng) minLng = lng;
+        if (lng > maxLng) maxLng = lng;
+      }
+
+      // TEST: Use Mapbox's official cameraForCoordinateBounds API
+      final bounds = CoordinateBounds(
+        southwest: Point(coordinates: Position(minLng, minLat)),
+        northeast: Point(coordinates: Position(maxLng, maxLat)),
+        infiniteBounds: false,
+      );
+
+      print('📸 DEBUG: Calling cameraForCoordinateBounds with bounds: SW($minLng, $minLat) NE($maxLng, $maxLat)');
+
+      final cameraOptions = await _persistentMapController?.cameraForCoordinateBounds(
+        bounds,
+        MbxEdgeInsets(top: 100, left: 100, bottom: 100, right: 100),
+        null, // bearing
+        null, // pitch
+        null, // maxZoom
+        null, // offset
+      );
+
+      if (cameraOptions != null) {
+        print('📸 DEBUG: Mapbox calculated zoom: ${cameraOptions.zoom}, center: (${cameraOptions.center?.coordinates.lng}, ${cameraOptions.center?.coordinates.lat})');
+        await _persistentMapController?.flyTo(cameraOptions, MapAnimationOptions(duration: 800));
+        print('✅ DEBUG: Camera positioned using Mapbox cameraForCoordinateBounds');
+      } else {
+        print('❌ DEBUG: cameraForCoordinateBounds returned null!');
+      }
+      return; // Exit early - we've already positioned the camera
+    }
+
+    // Update camera based on step (fallback if no route available)
+    if (_startLocation != null && _destinationLocation != null) {
+      // Show both locations using Mapbox's built-in API
+      print('📸 DEBUG: Flying camera to show both start (${_startLocation!.latitude}, ${_startLocation!.longitude}) and destination (${_destinationLocation!.latitude}, ${_destinationLocation!.longitude})');
+
+      // Calculate bounds from start and destination
+      final startLat = _startLocation!.latitude;
+      final startLng = _startLocation!.longitude;
+      final destLat = _destinationLocation!.latitude;
+      final destLng = _destinationLocation!.longitude;
+
+      final minLat = startLat < destLat ? startLat : destLat;
+      final maxLat = startLat > destLat ? startLat : destLat;
+      final minLng = startLng < destLng ? startLng : destLng;
+      final maxLng = startLng > destLng ? startLng : destLng;
+
+      // TEST: Use Mapbox's official cameraForCoordinateBounds API
+      final bounds = CoordinateBounds(
+        southwest: Point(coordinates: Position(minLng, minLat)),
+        northeast: Point(coordinates: Position(maxLng, maxLat)),
+        infiniteBounds: false,
+      );
+
+      print('📸 DEBUG: Calling cameraForCoordinateBounds for start/dest: SW($minLng, $minLat) NE($maxLng, $maxLat)');
+
+      final cameraOptions = await _persistentMapController?.cameraForCoordinateBounds(
+        bounds,
+        MbxEdgeInsets(top: 100, left: 100, bottom: 100, right: 100),
+        null, // bearing
+        null, // pitch
+        null, // maxZoom
+        null, // offset
+      );
+
+      if (cameraOptions != null) {
+        print('📸 DEBUG: Mapbox calculated zoom: ${cameraOptions.zoom}, center: (${cameraOptions.center?.coordinates.lng}, ${cameraOptions.center?.coordinates.lat})');
+        await _persistentMapController?.flyTo(cameraOptions, MapAnimationOptions(duration: 800));
+        print('✅ DEBUG: Camera positioned using Mapbox cameraForCoordinateBounds for start/dest');
+      } else {
+        print('❌ DEBUG: cameraForCoordinateBounds returned null for start/dest!');
+      }
     } else if (_startLocation != null) {
+      // Show start location
+      print('📸 DEBUG: Flying camera to show start location');
       final cameraOptions = CameraOptions(
         center: Point(coordinates: Position(_startLocation!.longitude, _startLocation!.latitude)),
         zoom: 12.0,
       );
-
-      _mapController?.flyTo(cameraOptions, null);
+      await _persistentMapController?.flyTo(cameraOptions, MapAnimationOptions(duration: 500));
     } else if (_destinationLocation != null) {
+      // Show destination
+      print('📸 DEBUG: Flying camera to show destination');
       final cameraOptions = CameraOptions(
         center: Point(coordinates: Position(_destinationLocation!.longitude, _destinationLocation!.latitude)),
         zoom: 12.0,
       );
-
-      _mapController?.flyTo(cameraOptions, null);
+      await _persistentMapController?.flyTo(cameraOptions, MapAnimationOptions(duration: 500));
     }
   }
 
@@ -263,7 +404,6 @@ class _GoalCreationScreenState extends ConsumerState<GoalCreationScreen> {
       setState(() {
         _currentStep = 1;
         _searchResults = [];
-        _searchQuery = '';
       });
     } else if (_currentStep == 1 && _destinationLocation != null) {
       // Update provider with destination location
@@ -273,11 +413,16 @@ class _GoalCreationScreenState extends ConsumerState<GoalCreationScreen> {
       setState(() {
         _currentStep = 2;
         _searchResults = [];
-        _searchQuery = '';
       });
 
       // Calculate route and generate milestones
+      print('📍 DEBUG: About to calculate route - Step: $_currentStep');
       await ref.read(goalCreationProvider.notifier).calculateRoute();
+      print('✅ DEBUG: Route calculation completed');
+
+      // Update map to show the calculated route
+      print('🎯 DEBUG: Calling _updateMapForCurrentStep after route calculation');
+      _updateMapForCurrentStep();
     } else if (_currentStep == 2) {
       // Move to final confirmation step and populate goal name
       final goalState = ref.read(goalCreationProvider);
@@ -293,19 +438,145 @@ class _GoalCreationScreenState extends ConsumerState<GoalCreationScreen> {
       setState(() {
         _currentStep = 3;
       });
+
+      // Update map to keep showing the route on confirmation screen
+      _updateMapForCurrentStep();
     } else if (_currentStep == 3) {
-      // Create the goal
-      final success = await ref.read(goalCreationProvider.notifier).createGoal();
-      if (success && mounted) {
-        // Navigate back to home
-        Navigator.pop(context);
+      // Check if user has an active goal
+      final hasActiveGoal = await ref.read(hasActiveGoalProvider.future);
+
+      // If they have an active goal, ask what to do
+      if (hasActiveGoal && mounted) {
+        final choice = await _showGoalActivationDialog();
+
+        if (choice == null) {
+          // User cancelled
+          return;
+        }
+
+        // Create the goal with the chosen activation status
+        await _createGoalWithActivation(activateGoal: choice == 'activate');
+      } else {
+        // No active goal, create and activate by default
+        await _createGoalWithActivation(activateGoal: true);
+      }
+    }
+  }
+
+  /// Show dialog asking user whether to activate new goal or add to bucket list
+  Future<String?> _showGoalActivationDialog() async {
+    return showDialog<String>(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: AppColors.surfaceDark,
+        title: Text(
+          'Activate This Goal?',
+          style: AppTextStyles.titleLarge.copyWith(
+            color: AppColors.textPrimaryDark,
+          ),
+        ),
+        content: Text(
+          'You already have an active goal. Would you like to activate this new goal (your current goal will be paused) or save it for later?',
+          style: AppTextStyles.bodyMedium.copyWith(
+            color: AppColors.textSecondaryDark,
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, 'save'),
+            child: Text(
+              'Save for Later',
+              style: AppTextStyles.labelLarge.copyWith(
+                color: AppColors.textSecondaryDark,
+              ),
+            ),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, 'activate'),
+            child: Text(
+              'Activate Now',
+              style: AppTextStyles.labelLarge.copyWith(
+                color: AppColors.primary,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Create goal with specified activation status
+  Future<void> _createGoalWithActivation({required bool activateGoal}) async {
+    final goalName = ref.read(goalCreationProvider).goalName; // Save before reset
+
+    // If activating, deactivate current goal first
+    if (activateGoal) {
+      final userAsync = await ref.read(currentUserProvider.future);
+      if (userAsync != null) {
+        final goalLocalDataSource = ref.read(_goalLocalDataSourceProvider);
+        await goalLocalDataSource.deactivateAllGoals(userAsync.uid);
+      }
+    }
+
+    // Create the goal (it will be created as active)
+    final success = await ref.read(goalCreationProvider.notifier).createGoal();
+
+    // If user chose "save for later", deactivate the newly created goal
+    if (success && !activateGoal && mounted) {
+      final userAsync = await ref.read(currentUserProvider.future);
+      if (userAsync != null) {
+        final goalLocalDataSource = ref.read(_goalLocalDataSourceProvider);
+        final activeGoal = goalLocalDataSource.getActiveGoalSafe(userAsync.uid);
+        if (activeGoal != null) {
+          final updatedGoal = activeGoal.copyWith(isActive: false);
+          await goalLocalDataSource.updateGoal(updatedGoal);
+        }
+      }
+    }
+
+    if (success && mounted) {
+      final userAsync = await ref.read(currentUserProvider.future);
+      final userId = userAsync?.uid;
+
+      // Invalidate all goal-related providers to force refresh from Hive
+      ref.invalidate(homeScreenDataProvider);
+      ref.invalidate(activeGoalProvider);
+      ref.invalidate(hasActiveGoalProvider);
+
+      // Invalidate Goals list screen provider so saved goals appear
+      if (userId != null) {
+        ref.invalidate(userGoalsProvider(userId));
+      }
+
+      // Reset the provider for next goal creation
+      ref.read(goalCreationProvider.notifier).reset();
+
+      // Navigate back to home
+      Navigator.pop(context);
+
+      // Show success message
+      if (mounted) {
+        final message = activateGoal
+            ? '🎉 Goal "$goalName" created and activated! Start running to reach your destination.'
+            : '✅ Goal "$goalName" saved for later! You can activate it from the Goals screen.';
+
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Goal created successfully!'),
+          SnackBar(
+            content: Text(message),
             backgroundColor: AppColors.success,
+            duration: const Duration(seconds: 4),
           ),
         );
       }
+    } else if (mounted) {
+      // Show error if creation failed
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(ref.read(goalCreationProvider).errorMessage ?? 'Failed to create goal'),
+          backgroundColor: AppColors.error,
+        ),
+      );
     }
   }
 
@@ -315,8 +586,17 @@ class _GoalCreationScreenState extends ConsumerState<GoalCreationScreen> {
       setState(() {
         _currentStep--;
         _searchResults = [];
-        _searchQuery = '';
+
+        // Restore local state from provider when going back
+        final goalState = ref.read(goalCreationProvider);
+        if (_currentStep == 0 && goalState.startLocation != null) {
+          _startLocation = goalState.startLocation;
+        } else if (_currentStep == 1 && goalState.destinationLocation != null) {
+          _destinationLocation = goalState.destinationLocation;
+        }
       });
+
+      _updateMapForCurrentStep();
     }
   }
 
@@ -332,15 +612,20 @@ class _GoalCreationScreenState extends ConsumerState<GoalCreationScreen> {
           // Stepper indicator
           _buildStepIndicator(),
 
-          // Map view
-          Expanded(
-            flex: 2,
-            child: _buildMapView(),
+          // PERSISTENT MAP - Single instance maintained across all steps (Issue #41 fix)
+          // Uses widgets.Visibility instead of AnimatedContainer to avoid opacity animations
+          // Visible on all steps (0-3) when search is not active
+          widgets.Visibility(
+            visible: !_isSearchFieldFocused && _searchResults.isEmpty,
+            maintainState: true, // Keep map alive when hidden
+            child: SizedBox(
+              height: MediaQuery.of(context).size.height * 0.3,
+              child: _buildPersistentMap(),
+            ),
           ),
 
-          // Content area
+          // Content area - expand to fill space when map is hidden
           Expanded(
-            flex: 3,
             child: _buildContentArea(),
           ),
         ],
@@ -357,7 +642,7 @@ class _GoalCreationScreenState extends ConsumerState<GoalCreationScreen> {
         color: AppColors.surface,
         border: Border(
           bottom: BorderSide(
-            color: AppColors.border.withValues(alpha: 0.3),
+            color: AppColors.border, // Removed alpha to avoid opacity issues (Issue #41)
             width: 1,
           ),
         ),
@@ -445,28 +730,82 @@ class _GoalCreationScreenState extends ConsumerState<GoalCreationScreen> {
             ? LinearGradient(
                 colors: [
                   AppColors.primary,
-                  AppColors.primary.withValues(alpha: 0.5),
+                  AppColors.primaryLight, // Use solid color instead of alpha (Issue #41)
                 ],
               )
             : null,
-        color: isCompleted ? null : AppColors.border.withValues(alpha: 0.3),
+        color: isCompleted ? null : AppColors.border, // Removed alpha (Issue #41)
       ),
     );
   }
 
-  Widget _buildMapView() {
-    return MapWidget(
-      cameraOptions: CameraOptions(
-        center: Point(coordinates: Position(-79.3832, 43.6532)), // Default to Toronto
-        zoom: 10.0,
+  /// Build persistent map widget that survives step changes (Issue #41 fix)
+  /// This single map instance is reused across all steps, avoiding disposal/recreation
+  Widget _buildPersistentMap() {
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: AppColors.border, // NO alpha - solid color only (Issue #41)
+          width: 1,
+        ),
       ),
-      styleUri: MapStyle.outdoors.styleUri,
-      onMapCreated: (controller) async {
-        _mapController = controller;
-        _circleManager = await controller.annotations.createCircleAnnotationManager();
-        _updateMap();
-      },
+      clipBehavior: Clip.hardEdge,
+      child: MapWidget(
+        cameraOptions: CameraOptions(
+          center: Point(coordinates: Position(78.4867, 17.3850)), // Default to Hyderabad
+          zoom: 10.0,
+        ),
+        styleUri: MapStyle.outdoors.styleUri,
+        onMapCreated: (controller) async {
+          print('🎨 DEBUG: onMapCreated CALLED - Creating persistent map');
+          _persistentMapController = controller;
+          print('🔵 DEBUG: Creating CircleAnnotationManager...');
+          _circleManager = await controller.annotations.createCircleAnnotationManager();
+          print('📏 DEBUG: Creating PolylineAnnotationManager...');
+          _polylineManager = await controller.annotations.createPolylineAnnotationManager();
+          _mapInitialized = true;
+          print('✅ DEBUG: Map fully initialized - managers ready');
+
+          // Update map for current step
+          _updateMapForCurrentStep();
+
+          // Fetch user's location to show on map (but don't auto-select)
+          _fetchUserLocationForMap();
+        },
+      ),
     );
+  }
+
+  /// Fetch user's location to display on map (without auto-selecting)
+  Future<void> _fetchUserLocationForMap() async {
+    try {
+      final locationService = ref.read(locationServiceProvider);
+
+      // Check permissions first
+      final permission = await locationService.checkPermission();
+      if (permission == LocationPermission.denied ||
+          permission == LocationPermission.deniedForever ||
+          permission == LocationPermission.unableToDetermine) {
+        // Don't auto-fetch if permission not granted yet
+        return;
+      }
+
+      // Get current position
+      final position = await locationService.getCurrentPosition();
+
+      if (position != null && mounted && _persistentMapController != null) {
+        // Update map to show user's location (but don't select it)
+        final cameraOptions = CameraOptions(
+          center: Point(coordinates: Position(position.longitude, position.latitude)),
+          zoom: 12.0,
+        );
+
+        _persistentMapController?.flyTo(cameraOptions, null);
+      }
+    } catch (e) {
+      // Silently fail - user can still use search or manual location selection
+    }
   }
 
   Widget _buildContentArea() {
@@ -488,7 +827,9 @@ class _GoalCreationScreenState extends ConsumerState<GoalCreationScreen> {
           Padding(
             padding: const EdgeInsets.all(16),
             child: Text(
-              _currentStep == 0 ? 'Select Start Location' : 'Select Destination',
+              _currentStep == 0
+                  ? (_startLocation != null ? 'Start Location' : 'Select Start Location')
+                  : (_destinationLocation != null ? 'Destination' : 'Select Destination'),
               style: AppTextStyles.headlineSmall.copyWith(
                 fontWeight: FontWeight.bold,
               ),
@@ -509,50 +850,55 @@ class _GoalCreationScreenState extends ConsumerState<GoalCreationScreen> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   // Selected location display
-                  if ((_currentStep == 0 && _startLocation != null) ||
-                      (_currentStep == 1 && _destinationLocation != null))
-                    _buildSelectedLocation(),
+                  _buildSelectedLocation(),
 
-                  const SizedBox(height: 16),
+                  // Only show search UI if no location is selected
+                  if ((_currentStep == 0 && _startLocation == null) ||
+                      (_currentStep == 1 && _destinationLocation == null)) ...[
+                    const SizedBox(height: 16),
 
-                  // Use current location button (only for start location)
-                  if (_currentStep == 0)
-                    CustomButton(
-                      text: 'Use Current Location',
-                      onPressed: _isLoadingCurrentLocation ? null : _useCurrentLocation,
-                      isLoading: _isLoadingCurrentLocation,
-                      icon: Icons.my_location,
-                      isOutlined: true,
-                    ),
+                    // Use current location button (only for start location)
+                    if (_currentStep == 0)
+                      CustomButton(
+                        text: 'Use Current Location',
+                        onPressed: _isLoadingCurrentLocation ? null : _useCurrentLocation,
+                        isLoading: _isLoadingCurrentLocation,
+                        icon: Icons.my_location,
+                        isOutlined: true,
+                      ),
 
-                  if (_currentStep == 0) const SizedBox(height: 16),
+                    if (_currentStep == 0) const SizedBox(height: 16),
 
-                  // Search field
-                  CustomTextField(
-                    label: 'Search for a location',
-                    hint: 'e.g., Toronto, Canada',
-                    prefixIcon: Icons.search,
-                    onChanged: (value) {
-                      Future.delayed(const Duration(milliseconds: 500), () {
-                        if (value == _searchQuery) {
+                    // Search field
+                    CustomTextField(
+                      label: 'Search for a location',
+                      hint: 'e.g., Toronto, Canada',
+                      prefixIcon: Icons.search,
+                      focusNode: _searchFocusNode,
+                      onChanged: (value) {
+                        // Cancel previous timer if user is still typing
+                        _searchDebounceTimer?.cancel();
+
+                        // Start new timer - only fires if user stops typing for 500ms
+                        _searchDebounceTimer = Timer(const Duration(milliseconds: 500), () {
                           _searchLocation(value);
-                        }
-                      });
-                    },
-                  ),
-
-                  const SizedBox(height: 8),
-
-                  // Loading indicator
-                  if (_isSearching)
-                    const Padding(
-                      padding: EdgeInsets.all(16),
-                      child: Center(child: LoadingIndicator()),
+                        });
+                      },
                     ),
 
-                  // Search results
-                  if (_searchResults.isNotEmpty)
-                    _buildSearchResults(),
+                    const SizedBox(height: 8),
+
+                    // Loading indicator
+                    if (_isSearching)
+                      const Padding(
+                        padding: EdgeInsets.all(16),
+                        child: Center(child: LoadingIndicator()),
+                      ),
+
+                    // Search results
+                    if (_searchResults.isNotEmpty)
+                      _buildSearchResults(),
+                  ],
                 ],
               ),
             ),
@@ -566,6 +912,8 @@ class _GoalCreationScreenState extends ConsumerState<GoalCreationScreen> {
   }
 
   Widget _buildSelectedLocation() {
+    // Only show location that was explicitly selected by user in THIS step
+    // Don't read from provider here - that causes confusion with stale data
     final location = _currentStep == 0 ? _startLocation : _destinationLocation;
 
     if (location == null) return const SizedBox.shrink();
@@ -635,7 +983,7 @@ class _GoalCreationScreenState extends ConsumerState<GoalCreationScreen> {
                   _destinationLocation = null;
                 }
               });
-              _updateMap();
+              _updateMapForCurrentStep();
             },
           ),
         ],
@@ -645,9 +993,12 @@ class _GoalCreationScreenState extends ConsumerState<GoalCreationScreen> {
 
   Widget _buildSearchResults() {
     return Container(
-      constraints: const BoxConstraints(maxHeight: 300),
+      constraints: BoxConstraints(
+        maxHeight: MediaQuery.of(context).size.height * 0.4, // 40% of screen height
+      ),
       child: ListView.separated(
         shrinkWrap: true,
+        padding: const EdgeInsets.only(bottom: 8),
         itemCount: _searchResults.length,
         separatorBuilder: (context, index) => const SizedBox(height: 8),
         itemBuilder: (context, index) {
@@ -808,6 +1159,11 @@ class _GoalCreationScreenState extends ConsumerState<GoalCreationScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
+                        // NOTE: Route map is displayed in the persistent map at top of screen (Issue #41 fix)
+                        // No need for separate map instance here - using single persistent map across all steps
+
+                        const SizedBox(height: 4), // Small spacing
+
                         // Route Info Card
                         if (goalState.route != null)
                           PrimaryCard(
@@ -1046,6 +1402,11 @@ class _GoalCreationScreenState extends ConsumerState<GoalCreationScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
+                  // NOTE: Route map displayed in persistent map at top (Issue #41 fix)
+                  // No separate map instance needed here
+
+                  const SizedBox(height: 4), // Small spacing
+
                   // Goal name input
                   Text(
                     'Goal Name',
@@ -1114,7 +1475,7 @@ class _GoalCreationScreenState extends ConsumerState<GoalCreationScreen> {
                         const SizedBox(height: 20),
                         Container(
                           height: 1,
-                          color: AppColors.border.withValues(alpha: 0.3),
+                          color: AppColors.border, // Removed alpha (Issue #41)
                         ),
                         const SizedBox(height: 20),
                         _buildSummaryRow('Start Location', _startLocation?.placeName ?? '-'),
@@ -1219,4 +1580,7 @@ class _GoalCreationScreenState extends ConsumerState<GoalCreationScreen> {
       ],
     );
   }
+
+  // NOTE: _buildRouteMapPreview() method removed (Issue #41 fix)
+  // Now using single persistent map at top of screen instead of creating separate instances
 }
