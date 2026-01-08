@@ -101,7 +101,7 @@ class HomeScreen extends ConsumerWidget {
                                     ),
                                     const SizedBox(width: 6),
                                     Text(
-                                      'Premium',
+                                      'Upgrade',
                                       style: AppTextStyles.bodySmall.copyWith(
                                         color: Colors.white,
                                         fontWeight: FontWeight.bold,
@@ -129,24 +129,6 @@ class HomeScreen extends ConsumerWidget {
           ),
         ],
       ),
-      floatingActionButton: userAsync.maybeWhen(
-        data: (user) => user != null
-            ? GlowingFAB(
-                icon: Icons.play_arrow,
-                onPressed: () async {
-                  final canStart = await ref.read(canStartRunProvider.future);
-                  if (!canStart && context.mounted) {
-                    AppRouter.navigateTo(context, RouteConstants.paywall);
-                  } else if (context.mounted) {
-                    AppRouter.navigateTo(context, RouteConstants.runTracking);
-                  }
-                },
-                size: 64,
-              )
-            : null,
-        orElse: () => null,
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       body: userAsync.when(
         data: (user) {
           if (user == null) {
@@ -174,8 +156,8 @@ class HomeScreen extends ConsumerWidget {
         : hour < 17
             ? 'Good afternoon'
             : 'Good evening';
-    final firstName = name.split(' ').first;
-    return '$timeGreeting, $firstName';
+    // Removed first name to prevent text truncation in header
+    return timeGreeting;
   }
 
   Widget _buildModernDashboard(BuildContext context, WidgetRef ref, dynamic user) {
@@ -195,10 +177,13 @@ class HomeScreen extends ConsumerWidget {
           );
         }
 
-        // Show dashboard with real goal data
-        return SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-          child: Column(
+        // Show dashboard with real goal data + sticky bottom button
+        return Stack(
+          children: [
+            // Scrollable content
+            SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+              child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Journey Title - Real goal name
@@ -254,59 +239,88 @@ class HomeScreen extends ConsumerWidget {
                   ),
                   photoUrl: homeData.nextMilestone!.photoUrl,
                 ),
-              if (homeData.nextMilestone != null) const SizedBox(height: 24),
-
-              // Recent Achievements - TODO: Implement real achievements system
-              // For now, hide achievements section until implemented
-              // AchievementsCarousel(
-              //   achievements: const [],
-              //   onViewAll: () {},
-              // ),
-
-              // Quick Actions
-              CustomButton(
-                text: 'Start Run',
-                onPressed: () async {
-                  final canStart = await ref.read(canStartRunProvider.future);
-                  if (!canStart && context.mounted) {
-                    AppRouter.navigateTo(context, RouteConstants.paywall);
-                  } else if (context.mounted) {
-                    AppRouter.navigateTo(context, RouteConstants.runTracking);
-                  }
-                },
-                icon: Icons.play_arrow,
-              ),
-              const SizedBox(height: 12),
-
-              CustomButton(
-                text: 'View Run History',
-                onPressed: () {
-                  AppRouter.navigateTo(context, RouteConstants.runHistory);
-                },
-                icon: Icons.history,
-                isOutlined: true,
-              ),
-              const SizedBox(height: 12),
-
-              CustomButton(
-                text: 'Create New Goal',
-                onPressed: () async {
-                  final canCreate = await ref.read(canCreateGoalProvider.future);
-                  if (!canCreate && context.mounted) {
-                    AppRouter.navigateTo(context, RouteConstants.paywall);
-                  } else if (context.mounted) {
-                    AppRouter.navigateTo(context, RouteConstants.goalCreation);
-                  }
-                },
-                icon: Icons.flag,
-                isOutlined: true,
-              ),
-              const SizedBox(height: 24),
+              if (homeData.nextMilestone != null) const SizedBox(height: 32),
 
               // Banner Ad (only shown to free users)
-              if (!user.hasActivePremium) const BannerAdWidget(),
-            ],
-          ),
+              if (!user.hasActivePremium) ...[
+                const BannerAdWidget(),
+                const SizedBox(height: 24),
+              ],
+
+              // Bottom padding for content (sticky button will be below)
+              const SizedBox(height: 100), // Space for sticky button + safe area
+                ],
+              ),
+            ),
+
+            // Sticky bottom button
+            Positioned(
+              left: 0,
+              right: 0,
+              bottom: 0,
+              child: Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      AppColors.backgroundDark.withValues(alpha: 0.0),
+                      AppColors.backgroundDark.withValues(alpha: 0.95),
+                      AppColors.backgroundDark,
+                    ],
+                    stops: const [0.0, 0.3, 1.0],
+                  ),
+                ),
+                padding: EdgeInsets.only(
+                  left: 20,
+                  right: 20,
+                  top: 16,
+                  bottom: MediaQuery.of(context).padding.bottom + 16,
+                ),
+                child: Container(
+                  height: 64,
+                  decoration: BoxDecoration(
+                    gradient: const LinearGradient(
+                      colors: [AppColors.primary, AppColors.primaryDark],
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                    ),
+                    borderRadius: BorderRadius.circular(16), // Less rounded than default
+                    boxShadow: AppColors.buttonShadow,
+                  ),
+                  child: Material(
+                    color: Colors.transparent,
+                    child: InkWell(
+                      borderRadius: BorderRadius.circular(16),
+                      onTap: () async {
+                        final canStart = await ref.read(canStartRunProvider.future);
+                        if (!canStart && context.mounted) {
+                          AppRouter.navigateTo(context, RouteConstants.paywall);
+                        } else if (context.mounted) {
+                          AppRouter.navigateTo(context, RouteConstants.runTracking);
+                        }
+                      },
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Icon(Icons.play_arrow, color: Colors.white, size: 28),
+                          const SizedBox(width: 12),
+                          Text(
+                            'Start Run',
+                            style: AppTextStyles.buttonLarge.copyWith(
+                              color: Colors.white,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
         );
       },
       loading: () => const Center(child: CircularProgressIndicator()),

@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:run_to_canada/core/theme/app_colors.dart';
 import 'package:run_to_canada/features/home/presentation/screens/home_screen.dart';
+import 'package:run_to_canada/features/runs/presentation/screens/run_history_screen.dart';
 import 'package:run_to_canada/features/goals/presentation/screens/goals_list_screen.dart';
 import 'package:run_to_canada/features/profile/presentation/screens/profile_screen.dart';
 
 /// Bottom navigation shell that wraps main app screens
-/// Provides persistent bottom navigation across Home, Goals, and Profile
+/// Provides persistent bottom navigation across Home, Activity, Goals, and Profile
 class BottomNavShell extends StatefulWidget {
   const BottomNavShell({super.key});
 
@@ -19,6 +20,7 @@ class _BottomNavShellState extends State<BottomNavShell> {
   // Screens for each tab
   final List<Widget> _screens = const [
     HomeScreen(),
+    RunHistoryScreen(),
     GoalsListScreen(),
     ProfileScreen(),
   ];
@@ -54,11 +56,16 @@ class _BottomNavShellState extends State<BottomNavShell> {
                 ),
                 _buildNavItem(
                   index: 1,
+                  icon: Icons.directions_run_rounded,
+                  label: 'Activity',
+                ),
+                _buildNavItem(
+                  index: 2,
                   icon: Icons.flag_rounded,
                   label: 'Goals',
                 ),
                 _buildNavItem(
-                  index: 2,
+                  index: 3,
                   icon: Icons.person_rounded,
                   label: 'Profile',
                 ),

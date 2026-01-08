@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:run_to_canada/core/theme/app_colors.dart';
 import 'package:run_to_canada/core/theme/app_text_styles.dart';
-import 'package:run_to_canada/core/widgets/glass_card.dart';
 
 /// Journey statistics grid (2-column layout)
 ///
@@ -99,10 +98,39 @@ class _StatCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GlassCard(
-      padding: const EdgeInsets.all(16),
-      blurStrength: 10,
-      backgroundColor: AppColors.surfaceDark.withValues(alpha: 0.05),
+    // Different gradient for each card - ENERGY!
+    final gradient = decorativeCircle
+        ? const LinearGradient(
+            colors: [
+              Color(0xFF0D7FF2), // Primary blue
+              Color(0xFF0A66C2), // Primary dark
+            ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          )
+        : const LinearGradient(
+            colors: [
+              Color(0xFF7C3AED), // Purple-600
+              Color(0xFF5B21B6), // Purple-800
+            ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          );
+
+    return Container(
+      padding: const EdgeInsets.all(18),
+      decoration: BoxDecoration(
+        gradient: gradient,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: (decorativeCircle ? AppColors.primary : const Color(0xFF7C3AED))
+                .withValues(alpha: 0.4),
+            blurRadius: 20,
+            offset: const Offset(0, 8),
+          ),
+        ],
+      ),
       child: Stack(
         clipBehavior: Clip.none,
         children: [
@@ -133,14 +161,14 @@ class _StatCard extends StatelessWidget {
                 children: [
                   Icon(
                     icon,
-                    color: AppColors.primary,
-                    size: 20,
+                    color: Colors.white.withValues(alpha: 0.9),
+                    size: 22,
                   ),
                   const SizedBox(width: 6),
                   Text(
                     label,
                     style: AppTextStyles.labelMedium.copyWith(
-                      color: AppColors.textSecondaryDark,
+                      color: Colors.white.withValues(alpha: 0.85),
                     ),
                   ),
                 ],
@@ -153,20 +181,22 @@ class _StatCard extends StatelessWidget {
                   Text(
                     value,
                     style: AppTextStyles.displayMedium.copyWith(
-                      color: AppColors.textPrimaryDark,
+                      color: Colors.white,
                       fontWeight: FontWeight.bold,
+                      fontSize: 38, // Bigger for more ENERGY!
                       fontFeatures: const [
                         FontFeature.tabularFigures(),
                       ],
                     ),
                   ),
-                  const SizedBox(width: 4),
+                  const SizedBox(width: 6),
                   Padding(
-                    padding: const EdgeInsets.only(bottom: 6),
+                    padding: const EdgeInsets.only(bottom: 8),
                     child: Text(
                       unit,
-                      style: AppTextStyles.bodyMedium.copyWith(
-                        color: AppColors.textSecondaryDark,
+                      style: AppTextStyles.bodyLarge.copyWith(
+                        color: Colors.white.withValues(alpha: 0.85),
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
                   ),
@@ -179,14 +209,15 @@ class _StatCard extends StatelessWidget {
                   children: [
                     Icon(
                       trend! >= 0 ? Icons.trending_up : Icons.trending_down,
-                      color: trend! >= 0 ? AppColors.success : AppColors.error,
-                      size: 14,
+                      color: Colors.white,
+                      size: 16,
                     ),
                     const SizedBox(width: 4),
                     Text(
                       '${trend! >= 0 ? "+" : ""}${trend!.toStringAsFixed(1)}% this week',
                       style: AppTextStyles.labelSmall.copyWith(
-                        color: trend! >= 0 ? AppColors.success : AppColors.error,
+                        color: Colors.white.withValues(alpha: 0.9),
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
                   ],
@@ -195,7 +226,7 @@ class _StatCard extends StatelessWidget {
                 Text(
                   subtitle!,
                   style: AppTextStyles.labelSmall.copyWith(
-                    color: AppColors.textSecondaryDark,
+                    color: Colors.white.withValues(alpha: 0.85),
                   ),
                 ),
             ],

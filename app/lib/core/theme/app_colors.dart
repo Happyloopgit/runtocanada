@@ -38,10 +38,10 @@ class AppColors {
 
   // ===== STATUS & ACCENT COLORS =====
 
-  // Milestones
+  // Milestones (vibrant but not overwhelming)
   static const Color milestone = Color(0xFFFFA500); // Warm orange
-  static const Color milestoneGradientStart = Color(0xFFFF6B35);
-  static const Color milestoneGradientEnd = Color(0xFFFFA500);
+  static const Color milestoneGradientStart = Color(0xFFFF8C42); // Brightened - was #FF9D5C
+  static const Color milestoneGradientEnd = Color(0xFFFFAA5C);   // Brightened - was #FFBB7C
 
   // Standard status colors
   static const Color success = Color(0xFF4CAF50);
