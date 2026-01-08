@@ -13,6 +13,7 @@ import 'package:run_to_canada/features/home/presentation/widgets/journey_map_car
 import 'package:run_to_canada/features/home/presentation/widgets/journey_stats_grid.dart';
 import 'package:run_to_canada/features/home/presentation/widgets/next_milestone_card.dart';
 import 'package:run_to_canada/features/home/presentation/widgets/empty_goal_state.dart';
+import 'package:run_to_canada/features/home/presentation/widgets/home_journey_map_widget.dart';
 import 'package:run_to_canada/features/home/presentation/providers/home_providers.dart';
 
 /// Home screen - main dashboard
@@ -212,23 +213,20 @@ class HomeScreen extends ConsumerWidget {
               const SizedBox(height: 16),
 
               // Journey Map Card
-              JourneyMapCard(
-                currentCity: 'Journey',
-                dayNumber: _calculateDayNumber(homeData.activeGoal?.createdAt),
-                mapWidget: Container(
-                  color: AppColors.surfaceDark,
-                  child: const Center(
-                    child: Icon(
-                      Icons.map,
-                      size: 64,
-                      color: AppColors.primary,
-                    ),
+              if (homeData.activeGoal != null)
+                JourneyMapCard(
+                  key: ValueKey('map_${homeData.activeGoal!.id}'), // Force rebuild when goal changes
+                  currentCity: _calculateCurrentCity(homeData.nextMilestone),
+                  dayNumber: _calculateDayNumber(homeData.activeGoal?.createdAt),
+                  mapWidget: HomeJourneyMapWidget(
+                    key: ValueKey('journey_map_${homeData.activeGoal!.id}'), // Force widget rebuild
+                    goal: homeData.activeGoal!,
+                    nextMilestone: homeData.nextMilestone,
                   ),
+                  onTap: () {
+                    AppRouter.navigateTo(context, RouteConstants.journeyMap);
+                  },
                 ),
-                onTap: () {
-                  AppRouter.navigateTo(context, RouteConstants.journeyMap);
-                },
-              ),
               const SizedBox(height: 20),
 
               // Stats Grid - Real data from goal progress
@@ -336,6 +334,16 @@ class HomeScreen extends ConsumerWidget {
     if (createdAt == null) return 1;
     final daysSinceCreation = DateTime.now().difference(createdAt).inDays;
     return daysSinceCreation + 1; // Day 1 on creation day
+  }
+
+  /// Get current city from next milestone or return generic text
+  String? _calculateCurrentCity(dynamic nextMilestone) {
+    if (nextMilestone == null) return null;
+    // Use milestone city name if available
+    if (nextMilestone.cityName != null && nextMilestone.cityName!.isNotEmpty) {
+      return nextMilestone.cityName;
+    }
+    return 'Journey';
   }
 
   /// Calculate distance to next milestone in km

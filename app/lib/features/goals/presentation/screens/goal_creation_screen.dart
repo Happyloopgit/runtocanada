@@ -519,7 +519,7 @@ class _GoalCreationScreenState extends ConsumerState<GoalCreationScreen> {
       }
     }
 
-    // Create the goal (it will be created as active)
+    // Create the goal (it will be created as active by default)
     final success = await ref.read(goalCreationProvider.notifier).createGoal();
 
     // If user chose "save for later", deactivate the newly created goal
@@ -527,9 +527,16 @@ class _GoalCreationScreenState extends ConsumerState<GoalCreationScreen> {
       final userAsync = await ref.read(currentUserProvider.future);
       if (userAsync != null) {
         final goalLocalDataSource = ref.read(_goalLocalDataSourceProvider);
-        final activeGoal = goalLocalDataSource.getActiveGoalSafe(userAsync.uid);
-        if (activeGoal != null) {
-          final updatedGoal = activeGoal.copyWith(isActive: false);
+
+        // Get all goals and find the most recently created one (the one we just made)
+        final allGoals = goalLocalDataSource.getGoalsByUserId(userAsync.uid);
+        if (allGoals.isNotEmpty) {
+          // Sort by createdAt descending to get the newest goal first
+          allGoals.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+          final newlyCreatedGoal = allGoals.first;
+
+          // Deactivate it since user chose "Save for Later"
+          final updatedGoal = newlyCreatedGoal.copyWith(isActive: false);
           await goalLocalDataSource.updateGoal(updatedGoal);
         }
       }

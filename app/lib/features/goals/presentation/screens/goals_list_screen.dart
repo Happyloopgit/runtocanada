@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../auth/presentation/providers/auth_providers.dart';
+import '../../../home/presentation/providers/home_providers.dart' as home_providers;
 import '../../domain/models/goal_model.dart';
 import '../providers/goals_list_provider.dart';
 import '../providers/goal_service_provider.dart';
@@ -663,7 +664,13 @@ class GoalsListScreen extends ConsumerWidget {
 
     // Invalidate all relevant providers to trigger UI refresh
     ref.invalidate(userGoalsProvider(userId));
-    // TODO: Also need to invalidate home screen providers
+
+    // CRITICAL: Invalidate home screen providers so activated goal shows on home screen
+    ref.invalidate(home_providers.homeScreenDataProvider);
+    ref.invalidate(home_providers.activeGoalProvider);
+    ref.invalidate(home_providers.hasActiveGoalProvider);
+    ref.invalidate(home_providers.nextMilestoneProvider);
+    ref.invalidate(home_providers.progressStatsProvider);
   }
 
   Future<bool?> _showActivateConfirmation({
@@ -753,6 +760,11 @@ class GoalsListScreen extends ConsumerWidget {
     );
     await dataSource.updateGoal(updatedGoal);
     ref.invalidate(userGoalsProvider(goal.userId));
+
+    // Invalidate home screen providers so deactivation reflects on home screen
+    ref.invalidate(home_providers.homeScreenDataProvider);
+    ref.invalidate(home_providers.activeGoalProvider);
+    ref.invalidate(home_providers.hasActiveGoalProvider);
   }
 
   Future<void> _deleteGoal(

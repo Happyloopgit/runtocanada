@@ -1600,3 +1600,141 @@ Failed to get current location: Exception: Invalid mapbox access token
 3. ✅ Verified both destination centering and route visibility fixed
 4. ✅ Updated TESTING_ISSUES_LOG.md with final resolution
 5. ✅ Issue #46 marked as RESOLVED
+
+---
+
+### Session 13 Summary (2026-01-08 - Goal Activation & Home Map Implementation)
+
+**🔍 ISSUES IDENTIFIED & FIXED:**
+
+**Issue #47: Goal Activation Not Syncing to Home Screen**
+- **Severity:** CRITICAL
+- **Status:** ✅ **FIXED** (Session 13 - 2026-01-08)
+- **Location:** `goals_list_screen.dart` - `_activateGoal()` and `_deactivateGoal()` methods
+- **Problem:**
+  - User activates goal in Goals screen
+  - Goal updates in Goals list ✅
+  - BUT home screen doesn't refresh ❌
+  - Goal data doesn't show on home screen
+- **Root Cause:** Missing provider invalidations for home screen providers
+- **Fix Applied:**
+  - Added import: `import '../../../home/presentation/providers/home_providers.dart' as home_providers;`
+  - Added provider invalidations in `_activateGoal()`:
+    - `ref.invalidate(home_providers.homeScreenDataProvider);`
+    - `ref.invalidate(home_providers.activeGoalProvider);`
+    - `ref.invalidate(home_providers.hasActiveGoalProvider);`
+    - `ref.invalidate(home_providers.nextMilestoneProvider);`
+    - `ref.invalidate(home_providers.progressStatsProvider);`
+  - Added same invalidations in `_deactivateGoal()`
+- **Files Modified:**
+  - [goals_list_screen.dart:1-9](app/lib/features/goals/presentation/screens/goals_list_screen.dart#L1-L9) - Added import
+  - [goals_list_screen.dart:665-673](app/lib/features/goals/presentation/screens/goals_list_screen.dart#L665-L673) - Activation invalidations
+  - [goals_list_screen.dart:762-767](app/lib/features/goals/presentation/screens/goals_list_screen.dart#L762-L767) - Deactivation invalidations
+
+**Issue #48: "Save for Later" Goals Showing as Active**
+- **Severity:** HIGH
+- **Status:** ✅ **FIXED** (Session 13 - 2026-01-08)
+- **Location:** `goal_creation_screen.dart` - `_createGoalWithActivation()` method
+- **Problem:**
+  - User creates goal and clicks "Save for Later"
+  - Goal should have `isActive = false`
+  - BUT goal appears in "Active Goals" section
+  - Goals are always created with `isActive = true` by default
+  - Post-creation deactivation logic had timing issues
+- **Root Cause:**
+  - Goals created with hardcoded `isActive = true` in provider
+  - Logic tried to find "active goal" after creation, but race condition
+- **Fix Applied:**
+  - Improved deactivation logic to sort goals by `createdAt` descending
+  - Get most recently created goal (the one just created)
+  - Deactivate it properly
+- **Files Modified:**
+  - [goal_creation_screen.dart:525-543](app/lib/features/goals/presentation/screens/goal_creation_screen.dart#L525-L543) - Fixed logic
+
+**Issue #49: Home Screen Map Not Implemented (CRITICAL)**
+- **Severity:** CRITICAL - Core Feature Missing
+- **Status:** ✅ **FIXED** (Session 13 - 2026-01-08)
+- **Location:** `home_screen.dart` - Journey map card
+- **Problem:**
+  - Home screen showed placeholder icon (Icons.map)
+  - No actual map widget implemented
+  - Users couldn't see their journey route
+- **Solution:** Created `HomeJourneyMapWidget`
+- **Features Implemented:**
+  - ✅ Displays route polyline from goal's `routePolyline` data
+  - ✅ Shows 4 markers:
+    - 🟢 Green: Start location
+    - 🔵 Blue: Current virtual position (based on progress)
+    - 🟠 Orange: Next milestone
+    - 🔴 Red: Destination
+  - ✅ Auto-positions camera to show full route using `cameraForCoordinateBounds()`
+  - ✅ Lightweight & optimized for home screen
+  - ✅ Handles empty/missing route data gracefully
+- **Files Created:**
+  - [home_journey_map_widget.dart](app/lib/features/home/presentation/widgets/home_journey_map_widget.dart) - New map widget
+- **Files Modified:**
+  - [home_screen.dart:12-17](app/lib/features/home/presentation/screens/home_screen.dart#L12-L17) - Added imports
+  - [home_screen.dart:215-229](app/lib/features/home/presentation/screens/home_screen.dart#L215-L229) - Integrated map widget
+  - [home_screen.dart:337-345](app/lib/features/home/presentation/screens/home_screen.dart#L337-L345) - Added `_calculateCurrentCity()` helper
+
+**Issue #50: Map Widget Not Rebuilding on Goal Activation**
+- **Severity:** HIGH
+- **Status:** ✅ **FIXED** (Session 13 - 2026-01-08)
+- **Location:** `home_screen.dart` - Map widget instantiation
+- **Problem:**
+  - User activates goal in Goals screen
+  - Home screen updates with goal data ✅
+  - BUT map doesn't show - still shows placeholder ❌
+  - Deactivating then reactivating makes map appear
+- **Root Cause:**
+  - Flutter widget tree reusing same `HomeJourneyMapWidget` instance
+  - Providers invalidated but widget not rebuilding
+  - Widget cached with old/empty goal data
+- **Fix Applied:**
+  - Added `key: ValueKey('journey_map_${goalId}')` to force new widget instance
+  - When goal ID changes, Flutter creates fresh map widget
+- **Files Modified:**
+  - [home_screen.dart:218-222](app/lib/features/home/presentation/screens/home_screen.dart#L218-L222) - Added ValueKey
+- **Testing:**
+  - ✅ Activate goal → Map appears immediately
+  - ✅ Switch to different goal → Map updates instantly
+  - ✅ No need to deactivate/reactivate
+
+---
+
+**🎉 SESSION 13 ACHIEVEMENTS:**
+
+**Critical Fixes Completed:**
+1. ✅ **Issue #47** - Goal activation now syncs to home screen instantly
+2. ✅ **Issue #48** - "Save for Later" goals correctly saved as inactive
+3. ✅ **Issue #49** - Home screen map fully implemented with route visualization
+4. ✅ **Issue #50** - Map widget rebuilds correctly on goal changes
+
+**Technical Improvements:**
+- Fixed provider invalidation chain (Goals → Home)
+- Implemented complete map widget with 4 marker types
+- Fixed widget rebuild lifecycle with proper keys
+- Improved "Save for Later" logic with timestamp-based sorting
+
+**User Experience Improvements:**
+- ✅ Goal activation flow works seamlessly
+- ✅ Visual journey map shows on home screen
+- ✅ Users can see route, progress, and milestones at a glance
+- ✅ Instant feedback when switching active goals
+
+**Files Modified:** 3 files
+- `goals_list_screen.dart` - Provider invalidations
+- `goal_creation_screen.dart` - Save for Later logic
+- `home_screen.dart` - Map integration + widget keys
+
+**Files Created:** 1 file
+- `home_journey_map_widget.dart` - Complete map implementation
+
+**Issues Closed:** 4 issues (#47, #48, #49, #50)
+
+---
+
+**Next Priorities:**
+1. 🟡 Home screen design improvements (reduce clutter, fix colors)
+2. 🟢 Theme toggle in settings
+3. 🟡 Remaining medium priority issues (onboarding text, milestone spacing, etc.)
