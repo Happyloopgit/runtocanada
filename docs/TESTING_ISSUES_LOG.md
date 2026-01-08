@@ -823,14 +823,14 @@ Failed to get current location: Exception: Invalid mapbox access token
 - **Files:** [goal_creation_screen.dart:1254-1319](app/lib/features/goals/presentation/screens/goal_creation_screen.dart#L1254-L1319)
 - **Note:** Map initialization code IS present and creates polyline, but it's not visually rendering
 
-**Issue #24: Next Milestone Shows State Name Instead of City**
+~~**Issue #24: Next Milestone Shows State Name Instead of City**~~ - ✅ **FIXED**
 - **Severity:** Critical
 - **Location:** Home screen - Next Milestone card
 - **Problem:** Shows "Telangana" (state name) instead of city name like "Nellore" or "Vijayawada"
-- **Status:** Open
-- **Impact:** Misleading milestone information, not motivating
+- **Status:** ✅ **FIXED** - Geocoding now filters to city types only
 - **Root Cause:** `nextMilestone.cityName` returning state from geocoding instead of city
-- **Screenshot Evidence:** Home screen shows "Telangana" as next milestone (68.2 km away)
+- **Fix:** milestone_generation_service.dart:44-48 - Added `types: ['place', 'locality']` filter to exclude 'region' (state names)
+- **File:** [milestone_generation_service.dart:44-48](app/lib/features/goals/data/services/milestone_generation_service.dart#L44-L48)
 
 **Issue #25: Intercontinental Route Fails (422 Error)**
 - **Severity:** High
@@ -842,35 +842,38 @@ Failed to get current location: Exception: Invalid mapbox access token
 - **Impact:** Users cannot create goals between continents
 - **Proposed Fix:** Fallback to great circle distance with straight-line visualization
 
-**Issue #26: No Live Tracking Map on Home Screen**
+~~**Issue #26: No Live Tracking Map on Home Screen**~~ - ✅ **FIXED in Session 13 (Issue #49)**
 - **Severity:** High
 - **Location:** Home screen - Journey Map Card
 - **Problem:** Map card shows blue Mapbox icon placeholder instead of actual map
-- **Status:** Open
-- **Impact:** Core visualization feature missing from home dashboard
-- **Expected:** Should show start → user position → destination with route
+- **Status:** ✅ **FIXED** - HomeJourneyMapWidget fully implemented
+- **Fix:** Created complete map widget with route polyline, 4 marker types (start/current/milestone/end), auto camera positioning
+- **Files:**
+  - [home_journey_map_widget.dart](app/lib/features/home/presentation/widgets/home_journey_map_widget.dart) (~322 lines)
+  - [home_screen.dart:205-209](app/lib/features/home/presentation/screens/home_screen.dart#L205-L209) - Integration
 
-**Issue #27: Multiple Active Goals System (No Management UI)**
+~~**Issue #27: Multiple Active Goals System (No Management UI)**~~ - ✅ **FIXED in Session 13 (Issues #47, #48)**
 - **Severity:** High
 - **Location:** Goal creation flow + Goal service
 - **Problem:** System allows unlimited active goals but no UI to manage/switch between them
-- **Current Behavior:** Every new goal created as `isActive: true`
-- **Status:** Open
-- **Impact:** User can create multiple goals but only sees one on home screen
-- **Proposed Fix:**
-  - Enforce single active goal at creation time
-  - Ask user: "Activate this goal? (will replace current goal)" or "Add to bucket list?"
-  - Add goal management UI in future
+- **Status:** ✅ **FIXED** - Single active goal enforced with user confirmation dialog
+- **Fix:**
+  - `setGoalActive()` now deactivates all other goals before activating new one
+  - Dialog asks user what to do if active goal exists (Activate/Save for Later)
+  - Proper provider invalidations sync home screen instantly
+- **Files:**
+  - [goal_local_datasource.dart:104-118](app/lib/features/goals/data/datasources/goal_local_datasource.dart#L104-L118) - Enforcement logic
+  - [goal_creation_screen.dart:445-463](app/lib/features/goals/presentation/screens/goal_creation_screen.dart#L445-L463) - User dialog
 
-**Issue #28: Milestone Spacing Too Wide**
+~~**Issue #28: Milestone Spacing Too Wide**~~ - ✅ **FIXED**
 - **Severity:** Medium
 - **Location:** Milestone generation algorithm
 - **Problem:** Even spacing creates unmotivating gaps (218 km for Hyderabad-Delhi)
-- **Current Logic:** `1743.9 km / 7 = ~218 km` between each milestone
-- **Status:** Open
-- **Impact:** User feels they're getting nowhere, demotivating
-- **Proposed Fix:** Adaptive spacing starting small (50km) and gradually increasing
-- **Example:** 50km → 100km → 175km → 275km → 425km...
+- **Old Logic:** `1743.9 km / 7 = ~218 km` between each milestone (evenly spaced)
+- **Status:** ✅ **FIXED** - Adaptive spacing algorithm implemented
+- **New Logic:** Starts at 50km, increases by 25km per milestone, max 250km gap
+- **Example:** 50km → 75km → 100km → 125km → 150km... (capped at 250km)
+- **File:** [milestone_generation_service.dart:79-118](app/lib/features/goals/data/services/milestone_generation_service.dart#L79-L118)
 
 **Issue #29: No Bottom Navigation Bar**
 - **Severity:** Medium
