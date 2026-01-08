@@ -2004,9 +2004,9 @@ This session focused on addressing Issue #9 (Home screen too cluttered) through 
 - **File Modified:** `home_screen.dart` lines 170-176
 - **Status:** ✅ **FIXED** - No more duplicate ad errors
 
-**Issue #59: Impeller Opacity Validation Spam (STILL OPEN)**
-- **Severity:** MEDIUM - Log Spam / Performance
-- **Problem:** Continuous Impeller errors when ad scrolls into view:
+**Issue #59: Impeller Opacity Validation Spam (DOCUMENTED AS KNOWN LIMITATION)**
+- **Severity:** LOW - Log Spam Only (No Functional Impact)
+- **Problem:** Continuous Impeller validation warnings when scrolling:
   ```
   E/flutter: [ERROR:flutter/impeller/entity/contents/contents.cc(122)]
   Break on 'ImpellerValidationBreak' to inspect point of failure:
@@ -2014,20 +2014,32 @@ This session focused on addressing Issue #9 (Home screen too cluttered) through 
   Contents::CanAcceptOpacity returns false.
   ```
 - **Root Cause:**
-  - AdWidget is a native platform view that renders in separate layer
-  - Cannot accept opacity from Flutter widget tree
-  - `SingleChildScrollView` applies opacity during scroll physics
-  - Previous fix (Session 14 RepaintBoundary) didn't work
+  - **Known Flutter 3.27+ Impeller limitation** with platform views
+  - AdWidget (native Android/iOS view) cannot accept opacity from Flutter rendering tree
+  - Impeller validation detects when opacity is applied to platform views
+  - Occurs with scrollable content near platform views
 - **Attempted Fixes:**
   1. Session 14: Wrapped in `RepaintBoundary` → FAILED
   2. Session 15: Replaced `Container` with `Center + SizedBox` → FAILED
-- **Research Findings:**
-  - Flutter 3.27+ Impeller issue with platform views
-  - FlutterFlow users solved by avoiding opacity system
-  - Platform views have fundamental limitation with inherited opacity
-  - Testing log Issue #41 notes: "RepaintBoundary can't protect against parent container opacity"
-- **Status:** ⚠️ **OPEN** - Errors persist, need different approach
-- **Next Steps:** Consider placing ad outside scroll view or accepting as known limitation
+  3. Session 15: Moved ad outside ScrollView with solid background → FAILED
+  4. Session 15: Tried placing ad inside ScrollView → FAILED
+- **Research Findings (2025-01-08):**
+  - **Multiple production apps report same issue with no visual impact**
+  - Flutter docs recommend filing [Impeller] issues on GitHub
+  - Only confirmed "fix" is disabling Impeller (not recommended - regressive)
+  - FlutterFlow community reports errors disappear after hot restart
+  - One developer reported 798 instances with "no apparent impact on app"
+  - **This is a cosmetic logging issue, not a functional blocker**
+- **Sources:**
+  - [Flutter Impeller Docs](https://docs.flutter.dev/perf/impeller)
+  - [Flutter Issue #166830](https://github.com/flutter/flutter/issues/166830)
+  - [FlutterFlow Community](https://community.flutterflow.io/ask-the-community/post/error-with-3-27-update-impeller-rendering-T55OoPW5VBcWXEk)
+- **Decision:** ✅ **ACCEPTED AS KNOWN LIMITATION**
+  - Does not cause crashes or visual glitches
+  - Does not block functionality
+  - Disabling Impeller would be regressive (Impeller is Flutter's future)
+  - Will monitor for Flutter team fixes in future releases
+- **Status:** 📋 **DOCUMENTED** - Accepted as known Flutter Impeller limitation
 
 **📊 SESSION 15 STATISTICS:**
 

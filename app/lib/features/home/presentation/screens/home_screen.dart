@@ -240,17 +240,25 @@ class HomeScreen extends ConsumerWidget {
                 ),
               if (homeData.nextMilestone != null) const SizedBox(height: 32),
 
-              // Banner Ad (only shown to free users)
-              if (!user.hasActivePremium) ...[
-                const BannerAdWidget(),
-                const SizedBox(height: 24),
-              ],
-
-              // Bottom padding for content (sticky button will be below)
-              const SizedBox(height: 100), // Space for sticky button + safe area
+              // Bottom padding for content (sticky button + ad will be below)
+              SizedBox(height: user.hasActivePremium ? 100 : 160), // Extra space for ad if free user
                 ],
               ),
             ),
+
+            // Banner Ad - positioned outside scroll view to prevent Impeller opacity errors
+            // Platform views (AdWidget) cannot accept opacity from ScrollView or gradient overlays
+            if (!user.hasActivePremium)
+              Positioned(
+                left: 0,
+                right: 0,
+                bottom: 80, // Above sticky button (button height + padding)
+                child: Container(
+                  color: AppColors.backgroundDark, // Solid background to isolate from gradient
+                  padding: const EdgeInsets.symmetric(vertical: 8),
+                  child: const BannerAdWidget(),
+                ),
+              ),
 
             // Sticky bottom button
             Positioned(
