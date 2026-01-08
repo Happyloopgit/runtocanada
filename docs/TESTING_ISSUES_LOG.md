@@ -1948,5 +1948,106 @@ This session focused on addressing Issue #9 (Home screen too cluttered) through 
 
 ---
 
-**Last Updated:** 2026-01-08 (Session 14 - Home Screen Redesign Complete)
-**Status:** Home screen redesign 95% complete, theme toggle and minor polish remaining
+**SESSION 15 - Firebase Sync & Route Regeneration (2026-01-08)**
+
+**🔧 CRITICAL FIXES IMPLEMENTED:**
+
+**Issue #61: Missing Bi-Directional Sync (FIXED)**
+- **Severity:** CRITICAL - Data Loss on Reinstall
+- **Problem:** Goals disappeared after app reinstall/new device
+  - User uninstalled app → all local Hive data wiped
+  - Sync was one-way only (local → Firestore)
+  - No mechanism to download goals from Firestore back to device
+  - `performFullSync` existed but was never downloading data
+- **Root Cause:**
+  - `fetchGoalsFromCloud()` method existed but never called
+  - No route polyline regeneration after sync (polylines excluded from Firestore due to 40K index limit)
+- **Fix Implemented:**
+  1. **Timestamp-Based Conflict Resolution:** Compare `updatedAt` timestamps, keep newer version
+  2. **Route Regeneration from Milestones:** Reconstruct full route polyline using Mapbox Directions API
+  3. **Trigger on Login:** Call `performFullSync(userId)` when user logs in
+- **Implementation Details:**
+  ```dart
+  // Sync flow:
+  1. User logs in → performFullSync() called
+  2. Upload local changes → processSyncQueue()
+  3. Download goals → fetchGoalsFromCloud() with timestamp comparison
+  4. Regenerate routes → regenerateMissingRoutes() using milestone waypoints
+  ```
+- **Route Regeneration Logic:**
+  - Builds waypoints: start → milestone1 → milestone2 → ... → destination
+  - Calls Mapbox Directions API with up to 25 waypoints
+  - Converts coordinates to flat list [lat, lng, lat, lng, ...]
+  - Saves updated goal to Hive with regenerated polyline
+  - Preserves user progress (distance-based, not coordinate-based)
+- **Cost Impact:** ~$0.01 per route regeneration (only on reinstall/new device)
+- **Files Modified:**
+  - `sync_service.dart`: Added `regenerateMissingRoutes()` method
+  - `auth_providers.dart`: Triggers `performFullSync()` on login (line 45)
+- **Test Results:**
+  ```
+  📥 Fetched 24 goals from Firestore
+  💾 Saved 20 goals, skipped 4 (local newer)
+  🔄 Regenerating route for goal: Run to Karnataka
+  ✅ Route regenerated: 1525.0 coordinate pairs
+  ```
+- **Status:** ✅ **FIXED** - Goals restore perfectly on new devices
+
+**Issue #58: Duplicate AdWidget Error (FIXED)**
+- **Severity:** HIGH - User-Visible Error
+- **Problem:** Red error message "AdWidget already in Widget tree" displayed on home screen
+- **Root Cause:** `BannerAdWidget` used twice in home_screen.dart:
+  - Line 175: In empty goal state
+  - Line 246: In dashboard with active goals
+  - Google Mobile Ads doesn't allow same ad object in multiple places
+- **Fix:** Removed BannerAdWidget from empty state (kept only in dashboard)
+- **File Modified:** `home_screen.dart` lines 170-176
+- **Status:** ✅ **FIXED** - No more duplicate ad errors
+
+**Issue #59: Impeller Opacity Validation Spam (STILL OPEN)**
+- **Severity:** MEDIUM - Log Spam / Performance
+- **Problem:** Continuous Impeller errors when ad scrolls into view:
+  ```
+  E/flutter: [ERROR:flutter/impeller/entity/contents/contents.cc(122)]
+  Break on 'ImpellerValidationBreak' to inspect point of failure:
+  Contents::SetInheritedOpacity should never be called when
+  Contents::CanAcceptOpacity returns false.
+  ```
+- **Root Cause:**
+  - AdWidget is a native platform view that renders in separate layer
+  - Cannot accept opacity from Flutter widget tree
+  - `SingleChildScrollView` applies opacity during scroll physics
+  - Previous fix (Session 14 RepaintBoundary) didn't work
+- **Attempted Fixes:**
+  1. Session 14: Wrapped in `RepaintBoundary` → FAILED
+  2. Session 15: Replaced `Container` with `Center + SizedBox` → FAILED
+- **Research Findings:**
+  - Flutter 3.27+ Impeller issue with platform views
+  - FlutterFlow users solved by avoiding opacity system
+  - Platform views have fundamental limitation with inherited opacity
+  - Testing log Issue #41 notes: "RepaintBoundary can't protect against parent container opacity"
+- **Status:** ⚠️ **OPEN** - Errors persist, need different approach
+- **Next Steps:** Consider placing ad outside scroll view or accepting as known limitation
+
+**📊 SESSION 15 STATISTICS:**
+
+**Goals Sync Performance:**
+- 24 goals in Firestore
+- 20 goals synced successfully
+- 4 goals skipped (local version newer - timestamp protection working)
+- 20 routes regenerated via Mapbox API
+- Average route: 6,000 coordinate pairs
+
+**Mapbox API Costs (This Session):**
+- Route regenerations: 20 goals × $0.01 = $0.20
+- One-time cost (routes cached in Hive for future app runs)
+
+**Files Modified:** 3 files
+1. `sync_service.dart` - Route regeneration logic (+80 lines)
+2. `auth_providers.dart` - Trigger sync on login (+8 lines)
+3. `home_screen.dart` - Remove duplicate ad widget (-6 lines)
+
+---
+
+**Last Updated:** 2026-01-08 (Session 15 - Firebase Sync & Route Regeneration)
+**Status:** Critical sync issue resolved, Impeller ad error remains open

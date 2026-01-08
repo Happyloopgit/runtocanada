@@ -167,12 +167,11 @@ class HomeScreen extends ConsumerWidget {
       data: (homeData) {
         // Show empty state if no active goal
         if (!homeData.hasActiveGoal) {
-          return Column(
+          return const Column(
             children: [
-              const Expanded(child: EmptyGoalState()),
-              const SizedBox(height: 24),
-              // Banner Ad (only shown to free users)
-              if (!user.hasActivePremium) const BannerAdWidget(),
+              Expanded(child: EmptyGoalState()),
+              // Banner Ad removed from empty state to prevent duplicate ad widget error
+              // Ad is shown in the main dashboard instead (see line ~246)
             ],
           );
         }

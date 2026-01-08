@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../data/services/auth_service.dart';
 import '../../domain/models/user_model.dart';
 import 'package:run_to_canada/features/premium/data/services/revenue_cat_service.dart';
+import 'package:run_to_canada/core/data/providers/sync_providers.dart';
 
 /// Provider for AuthService instance
 final authServiceProvider = Provider<AuthService>((ref) {
@@ -36,6 +37,17 @@ final currentUserProvider = StreamProvider<UserModel?>((ref) async* {
           // Log error but don't block authentication
           // ignore: avoid_print
           print('Failed to initialize RevenueCat: $e');
+        }
+
+        // Sync data from Firestore when user logs in
+        // This restores goals/runs on new devices or after reinstall
+        try {
+          final syncService = ref.read(syncServiceProvider);
+          await syncService.performFullSync(user.uid);
+        } catch (e) {
+          // Log error but don't block authentication
+          // ignore: avoid_print
+          print('Failed to sync data from Firestore: $e');
         }
 
         yield userModel;

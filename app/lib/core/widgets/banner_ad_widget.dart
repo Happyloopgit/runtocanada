@@ -71,10 +71,10 @@ class _BannerAdWidgetState extends ConsumerState<BannerAdWidget> {
       return const SizedBox.shrink();
     }
 
-    // Show banner ad wrapped in RepaintBoundary to prevent Impeller opacity errors
-    return RepaintBoundary(
-      child: Container(
-        alignment: Alignment.center,
+    // Show banner ad with minimal wrapper to prevent Impeller opacity errors
+    // Using SizedBox instead of Container to avoid opacity layer creation
+    return Center(
+      child: SizedBox(
         width: _bannerAd!.size.width.toDouble(),
         height: _bannerAd!.size.height.toDouble(),
         child: AdWidget(ad: _bannerAd!),

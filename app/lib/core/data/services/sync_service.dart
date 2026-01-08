@@ -7,6 +7,7 @@ import '../datasources/firestore_datasource.dart';
 import '../models/sync_queue_item.dart';
 import '../../../features/runs/data/datasources/run_local_datasource.dart';
 import '../../../features/goals/data/datasources/goal_local_datasource.dart';
+import '../../services/directions_service.dart';
 
 /// Service for synchronizing data between local (Hive) and cloud (Firestore)
 class SyncService {
@@ -199,29 +200,63 @@ class SyncService {
   }
 
   /// Fetch all runs from Firestore and save to local
+  /// Uses timestamp-based conflict resolution to prevent data loss
   Future<void> fetchRunsFromCloud(String userId) async {
     if (!await isOnline()) {
       throw Exception('Cannot fetch runs while offline');
     }
 
-    final runs = await _firestoreDataSource.fetchRuns(userId);
+    final cloudRuns = await _firestoreDataSource.fetchRuns(userId);
 
-    for (final run in runs) {
-      await _runLocalDataSource.saveRun(run);
+    for (final cloudRun in cloudRuns) {
+      final localRun = _runLocalDataSource.getRunById(cloudRun.id);
+
+      if (localRun == null) {
+        // New run from cloud - save it
+        await _runLocalDataSource.saveRun(cloudRun);
+      } else {
+        // Compare timestamps - keep newer version
+        if (cloudRun.startTime.isAfter(localRun.startTime)) {
+          await _runLocalDataSource.saveRun(cloudRun);
+        }
+        // else: local is newer, keep it (don't overwrite)
+      }
     }
   }
 
   /// Fetch all goals from Firestore and save to local
+  /// Uses timestamp-based conflict resolution to prevent data loss
   Future<void> fetchGoalsFromCloud(String userId) async {
     if (!await isOnline()) {
       throw Exception('Cannot fetch goals while offline');
     }
 
-    final goals = await _firestoreDataSource.fetchGoals(userId);
+    final cloudGoals = await _firestoreDataSource.fetchGoals(userId);
+    print('📥 Fetched ${cloudGoals.length} goals from Firestore');
 
-    for (final goal in goals) {
-      await _goalLocalDataSource.saveGoal(goal);
+    int saved = 0;
+    int skipped = 0;
+
+    for (final cloudGoal in cloudGoals) {
+      final localGoal = _goalLocalDataSource.getGoalById(cloudGoal.id);
+
+      if (localGoal == null) {
+        // New goal from cloud - save it
+        await _goalLocalDataSource.saveGoal(cloudGoal);
+        saved++;
+      } else {
+        // Compare timestamps - keep newer version
+        if (cloudGoal.updatedAt.isAfter(localGoal.updatedAt)) {
+          await _goalLocalDataSource.saveGoal(cloudGoal);
+          saved++;
+        } else {
+          skipped++;
+        }
+        // else: local is newer, keep it (don't overwrite)
+      }
     }
+
+    print('💾 Saved $saved goals, skipped $skipped (local newer)');
   }
 
   /// Full sync: Upload local data and download cloud data
@@ -236,6 +271,92 @@ class SyncService {
     // Then fetch from cloud (this will merge with local data)
     await fetchRunsFromCloud(userId);
     await fetchGoalsFromCloud(userId);
+
+    // Regenerate missing route polylines
+    await regenerateMissingRoutes(userId);
+  }
+
+  /// Regenerate route polylines for goals that are missing them
+  /// This happens when goals are synced from Firestore (polyline excluded to save space)
+  Future<void> regenerateMissingRoutes(String userId) async {
+    try {
+      final goals = _goalLocalDataSource.getGoalsByUserId(userId);
+      final directionsService = DirectionsService();
+
+      for (final goal in goals) {
+        // Skip if route already exists
+        if (goal.routePolyline.isNotEmpty) continue;
+
+        print('🔄 Regenerating route for goal: ${goal.name}');
+
+        // Build waypoints from start → milestones → destination
+        final waypoints = <DirectionsCoordinate>[
+          // Start location
+          DirectionsCoordinate(
+            latitude: goal.startLocation.latitude,
+            longitude: goal.startLocation.longitude,
+          ),
+          // Milestone locations (ordered by distanceFromStart)
+          ...goal.milestones
+              .map((m) => DirectionsCoordinate(
+                    latitude: m.location.latitude,
+                    longitude: m.location.longitude,
+                  ))
+              .toList(),
+          // Destination location
+          DirectionsCoordinate(
+            latitude: goal.destinationLocation.latitude,
+            longitude: goal.destinationLocation.longitude,
+          ),
+        ];
+
+        // Mapbox supports max 25 waypoints per request
+        // If we have more, we need to batch requests
+        if (waypoints.length <= 25) {
+          final route = await directionsService.getRouteWithWaypoints(
+            waypoints: waypoints,
+          );
+
+          if (route != null) {
+            // Convert route coordinates to flat list [lat, lng, lat, lng, ...]
+            final polyline = <double>[];
+            for (final coord in route.coordinates) {
+              polyline.add(coord.latitude);
+              polyline.add(coord.longitude);
+            }
+
+            // Create updated goal with regenerated polyline
+            final goalWithPolyline = GoalModel(
+              id: goal.id,
+              userId: goal.userId,
+              name: goal.name,
+              startLocation: goal.startLocation,
+              destinationLocation: goal.destinationLocation,
+              totalDistance: route.distance, // Use regenerated distance
+              currentProgress: goal.currentProgress,
+              milestones: goal.milestones,
+              routePolyline: polyline, // Add regenerated polyline
+              isActive: goal.isActive,
+              isCompleted: goal.isCompleted,
+              completedAt: goal.completedAt,
+              isSynced: goal.isSynced,
+              createdAt: goal.createdAt,
+              updatedAt: goal.updatedAt,
+            );
+            await _goalLocalDataSource.saveGoal(goalWithPolyline);
+            print('✅ Route regenerated: ${polyline.length / 2} coordinate pairs');
+          } else {
+            print('❌ Failed to regenerate route for ${goal.name}');
+          }
+        } else {
+          // TODO: Handle routes with >25 waypoints (batch multiple requests)
+          print('⚠️ Goal has ${waypoints.length} waypoints, need to batch requests');
+        }
+      }
+    } catch (e) {
+      print('❌ Error regenerating routes: $e');
+      // Don't throw - sync should continue even if route regeneration fails
+    }
   }
 
   /// Get sync queue status
