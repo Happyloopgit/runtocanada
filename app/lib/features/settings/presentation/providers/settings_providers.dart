@@ -12,7 +12,8 @@ final userLocalDataSourceProvider = Provider<UserLocalDataSource>((ref) {
 });
 
 /// Provider for current user settings
-final userSettingsProvider = StreamProvider<UserSettingsHive?>((ref) {
+/// Returns default settings when no user is logged in
+final userSettingsProvider = StreamProvider<UserSettingsHive>((ref) {
   final dataSource = ref.watch(userLocalDataSourceProvider);
   return dataSource.watchSettings();
 });

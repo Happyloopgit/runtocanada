@@ -1,16 +1,16 @@
 # Testing Issues Log
 
 **Date:** 2026-01-06 (Initial Testing)
-**Last Updated:** 2026-01-09 (Session 22 - New Issue Added)
+**Last Updated:** 2026-01-09 (Session 23 - TD-003 Complete)
 **Testing Phase:** Pre-Sprint 17.5 User Workflow Testing
 **Tester:** Karthik
 
 ---
 
-## 📊 Current Status (2026-01-09 - After Session 22)
+## 📊 Current Status (2026-01-09 - After Session 23)
 
-**Total Issues Found:** 23
-**Fixed Issues:** 17 ✅
+**Total Issues Found:** 24
+**Fixed Issues:** 18 ✅
 **Open Issues:** 5 ⚠️
 **On Hold:** 1 ⏸️
 
@@ -105,18 +105,23 @@
 | 18 | Ads - Android Layout | Banner ad positioned under device touch buttons (back, home, recent apps) - partially obscured | High | Open | Safe area padding needed for bottom banner ad |
 | 19 | Premium Badge - Confusing UI | Gold "Premium" badge in top bar looks like user IS premium, but it's actually an upgrade CTA | High | **FIXED** | ✅ Fixed in Session 13 - Changed text from "Premium" to "Upgrade" to clarify it's a CTA, not a status indicator |
 | 30 | Goal Creation - Keyboard Obscures Goal Name Input (Android) | On Step 4 (Confirm screen), when keyboard appears to edit goal name, it covers the input field - user cannot see what they're typing | High | **FIXED** | ✅ Fixed in Session 22 - Added FocusNode to goal name field that triggers map hiding when typing (consistent with Steps 0-1 UX). Also added 30-char limit to prevent excessively long goal names. Required `flutter clean` to resolve build cache issue. |
+| **APP-WIDE ISSUES** |||||
+| 62 | Multi-User Data Leakage | User switching accounts sees mixed data from both accounts - email account goals appear when logged in with Google account | **CRITICAL** | **FIXED** | ✅ Fixed in Session 22 - Implemented user-scoped Hive box architecture (user_{userId}_goals, user_{userId}_runs) with proper box lifecycle management |
+| 63 | App Startup Crash | App crashes immediately on startup with "Bad state: No user logged in. Call initializeForUser() first." error - before even reaching login screen | **CRITICAL - BLOCKER** | **FIXED** | ✅ Fixed in Session 23 - Implemented TD-003: Lazy datasource initialization pattern for all 4 datasources (UserLocalDataSource, RunLocalDataSource, GoalLocalDataSource, SyncService). Changed from eager box access in constructors to lazy `_getBox` getter that checks `HiveService.currentUserId != null` |
 
 ---
 
 ## Summary of Critical Blockers
 
-### ✅ **ALL CRITICAL BLOCKERS RESOLVED!** (Sessions 3-14)
+### ✅ **ALL CRITICAL BLOCKERS RESOLVED!** (Sessions 3-23)
 1. ~~**Issue #22:** Run tracking perpetual loading~~ - ✅ **FIXED Session 4**
 2. ~~**Issue #20:** Search not returning results~~ - ✅ **FIXED Session 4**
 3. ~~**Issue #21:** Location lost between steps~~ - ✅ **FIXED Session 4**
 4. ~~**Issue #11:** All home screen data hardcoded~~ - ✅ **FIXED Session 3**
 5. ~~**Issue #12:** No empty state for new users~~ - ✅ **FIXED Session 3**
 6. ~~**Issue #14:** Mapbox API key invalid (run tracking)~~ - ✅ **FIXED**
+7. ~~**Issue #62:** Multi-user data leakage~~ - ✅ **FIXED Session 22**
+8. ~~**Issue #63:** App startup crash before login~~ - ✅ **FIXED Session 23**
 7. ~~**Issue #15:** Mapbox API key invalid (goal creation)~~ - ✅ **FIXED**
 8. ~~**Issue #9:** Home screen too cluttered, too many colors~~ - ✅ **FIXED Session 14**
 9. ~~**Issue #13:** Journey map not rendering on home screen~~ - ✅ **FIXED Session 13**
@@ -2820,3 +2825,60 @@ Location: /Users/karthik/Desktop/Happyloop_website/apps/runtocanada/
 2. Fix Issue #18 (Android ads SafeArea) - Similar padding issue
 3. Fix Issue #10 (Top bar clutter) - UX polish
 4. Debug Issue #17 (iOS ads) - Platform-specific
+
+
+---
+
+## 🚀 Session 23 Summary (2026-01-09)
+
+**Focus:** Implement TD-003: Lazy datasource initialization to fix app startup crash
+
+### **Issue Fixed:**
+
+**Issue #63: App Crashes on Startup - "No user logged in" Error** ✅
+- **Severity:** CRITICAL - App Blocker
+- **Status:** ✅ **FIXED** (Session 23 - 2026-01-09)
+- **Problem:**
+  - App crashed immediately on startup before reaching login screen
+  - Error: "Bad state: No user logged in. Call initializeForUser() first."
+  - Even occurred when NO user was logged in yet
+  - Affected iOS device testing
+- **Root Cause:**
+  - Technical Debt TD-003 from Session 22 was not implemented
+  - All datasources tried to access user-scoped Hive boxes in constructors
+  - `main.dart` immediately watches `darkModeProvider` → `settingsNotifierProvider` → tries to access settings box
+  - This happened BEFORE any user could log in → immediate crash
+  - Affected 4 datasources: UserLocalDataSource, RunLocalDataSource, GoalLocalDataSource, SyncService
+- **Solution: Lazy Box Loading Pattern (TD-003)**
+  - Changed all datasource box access from eager (constructor) to lazy (getter)
+  - Pattern: Check if user logged in (`HiveService.currentUserId != null`) before accessing box
+  - Return null/empty defaults when no user logged in
+  - Throw explicit errors for write operations requiring authentication
+- **Files Modified (5 total):**
+  1. `user_local_datasource.dart` - Changed `late Box` → `Box?`, added `_getBox` getter
+  2. `run_local_datasource.dart` - Same pattern, added error throwing for `saveRun()`
+  3. `goal_local_datasource.dart` - Same pattern, added error throwing for `saveGoal()`
+  4. `sync_service.dart` - Same pattern for sync queue box
+  5. `settings_providers.dart` - Updated `userSettingsProvider` return type (non-nullable)
+- **Key Improvements:**
+  - Explicit error messages: "Cannot save goal: No user logged in (currentUserId: ...)"
+  - Graceful degradation: Returns defaults when no user logged in
+  - Better error handling: Throws exceptions instead of silent failures
+- **Testing Results:**
+  - ✅ App starts successfully (no crash)
+  - ✅ Shows login screen with default light theme
+  - ✅ User can log in successfully
+  - ✅ Goal creation works after login
+  - ✅ User settings load correctly after login
+  - ✅ Dark mode toggle functional
+- **Technical Debt Resolved:**
+  - **TD-003: Lazy datasource initialization** - ✅ COMPLETE
+- **Impact:**
+  - Critical app blocker eliminated
+  - User-scoped box architecture now fully functional
+  - Multi-user data isolation working correctly
+  - Better error diagnostics for authentication issues
+
+---
+
+**Last Updated:** 2026-01-09 (Session 23 - TD-003 Lazy Datasource Initialization Complete ✅)

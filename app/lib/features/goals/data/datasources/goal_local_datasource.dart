@@ -3,44 +3,65 @@ import '../../domain/models/goal_model.dart';
 import '../../../../core/data/services/hive_service.dart';
 
 class GoalLocalDataSource {
-  late Box<GoalModel> _box;
+  Box<GoalModel>? _box;
 
   GoalLocalDataSource() {
-    _box = HiveService.getBox<GoalModel>(HiveService.goalsBox);
+    // Don't initialize box in constructor - it will be lazy loaded
+    // This prevents crashing when no user is logged in yet (TD-003)
+  }
+
+  /// Get the box if user is logged in, otherwise return null
+  Box<GoalModel>? get _getBox {
+    if (_box != null) return _box;
+
+    try {
+      // Only try to get box if a user is logged in
+      if (HiveService.currentUserId != null) {
+        _box = HiveService.getBox<GoalModel>(HiveService.goalsBox);
+        return _box;
+      }
+      return null;
+    } catch (e) {
+      return null;
+    }
   }
 
   /// Save a new goal
   Future<void> saveGoal(GoalModel goal) async {
-    await _box.put(goal.id, goal);
+    final box = _getBox;
+    if (box == null) {
+      throw Exception('Cannot save goal: No user logged in (currentUserId: ${HiveService.currentUserId})');
+    }
+    await box.put(goal.id, goal);
   }
 
   /// Get a goal by ID
   GoalModel? getGoalById(String id) {
-    return _box.get(id);
+    final box = _getBox;
+    if (box == null) return null;
+    return box.get(id);
   }
 
   /// Get all goals
   List<GoalModel> getAllGoals() {
-    return _box.values.toList();
+    final box = _getBox;
+    if (box == null) return [];
+    return box.values.toList();
   }
 
   /// Get goals by user ID
   List<GoalModel> getGoalsByUserId(String userId) {
-    return _box.values.where((goal) => goal.userId == userId).toList();
+    final box = _getBox;
+    if (box == null) return [];
+    return box.values.where((goal) => goal.userId == userId).toList();
   }
 
   /// Get active goal for user (only one active goal at a time)
   GoalModel? getActiveGoal(String userId) {
-    return _box.values.firstWhere(
-      (goal) => goal.userId == userId && goal.isActive && !goal.isCompleted,
-      orElse: () => _box.values.first, // This will throw if empty, which is fine
-    );
-  }
-
-  /// Get active goal safely (returns null if none)
-  GoalModel? getActiveGoalSafe(String userId) {
+    final box = _getBox;
+    if (box == null) return null;
     try {
-      return _box.values.firstWhere(
+      return box.values.firstWhere(
         (goal) => goal.userId == userId && goal.isActive && !goal.isCompleted,
       );
     } catch (e) {
@@ -48,9 +69,16 @@ class GoalLocalDataSource {
     }
   }
 
+  /// Get active goal safely (returns null if none)
+  GoalModel? getActiveGoalSafe(String userId) {
+    return getActiveGoal(userId);
+  }
+
   /// Get completed goals
   List<GoalModel> getCompletedGoals(String userId) {
-    return _box.values
+    final box = _getBox;
+    if (box == null) return [];
+    return box.values
         .where((goal) => goal.userId == userId && goal.isCompleted)
         .toList();
   }
@@ -64,12 +92,16 @@ class GoalLocalDataSource {
 
   /// Update a goal
   Future<void> updateGoal(GoalModel goal) async {
-    await _box.put(goal.id, goal);
+    final box = _getBox;
+    if (box == null) return;
+    await box.put(goal.id, goal);
   }
 
   /// Update goal progress
   Future<void> updateGoalProgress(String id, double newProgress) async {
-    final goal = _box.get(id);
+    final box = _getBox;
+    if (box == null) return;
+    final goal = box.get(id);
     if (goal != null) {
       final isNowCompleted = newProgress >= goal.totalDistance;
       final updatedGoal = goal.copyWith(
@@ -78,13 +110,15 @@ class GoalLocalDataSource {
         completedAt: isNowCompleted ? DateTime.now() : null,
         updatedAt: DateTime.now(),
       );
-      await _box.put(id, updatedGoal);
+      await box.put(id, updatedGoal);
     }
   }
 
   /// Delete a goal
   Future<void> deleteGoal(String id) async {
-    await _box.delete(id);
+    final box = _getBox;
+    if (box == null) return;
+    await box.delete(id);
   }
 
   /// Deactivate all goals for a user
@@ -96,14 +130,16 @@ class GoalLocalDataSource {
           isActive: false,
           updatedAt: DateTime.now(),
         );
-        await _box.put(goal.id, updatedGoal);
+        await updateGoal(updatedGoal);
       }
     }
   }
 
   /// Set a goal as active (deactivates other goals)
   Future<void> setGoalActive(String id) async {
-    final goal = _box.get(id);
+    final box = _getBox;
+    if (box == null) return;
+    final goal = box.get(id);
     if (goal != null) {
       // Deactivate all other goals for this user
       await deactivateAllGoals(goal.userId);
@@ -113,37 +149,45 @@ class GoalLocalDataSource {
         isActive: true,
         updatedAt: DateTime.now(),
       );
-      await _box.put(id, updatedGoal);
+      await box.put(id, updatedGoal);
     }
   }
 
   /// Get unsynced goals
   List<GoalModel> getUnsyncedGoals(String userId) {
-    return _box.values
+    final box = _getBox;
+    if (box == null) return [];
+    return box.values
         .where((goal) => goal.userId == userId && !goal.isSynced)
         .toList();
   }
 
   /// Mark goal as synced
   Future<void> markGoalAsSynced(String id) async {
-    final goal = _box.get(id);
+    final box = _getBox;
+    if (box == null) return;
+    final goal = box.get(id);
     if (goal != null) {
       final updatedGoal = goal.copyWith(
         isSynced: true,
         updatedAt: DateTime.now(),
       );
-      await _box.put(id, updatedGoal);
+      await box.put(id, updatedGoal);
     }
   }
 
   /// Clear all goals (for testing or logout)
   Future<void> clearAllGoals() async {
-    await _box.clear();
+    final box = _getBox;
+    if (box == null) return;
+    await box.clear();
   }
 
   /// Check if user has any goals
   bool hasGoals(String userId) {
-    return _box.values.any((goal) => goal.userId == userId);
+    final box = _getBox;
+    if (box == null) return false;
+    return box.values.any((goal) => goal.userId == userId);
   }
 
   /// Check if user has an active goal
@@ -153,11 +197,15 @@ class GoalLocalDataSource {
 
   /// Get total number of goals by user
   int getTotalGoalCount(String userId) {
-    return _box.values.where((goal) => goal.userId == userId).length;
+    final box = _getBox;
+    if (box == null) return 0;
+    return box.values.where((goal) => goal.userId == userId).length;
   }
 
   /// Check if box is empty
   bool isEmpty() {
-    return _box.isEmpty;
+    final box = _getBox;
+    if (box == null) return true;
+    return box.isEmpty;
   }
 }

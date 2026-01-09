@@ -17,7 +17,7 @@ class SyncService {
   final GoalLocalDataSource _goalLocalDataSource;
   final Connectivity _connectivity;
 
-  late Box<SyncQueueItem> _syncQueueBox;
+  Box<SyncQueueItem>? _syncQueueBox;
   Timer? _syncTimer;
   StreamSubscription<ConnectivityResult>? _connectivitySubscription;
   bool _isSyncing = false;
@@ -32,11 +32,27 @@ class SyncService {
         _goalLocalDataSource = goalLocalDataSource,
         _connectivity = connectivity ?? Connectivity();
 
+  /// Get the box if user is logged in, otherwise return null (TD-003)
+  Box<SyncQueueItem>? get _getBox {
+    if (_syncQueueBox != null) return _syncQueueBox;
+
+    try {
+      // Only try to get box if a user is logged in
+      if (HiveService.currentUserId != null) {
+        _syncQueueBox = HiveService.getBox<SyncQueueItem>(HiveService.syncQueueBox);
+        return _syncQueueBox;
+      }
+      return null;
+    } catch (e) {
+      return null;
+    }
+  }
+
   /// Initialize the sync service
   Future<void> initialize() async {
-    // Use user-scoped syncQueue box (requires user to be logged in)
-    // This is safe because SyncService is only used after authentication
-    _syncQueueBox = HiveService.getBox<SyncQueueItem>(HiveService.syncQueueBox);
+    // Try to initialize box - but don't crash if no user is logged in yet (TD-003)
+    // The box will be accessed lazily when needed
+    _syncQueueBox = _getBox;
 
     // Listen to connectivity changes
     _connectivitySubscription = _connectivity.onConnectivityChanged.listen((result) {
@@ -51,8 +67,10 @@ class SyncService {
       processSyncQueue();
     });
 
-    // Process queue on initialization
-    processSyncQueue();
+    // Process queue on initialization (if user is logged in)
+    if (_syncQueueBox != null) {
+      processSyncQueue();
+    }
   }
 
   /// Check if there's an internet connection
@@ -71,6 +89,9 @@ class SyncService {
 
   /// Add a run to the sync queue
   Future<void> queueRunForSync(RunModel run) async {
+    final box = _getBox;
+    if (box == null) return; // Skip if no user logged in
+
     final item = SyncQueueItem(
       id: run.id,
       type: SyncItemType.run,
@@ -79,11 +100,14 @@ class SyncService {
       retryCount: 0,
     );
 
-    await _syncQueueBox.put(item.id, item);
+    await box.put(item.id, item);
   }
 
   /// Add a goal to the sync queue
   Future<void> queueGoalForSync(GoalModel goal) async {
+    final box = _getBox;
+    if (box == null) return; // Skip if no user logged in
+
     final item = SyncQueueItem(
       id: goal.id,
       type: SyncItemType.goal,
@@ -92,7 +116,7 @@ class SyncService {
       retryCount: 0,
     );
 
-    await _syncQueueBox.put(item.id, item);
+    await box.put(item.id, item);
   }
 
   /// Process the sync queue
@@ -100,10 +124,16 @@ class SyncService {
     if (_isSyncing) return; // Prevent concurrent syncs
     if (!await isOnline()) return; // Skip if offline
 
+    final box = _getBox;
+    if (box == null) {
+      _isSyncing = false;
+      return; // Skip if no user logged in
+    }
+
     _isSyncing = true;
 
     try {
-      final items = _syncQueueBox.values.toList();
+      final items = box.values.toList();
       if (items.isEmpty) {
         _isSyncing = false;
         return;
@@ -113,7 +143,7 @@ class SyncService {
         try {
           await _syncItem(item);
           // Remove from queue after successful sync
-          await _syncQueueBox.delete(item.id);
+          await box.delete(item.id);
         } catch (e) {
           // Increment retry count using copyWith
           final updatedItem = item.copyWith(
@@ -122,7 +152,7 @@ class SyncService {
           );
 
           // Keep in queue with updated retry count
-          await _syncQueueBox.put(item.id, updatedItem);
+          await box.put(item.id, updatedItem);
 
           // If retry count exceeds threshold, log error
           if (updatedItem.retryCount > 5) {
@@ -364,7 +394,16 @@ class SyncService {
 
   /// Get sync queue status
   SyncQueueStatus getSyncQueueStatus() {
-    final items = _syncQueueBox.values.toList();
+    final box = _getBox;
+    if (box == null) {
+      return SyncQueueStatus(
+        pendingCount: 0,
+        failedCount: 0,
+        isSyncing: false,
+      );
+    }
+
+    final items = box.values.toList();
     final pendingCount = items.length;
     final failedCount = items.where((item) => item.retryCount > 0).length;
 
@@ -377,7 +416,9 @@ class SyncService {
 
   /// Clear the sync queue (use with caution)
   Future<void> clearSyncQueue() async {
-    await _syncQueueBox.clear();
+    final box = _getBox;
+    if (box == null) return;
+    await box.clear();
   }
 
   /// Dispose resources
