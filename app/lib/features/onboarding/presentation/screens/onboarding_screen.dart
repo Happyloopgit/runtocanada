@@ -103,7 +103,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                   ),
                   title: 'Journey Progress',
                   description:
-                      'Set a destination goal and watch your virtual location move along the route. Celebrate milestones as you virtually pass through Canadian cities!',
+                      'Set a destination goal and watch your virtual location move along the route. Celebrate milestones as you virtually pass through cities along your journey!',
                 ),
                 OnboardingPage(
                   icon: Icons.photo_camera,
@@ -114,7 +114,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                   ),
                   title: 'Discover Cities',
                   description:
-                      'Unlock city photos and fun facts as you reach each milestone. Learn about Canada while staying fit and motivated!',
+                      'Unlock city photos and fun facts as you reach each milestone. Discover new places while staying fit and motivated!',
                 ),
               ],
             ),

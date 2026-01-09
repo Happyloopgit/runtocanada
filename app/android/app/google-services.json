@@ -12,7 +12,20 @@
           "package_name": "com.runtocanada.app"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "845378302830-58pajn9nqltk173dqsvtobukfc7tqhal.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.runtocanada.app",
+            "certificate_hash": "bb0f412203dcd18ad36cb73a4a51027cd5268346"
+          }
+        },
+        {
+          "client_id": "845378302830-rgf62pd2ujtmio3sjcf9eq2h76uihs4j.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyBg5-gVqBo6Zs5BaVlNsLKa667NgZm6rQU"
@@ -20,7 +33,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "845378302830-rgf62pd2ujtmio3sjcf9eq2h76uihs4j.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "845378302830-vodesujk4r7egfil9lla530vr90o92q5.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.runtocanada.app"
+              }
+            }
+          ]
         }
       }
     }

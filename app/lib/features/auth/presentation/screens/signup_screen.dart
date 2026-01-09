@@ -8,6 +8,7 @@ import 'package:run_to_canada/core/widgets/custom_button.dart';
 import 'package:run_to_canada/core/widgets/custom_text_field.dart';
 import 'package:run_to_canada/core/widgets/error_message.dart';
 import 'package:run_to_canada/core/widgets/glass_card.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../providers/auth_providers.dart';
 
 /// Signup screen
@@ -240,8 +241,11 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                                   ),
                                 ),
                                 GestureDetector(
-                                  onTap: () {
-                                    // TODO: Show terms and conditions
+                                  onTap: () async {
+                                    final Uri url = Uri.parse('https://runtocanada.happyloop.pro/terms.html');
+                                    if (await canLaunchUrl(url)) {
+                                      await launchUrl(url, mode: LaunchMode.externalApplication);
+                                    }
                                   },
                                   child: Text(
                                     'Terms and Conditions',
@@ -258,8 +262,11 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                                   ),
                                 ),
                                 GestureDetector(
-                                  onTap: () {
-                                    // TODO: Show privacy policy
+                                  onTap: () async {
+                                    final Uri url = Uri.parse('https://runtocanada.happyloop.pro/privacy.html');
+                                    if (await canLaunchUrl(url)) {
+                                      await launchUrl(url, mode: LaunchMode.externalApplication);
+                                    }
                                   },
                                   child: Text(
                                     'Privacy Policy',

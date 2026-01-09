@@ -1561,11 +1561,24 @@ service firebase.storage {
 - No sharing of location data with third parties
 - User can delete all data (GDPR compliance)
 
-**Privacy Policy Requirements:**
-- Location data usage explanation
-- Data retention policy
-- Third-party services disclosure (Mapbox, Unsplash)
-- User rights (access, deletion, export)
+**Privacy Policy & Terms:**
+- **Website:** [https://runtocanada.happyloop.pro](https://runtocanada.happyloop.pro)
+- **Terms of Service:** [https://runtocanada.happyloop.pro/terms.html](https://runtocanada.happyloop.pro/terms.html)
+- **Privacy Policy:** [https://runtocanada.happyloop.pro/privacy.html](https://runtocanada.happyloop.pro/privacy.html)
+- **Support:** [https://runtocanada.happyloop.pro/support.html](https://runtocanada.happyloop.pro/support.html)
+
+**Privacy Policy Coverage:**
+- Location data usage explanation (GPS tracking during runs only)
+- Data retention policy (deleted within 30 days of account deletion)
+- Third-party services disclosure (Firebase, Mapbox, AdMob, RevenueCat, Sentry)
+- User rights (GDPR/CCPA compliance - access, deletion, export, portability)
+- Health & safety disclaimers
+- Children's privacy (not for users under 13)
+
+**In-App Integration:**
+- Signup screen links to Terms & Privacy before account creation
+- Settings screen provides access to legal pages
+- Support email: support@runtocanada.com
 
 ---
 
@@ -1810,7 +1823,48 @@ version: 1.0.0+1
 
 ---
 
-### 6. Monitoring & Analytics
+### 6. Website & Legal Pages Deployment
+
+**Website Hosting:**
+- **Platform:** Happyloop Pro (https://happyloop.pro)
+- **Subdomain:** runtocanada.happyloop.pro
+- **Repository:** `/Happyloop_website/apps/runtocanada/`
+- **Tech Stack:** Static HTML/CSS (no frameworks - fast, simple, SEO-friendly)
+
+**Website Structure:**
+```
+apps/runtocanada/
+├── index.html        # Landing page with app features
+├── terms.html        # Terms of Service
+├── privacy.html      # Privacy Policy (GDPR/CCPA compliant)
+├── support.html      # FAQ & Support
+└── styles.css        # Branded styling (blue #0D7FF2, dark mode)
+```
+
+**Deployment Process:**
+1. Update files in `/Happyloop_website/apps/runtocanada/`
+2. Push to repository
+3. Deploy to happyloop.pro hosting
+4. Verify subdomain: https://runtocanada.happyloop.pro
+5. Test all links from mobile app
+
+**Key Features:**
+- Responsive design (mobile-first)
+- Brand colors matching app (bright blue #0D7FF2)
+- Dark mode theme consistent with app
+- App store badges (iOS & Android)
+- Legal compliance (comprehensive Terms & Privacy)
+- Support & FAQ section
+- Contact email: support@runtocanada.com
+
+**App Integration:**
+- Signup screen: Links to Terms & Privacy
+- Settings screen: Access to legal pages
+- Support: Links to FAQ and contact
+
+---
+
+### 7. Monitoring & Analytics
 
 **Firebase Analytics:**
 ```dart

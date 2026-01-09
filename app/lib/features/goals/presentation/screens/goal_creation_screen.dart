@@ -1068,48 +1068,51 @@ class _GoalCreationScreenState extends ConsumerState<GoalCreationScreen> {
   }
 
   Widget _buildNavigationButtons() {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surface,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: 10,
-            offset: const Offset(0, -2),
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
-          if (_currentStep > 0)
+    return SafeArea(
+      top: false, // Don't apply SafeArea to top (handled by appBar)
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.surface,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.05),
+              blurRadius: 10,
+              offset: const Offset(0, -2),
+            ),
+          ],
+        ),
+        child: Row(
+          children: [
+            if (_currentStep > 0)
+              Expanded(
+                child: CustomButton(
+                  text: 'Back',
+                  onPressed: _previousStep,
+                  isOutlined: true,
+                ),
+              ),
+
+            if (_currentStep > 0) const SizedBox(width: 12),
+
             Expanded(
+              flex: 2,
               child: CustomButton(
-                text: 'Back',
-                onPressed: _previousStep,
-                isOutlined: true,
+                text: _currentStep == 0
+                    ? 'Next: Destination'
+                    : _currentStep == 1
+                        ? 'Calculate Route'
+                        : _currentStep == 2
+                            ? 'Next: Confirm'
+                            : 'Create Goal',
+                onPressed: (_currentStep == 0 && _startLocation == null) ||
+                        (_currentStep == 1 && _destinationLocation == null)
+                    ? null
+                    : _nextStep,
               ),
             ),
-
-          if (_currentStep > 0) const SizedBox(width: 12),
-
-          Expanded(
-            flex: 2,
-            child: CustomButton(
-              text: _currentStep == 0
-                  ? 'Next: Destination'
-                  : _currentStep == 1
-                      ? 'Calculate Route'
-                      : _currentStep == 2
-                          ? 'Next: Confirm'
-                          : 'Create Goal',
-              onPressed: (_currentStep == 0 && _startLocation == null) ||
-                      (_currentStep == 1 && _destinationLocation == null)
-                  ? null
-                  : _nextStep,
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
