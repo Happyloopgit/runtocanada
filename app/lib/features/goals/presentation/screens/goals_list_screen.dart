@@ -26,7 +26,7 @@ class GoalsListScreen extends ConsumerWidget {
     final goalsAsync = ref.watch(userGoalsProvider(userId));
 
     return Scaffold(
-      backgroundColor: AppColors.backgroundDark,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       body: goalsAsync.when(
         data: (goals) {
           if (goals.isEmpty) {
@@ -56,10 +56,10 @@ class GoalsListScreen extends ConsumerWidget {
             children: [
               // Page Title
               const SizedBox(height: 40),
-              const Text(
+              Text(
                 'My Goals',
                 style: TextStyle(
-                  color: AppColors.textPrimaryDark,
+                  color: Theme.of(context).colorScheme.onSurface,
                   fontSize: 32,
                   fontWeight: FontWeight.bold,
                 ),
@@ -132,13 +132,13 @@ class GoalsListScreen extends ConsumerWidget {
           Icon(
             Icons.flag_outlined,
             size: 80,
-            color: AppColors.textSecondaryDark.withValues(alpha: 0.5),
+            color: Theme.of(context).colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
           ),
           const SizedBox(height: 16),
           Text(
             'No Goals Yet',
             style: TextStyle(
-              color: AppColors.textPrimaryDark,
+              color: Theme.of(context).colorScheme.onSurface,
               fontSize: 24,
               fontWeight: FontWeight.bold,
             ),
@@ -147,7 +147,7 @@ class GoalsListScreen extends ConsumerWidget {
           Text(
             'Create your first running goal!',
             style: TextStyle(
-              color: AppColors.textSecondaryDark,
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
               fontSize: 16,
             ),
           ),
@@ -181,13 +181,15 @@ class GoalsListScreen extends ConsumerWidget {
   }
 
   Widget _buildSectionHeader(String title) {
-    return Text(
-      title,
-      style: const TextStyle(
-        color: AppColors.textSecondaryDark,
-        fontSize: 14,
-        fontWeight: FontWeight.w600,
-        letterSpacing: 0.5,
+    return Builder(
+      builder: (context) => Text(
+        title,
+        style: TextStyle(
+          color: Theme.of(context).colorScheme.onSurfaceVariant,
+          fontSize: 14,
+          fontWeight: FontWeight.w600,
+          letterSpacing: 0.5,
+        ),
       ),
     );
   }
@@ -321,10 +323,10 @@ class GoalsListScreen extends ConsumerWidget {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
-        color: AppColors.surfaceDark,
+        color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: AppColors.border.withValues(alpha: 0.3),
+          color: Theme.of(context).colorScheme.outlineVariant,
           width: 1,
         ),
       ),
@@ -345,17 +347,17 @@ class GoalsListScreen extends ConsumerWidget {
                     Expanded(
                       child: Text(
                         goal.name,
-                        style: const TextStyle(
-                          color: AppColors.textPrimaryDark,
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.onSurface,
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                     ),
                     IconButton(
-                      icon: const Icon(
+                      icon: Icon(
                         Icons.more_vert,
-                        color: AppColors.textSecondaryDark,
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
                       ),
                       onPressed: () {
                         _showGoalOptions(context, ref, goal, userId);
@@ -366,8 +368,8 @@ class GoalsListScreen extends ConsumerWidget {
                 const SizedBox(height: 4),
                 Text(
                   '${goal.startLocation.city ?? goal.startLocation.placeName} → ${goal.destinationLocation.city ?? goal.destinationLocation.placeName}',
-                  style: const TextStyle(
-                    color: AppColors.textSecondaryDark,
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
                     fontSize: 14,
                   ),
                 ),
@@ -377,13 +379,13 @@ class GoalsListScreen extends ConsumerWidget {
                     Icon(
                       Icons.route,
                       size: 16,
-                      color: AppColors.textHintDark,
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
                     ),
                     const SizedBox(width: 4),
                     Text(
                       '${goal.totalDistanceInKm.toStringAsFixed(1)} km',
-                      style: const TextStyle(
-                        color: AppColors.textHintDark,
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
                         fontSize: 12,
                       ),
                     ),
@@ -391,13 +393,13 @@ class GoalsListScreen extends ConsumerWidget {
                     Icon(
                       Icons.flag,
                       size: 16,
-                      color: AppColors.textHintDark,
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
                     ),
                     const SizedBox(width: 4),
                     Text(
                       '${goal.totalMilestones} milestones',
-                      style: const TextStyle(
-                        color: AppColors.textHintDark,
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
                         fontSize: 12,
                       ),
                     ),
@@ -446,7 +448,7 @@ class GoalsListScreen extends ConsumerWidget {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
-        color: AppColors.surfaceDark,
+        color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
           color: AppColors.success.withValues(alpha: 0.3),
@@ -496,8 +498,8 @@ class GoalsListScreen extends ConsumerWidget {
                 const SizedBox(height: 12),
                 Text(
                   goal.name,
-                  style: const TextStyle(
-                    color: AppColors.textPrimaryDark,
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.onSurface,
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
                   ),
@@ -505,8 +507,8 @@ class GoalsListScreen extends ConsumerWidget {
                 const SizedBox(height: 4),
                 Text(
                   '${goal.startLocation.city ?? goal.startLocation.placeName} → ${goal.destinationLocation.city ?? goal.destinationLocation.placeName}',
-                  style: const TextStyle(
-                    color: AppColors.textSecondaryDark,
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
                     fontSize: 14,
                   ),
                 ),
@@ -516,13 +518,13 @@ class GoalsListScreen extends ConsumerWidget {
                     Icon(
                       Icons.calendar_today,
                       size: 16,
-                      color: AppColors.textHintDark,
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
                     ),
                     const SizedBox(width: 4),
                     Text(
                       'Completed $formattedDate',
-                      style: const TextStyle(
-                        color: AppColors.textHintDark,
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
                         fontSize: 12,
                       ),
                     ),
@@ -534,13 +536,13 @@ class GoalsListScreen extends ConsumerWidget {
                     Icon(
                       Icons.route,
                       size: 16,
-                      color: AppColors.textHintDark,
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
                     ),
                     const SizedBox(width: 4),
                     Text(
                       '${goal.totalDistanceInKm.toStringAsFixed(1)} km',
-                      style: const TextStyle(
-                        color: AppColors.textHintDark,
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
                         fontSize: 12,
                       ),
                     ),
@@ -577,7 +579,7 @@ class GoalsListScreen extends ConsumerWidget {
   ) {
     showModalBottomSheet(
       context: context,
-      backgroundColor: AppColors.surfaceDark,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
@@ -590,7 +592,7 @@ class GoalsListScreen extends ConsumerWidget {
               width: 40,
               height: 4,
               decoration: BoxDecoration(
-                color: AppColors.textHintDark,
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
@@ -598,9 +600,9 @@ class GoalsListScreen extends ConsumerWidget {
             if (!goal.isActive && !goal.isCompleted)
               ListTile(
                 leading: const Icon(Icons.play_arrow, color: AppColors.primary),
-                title: const Text(
+                title: Text(
                   'Activate Goal',
-                  style: TextStyle(color: AppColors.textPrimaryDark),
+                  style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
                 ),
                 onTap: () async {
                   final ctx = context;
@@ -611,9 +613,9 @@ class GoalsListScreen extends ConsumerWidget {
             if (goal.isActive)
               ListTile(
                 leading: const Icon(Icons.pause, color: AppColors.warning),
-                title: const Text(
+                title: Text(
                   'Deactivate Goal',
-                  style: TextStyle(color: AppColors.textPrimaryDark),
+                  style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
                 ),
                 onTap: () async {
                   Navigator.pop(context);
@@ -681,10 +683,10 @@ class GoalsListScreen extends ConsumerWidget {
     return showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        backgroundColor: AppColors.surfaceDark,
-        title: const Text(
+        backgroundColor: Theme.of(context).colorScheme.surface,
+        title: Text(
           'Activate Goal?',
-          style: TextStyle(color: AppColors.textPrimaryDark),
+          style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
         ),
         content: Column(
           mainAxisSize: MainAxisSize.min,
@@ -692,13 +694,13 @@ class GoalsListScreen extends ConsumerWidget {
           children: [
             Text(
               'Activating "${goal.name}" will replace your current active goal:',
-              style: const TextStyle(color: AppColors.textSecondaryDark),
+              style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant),
             ),
             const SizedBox(height: 12),
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: AppColors.surfaceInput.withValues(alpha: 0.5),
+                color: Theme.of(context).colorScheme.surfaceContainerHighest,
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Column(
@@ -706,16 +708,16 @@ class GoalsListScreen extends ConsumerWidget {
                 children: [
                   Text(
                     currentGoal.name,
-                    style: const TextStyle(
-                      color: AppColors.textPrimaryDark,
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.onSurface,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   const SizedBox(height: 4),
                   Text(
                     'Progress: ${currentGoal.progressPercentage.toStringAsFixed(1)}%',
-                    style: const TextStyle(
-                      color: AppColors.textHintDark,
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
                       fontSize: 12,
                     ),
                   ),
@@ -775,14 +777,14 @@ class GoalsListScreen extends ConsumerWidget {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        backgroundColor: AppColors.surfaceDark,
-        title: const Text(
+        backgroundColor: Theme.of(context).colorScheme.surface,
+        title: Text(
           'Delete Goal?',
-          style: TextStyle(color: AppColors.textPrimaryDark),
+          style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
         ),
         content: Text(
           'Are you sure you want to delete "${goal.name}"? This action cannot be undone.',
-          style: const TextStyle(color: AppColors.textSecondaryDark),
+          style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant),
         ),
         actions: [
           TextButton(

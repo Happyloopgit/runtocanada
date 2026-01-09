@@ -468,17 +468,17 @@ class _GoalCreationScreenState extends ConsumerState<GoalCreationScreen> {
     return showDialog<String>(
       context: context,
       builder: (context) => AlertDialog(
-        backgroundColor: AppColors.surfaceDark,
+        backgroundColor: Theme.of(context).colorScheme.surface,
         title: Text(
           'Activate This Goal?',
           style: AppTextStyles.titleLarge.copyWith(
-            color: AppColors.textPrimaryDark,
+            color: Theme.of(context).colorScheme.onSurface,
           ),
         ),
         content: Text(
           'You already have an active goal. Would you like to activate this new goal (your current goal will be paused) or save it for later?',
           style: AppTextStyles.bodyMedium.copyWith(
-            color: AppColors.textSecondaryDark,
+            color: Theme.of(context).colorScheme.onSurfaceVariant,
           ),
         ),
         actions: [
@@ -487,7 +487,7 @@ class _GoalCreationScreenState extends ConsumerState<GoalCreationScreen> {
             child: Text(
               'Save for Later',
               style: AppTextStyles.labelLarge.copyWith(
-                color: AppColors.textSecondaryDark,
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
               ),
             ),
           ),
@@ -612,7 +612,7 @@ class _GoalCreationScreenState extends ConsumerState<GoalCreationScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Create New Goal'),
-        backgroundColor: AppColors.background,
+        backgroundColor: Theme.of(context).colorScheme.surface,
       ),
       body: Column(
         children: [
@@ -646,10 +646,10 @@ class _GoalCreationScreenState extends ConsumerState<GoalCreationScreen> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
       decoration: BoxDecoration(
-        color: AppColors.surface,
+        color: Theme.of(context).colorScheme.surface,
         border: Border(
           bottom: BorderSide(
-            color: AppColors.border, // Removed alpha to avoid opacity issues (Issue #41)
+            color: Theme.of(context).colorScheme.outlineVariant,
             width: 1,
           ),
         ),
@@ -686,11 +686,11 @@ class _GoalCreationScreenState extends ConsumerState<GoalCreationScreen> {
                     end: Alignment.bottomRight,
                   )
                 : null,
-            color: isCompleted || isActive ? null : AppColors.surfaceLight,
+            color: isCompleted || isActive ? null : Theme.of(context).colorScheme.surfaceContainerHighest,
             border: Border.all(
               color: isCompleted || isActive
                   ? AppColors.primary.withValues(alpha: 0.5)
-                  : AppColors.border,
+                  : Theme.of(context).colorScheme.outlineVariant,
               width: 2,
             ),
             boxShadow: isActive
@@ -709,7 +709,7 @@ class _GoalCreationScreenState extends ConsumerState<GoalCreationScreen> {
                 : Text(
                     '${step + 1}',
                     style: AppTextStyles.bodyMedium.copyWith(
-                      color: isActive ? Colors.white : AppColors.textSecondary,
+                      color: isActive ? Colors.white : Theme.of(context).colorScheme.onSurfaceVariant,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -719,7 +719,7 @@ class _GoalCreationScreenState extends ConsumerState<GoalCreationScreen> {
         Text(
           label,
           style: AppTextStyles.bodySmall.copyWith(
-            color: isActive ? AppColors.textPrimary : AppColors.textSecondary,
+            color: isActive ? Theme.of(context).colorScheme.onSurface : Theme.of(context).colorScheme.onSurfaceVariant,
             fontWeight: isActive ? FontWeight.w600 : FontWeight.normal,
             fontSize: 11,
           ),
@@ -741,7 +741,7 @@ class _GoalCreationScreenState extends ConsumerState<GoalCreationScreen> {
                 ],
               )
             : null,
-        color: isCompleted ? null : AppColors.border, // Removed alpha (Issue #41)
+        color: isCompleted ? null : Theme.of(context).colorScheme.outlineVariant,
       ),
     );
   }
@@ -753,7 +753,7 @@ class _GoalCreationScreenState extends ConsumerState<GoalCreationScreen> {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: AppColors.border, // NO alpha - solid color only (Issue #41)
+          color: Theme.of(context).colorScheme.outlineVariant,
           width: 1,
         ),
       ),
@@ -824,9 +824,9 @@ class _GoalCreationScreenState extends ConsumerState<GoalCreationScreen> {
 
     // Steps 0 and 1: Location selection
     return Container(
-      decoration: const BoxDecoration(
-        color: AppColors.background,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.surface,
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
       ),
       child: Column(
         children: [
@@ -965,7 +965,7 @@ class _GoalCreationScreenState extends ConsumerState<GoalCreationScreen> {
                   location.placeName,
                   style: AppTextStyles.bodyLarge.copyWith(
                     fontWeight: FontWeight.w600,
-                    color: AppColors.textPrimary,
+                    color: Theme.of(context).colorScheme.onSurface,
                   ),
                 ),
                 const SizedBox(height: 2),
@@ -973,7 +973,7 @@ class _GoalCreationScreenState extends ConsumerState<GoalCreationScreen> {
                   Text(
                     location.country!,
                     style: AppTextStyles.bodySmall.copyWith(
-                      color: AppColors.textSecondary,
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
                     ),
                   ),
               ],
@@ -981,7 +981,7 @@ class _GoalCreationScreenState extends ConsumerState<GoalCreationScreen> {
           ),
           IconButton(
             icon: const Icon(Icons.edit_outlined, size: 20),
-            color: AppColors.textSecondary,
+            color: Theme.of(context).colorScheme.onSurfaceVariant,
             onPressed: () {
               setState(() {
                 if (_currentStep == 0) {
@@ -1038,7 +1038,7 @@ class _GoalCreationScreenState extends ConsumerState<GoalCreationScreen> {
                         result.shortName,
                         style: AppTextStyles.bodyMedium.copyWith(
                           fontWeight: FontWeight.w600,
-                          color: AppColors.textPrimary,
+                          color: Theme.of(context).colorScheme.onSurface,
                         ),
                       ),
                       const SizedBox(height: 2),
@@ -1047,17 +1047,17 @@ class _GoalCreationScreenState extends ConsumerState<GoalCreationScreen> {
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: AppTextStyles.bodySmall.copyWith(
-                          color: AppColors.textSecondary,
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
                           fontSize: 12,
                         ),
                       ),
                     ],
                   ),
                 ),
-                const Icon(
+                Icon(
                   Icons.arrow_forward_ios,
                   size: 16,
-                  color: AppColors.textSecondary,
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
                 ),
               ],
             ),
@@ -1071,7 +1071,7 @@ class _GoalCreationScreenState extends ConsumerState<GoalCreationScreen> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppColors.background,
+        color: Theme.of(context).colorScheme.surface,
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.05),
@@ -1119,9 +1119,9 @@ class _GoalCreationScreenState extends ConsumerState<GoalCreationScreen> {
     final goalState = ref.watch(goalCreationProvider);
 
     return Container(
-      decoration: const BoxDecoration(
-        color: AppColors.background,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.surface,
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
       ),
       child: Column(
         children: [
@@ -1132,7 +1132,7 @@ class _GoalCreationScreenState extends ConsumerState<GoalCreationScreen> {
               'Route & Milestones',
               style: AppTextStyles.headlineSmall.copyWith(
                 fontWeight: FontWeight.bold,
-                color: AppColors.textPrimary,
+                color: Theme.of(context).colorScheme.onSurface,
               ),
             ),
           ),
@@ -1155,7 +1155,7 @@ class _GoalCreationScreenState extends ConsumerState<GoalCreationScreen> {
                         Text(
                           'Calculating route and generating milestones...',
                           style: AppTextStyles.bodyMedium.copyWith(
-                            color: AppColors.textSecondary,
+                            color: Theme.of(context).colorScheme.onSurfaceVariant,
                           ),
                         ),
                       ],
@@ -1282,14 +1282,14 @@ class _GoalCreationScreenState extends ConsumerState<GoalCreationScreen> {
                             'Milestones Along Your Journey',
                             style: AppTextStyles.titleMedium.copyWith(
                               fontWeight: FontWeight.bold,
-                              color: AppColors.textPrimary,
+                              color: Theme.of(context).colorScheme.onSurface,
                             ),
                           ),
                           const SizedBox(height: 8),
                           Text(
                             '${goalState.milestones.length} milestone cities to discover',
                             style: AppTextStyles.bodyMedium.copyWith(
-                              color: AppColors.textSecondary,
+                              color: Theme.of(context).colorScheme.onSurfaceVariant,
                             ),
                           ),
                           const SizedBox(height: 16),
@@ -1344,14 +1344,14 @@ class _GoalCreationScreenState extends ConsumerState<GoalCreationScreen> {
                                             milestone.cityName,
                                             style: AppTextStyles.bodyLarge.copyWith(
                                               fontWeight: FontWeight.bold,
-                                              color: AppColors.textPrimary,
+                                              color: Theme.of(context).colorScheme.onSurface,
                                             ),
                                           ),
                                           const SizedBox(height: 4),
                                           Text(
                                             '${milestone.distanceInKm.toStringAsFixed(1)} km from start',
                                             style: AppTextStyles.bodySmall.copyWith(
-                                              color: AppColors.textSecondary,
+                                              color: Theme.of(context).colorScheme.onSurfaceVariant,
                                             ),
                                           ),
                                         ],
@@ -1385,9 +1385,9 @@ class _GoalCreationScreenState extends ConsumerState<GoalCreationScreen> {
     final goalState = ref.watch(goalCreationProvider);
 
     return Container(
-      decoration: const BoxDecoration(
-        color: AppColors.background,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.surface,
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
       ),
       child: Column(
         children: [
@@ -1398,7 +1398,7 @@ class _GoalCreationScreenState extends ConsumerState<GoalCreationScreen> {
               'Confirm Your Goal',
               style: AppTextStyles.headlineSmall.copyWith(
                 fontWeight: FontWeight.bold,
-                color: AppColors.textPrimary,
+                color: Theme.of(context).colorScheme.onSurface,
               ),
             ),
           ),
@@ -1419,7 +1419,7 @@ class _GoalCreationScreenState extends ConsumerState<GoalCreationScreen> {
                     'Goal Name',
                     style: AppTextStyles.titleMedium.copyWith(
                       fontWeight: FontWeight.w600,
-                      color: AppColors.textPrimary,
+                      color: Theme.of(context).colorScheme.onSurface,
                     ),
                   ),
                   const SizedBox(height: 12),
@@ -1474,7 +1474,7 @@ class _GoalCreationScreenState extends ConsumerState<GoalCreationScreen> {
                               'Journey Summary',
                               style: AppTextStyles.titleMedium.copyWith(
                                 fontWeight: FontWeight.bold,
-                                color: AppColors.textPrimary,
+                                color: Theme.of(context).colorScheme.onSurface,
                               ),
                             ),
                           ],
@@ -1482,7 +1482,7 @@ class _GoalCreationScreenState extends ConsumerState<GoalCreationScreen> {
                         const SizedBox(height: 20),
                         Container(
                           height: 1,
-                          color: AppColors.border, // Removed alpha (Issue #41)
+                          color: Theme.of(context).colorScheme.outlineVariant,
                         ),
                         const SizedBox(height: 20),
                         _buildSummaryRow('Start Location', _startLocation?.placeName ?? '-'),
@@ -1537,7 +1537,7 @@ class _GoalCreationScreenState extends ConsumerState<GoalCreationScreen> {
                             child: Text(
                               'Your virtual progress will be tracked as you complete runs. Each run brings you closer to your destination!',
                               style: AppTextStyles.bodySmall.copyWith(
-                                color: AppColors.textPrimary,
+                                color: Theme.of(context).colorScheme.onSurface,
                                 height: 1.5,
                               ),
                             ),
@@ -1567,7 +1567,7 @@ class _GoalCreationScreenState extends ConsumerState<GoalCreationScreen> {
           child: Text(
             label,
             style: AppTextStyles.bodyMedium.copyWith(
-              color: AppColors.textSecondary,
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
               fontSize: 14,
             ),
           ),
@@ -1579,7 +1579,7 @@ class _GoalCreationScreenState extends ConsumerState<GoalCreationScreen> {
             value,
             style: AppTextStyles.bodyMedium.copyWith(
               fontWeight: FontWeight.w600,
-              color: AppColors.textPrimary,
+              color: Theme.of(context).colorScheme.onSurface,
             ),
             textAlign: TextAlign.end,
           ),
