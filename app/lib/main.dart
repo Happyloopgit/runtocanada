@@ -11,6 +11,7 @@ import 'package:run_to_canada/core/theme/app_theme.dart';
 import 'package:run_to_canada/firebase_options.dart';
 import 'package:run_to_canada/core/data/services/hive_service.dart';
 import 'package:run_to_canada/core/services/ad_service.dart';
+import 'package:run_to_canada/features/settings/presentation/providers/settings_providers.dart';
 
 void main() async {
   // Ensure Flutter bindings are initialized
@@ -62,15 +63,18 @@ class MyApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // Watch dark mode setting specifically for theme changes
+    final darkModeEnabled = ref.watch(darkModeProvider);
+
     return MaterialApp(
       // App configuration
       title: AppConstants.appName,
       debugShowCheckedModeBanner: false,
 
-      // Theme - Light theme default with dark theme support
+      // Theme - Respects user's dark mode preference
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
-      themeMode: ThemeMode.system, // Respects user's device settings
+      themeMode: darkModeEnabled ? ThemeMode.dark : ThemeMode.light,
 
       // Routing - start with initial screen (checks onboarding status)
       initialRoute: RouteConstants.initialRoute,

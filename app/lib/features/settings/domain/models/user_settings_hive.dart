@@ -31,6 +31,9 @@ class UserSettingsHive extends HiveObject {
   @HiveField(8)
   final DateTime updatedAt;
 
+  @HiveField(9)
+  final bool darkModeEnabled;
+
   UserSettingsHive({
     required this.userId,
     this.useMetric = true,
@@ -41,6 +44,7 @@ class UserSettingsHive extends HiveObject {
     this.isPremium = false,
     this.premiumExpiresAt,
     required this.updatedAt,
+    this.darkModeEnabled = true,
   });
 
   factory UserSettingsHive.defaultSettings(String userId) {
@@ -59,6 +63,7 @@ class UserSettingsHive extends HiveObject {
     bool? isPremium,
     DateTime? premiumExpiresAt,
     DateTime? updatedAt,
+    bool? darkModeEnabled,
   }) {
     return UserSettingsHive(
       userId: userId,
@@ -70,6 +75,7 @@ class UserSettingsHive extends HiveObject {
       isPremium: isPremium ?? this.isPremium,
       premiumExpiresAt: premiumExpiresAt ?? this.premiumExpiresAt,
       updatedAt: updatedAt ?? this.updatedAt,
+      darkModeEnabled: darkModeEnabled ?? this.darkModeEnabled,
     );
   }
 
@@ -84,6 +90,7 @@ class UserSettingsHive extends HiveObject {
       'isPremium': isPremium,
       'premiumExpiresAt': premiumExpiresAt?.toIso8601String(),
       'updatedAt': updatedAt.toIso8601String(),
+      'darkModeEnabled': darkModeEnabled,
     };
   }
 
@@ -100,6 +107,7 @@ class UserSettingsHive extends HiveObject {
           ? DateTime.parse(json['premiumExpiresAt'] as String)
           : null,
       updatedAt: DateTime.parse(json['updatedAt'] as String),
+      darkModeEnabled: json['darkModeEnabled'] as bool? ?? true,
     );
   }
 

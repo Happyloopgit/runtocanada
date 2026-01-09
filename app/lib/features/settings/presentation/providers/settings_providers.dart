@@ -52,6 +52,14 @@ class SettingsNotifier extends StateNotifier<UserSettingsHive> {
     await _dataSource.saveSettings(state);
   }
 
+  Future<void> setDarkModeEnabled(bool value) async {
+    state = state.copyWith(
+      darkModeEnabled: value,
+      updatedAt: DateTime.now(),
+    );
+    await _dataSource.saveSettings(state);
+  }
+
   String _mapStyleToString(MapStyle style) {
     switch (style) {
       case MapStyle.streets:
@@ -116,4 +124,10 @@ final settingsNotifierProvider =
     StateNotifierProvider<SettingsNotifier, UserSettingsHive>((ref) {
   final dataSource = ref.watch(userLocalDataSourceProvider);
   return SettingsNotifier(dataSource);
+});
+
+/// Provider for just the dark mode state (for MaterialApp to watch)
+final darkModeProvider = Provider<bool>((ref) {
+  final settings = ref.watch(settingsNotifierProvider);
+  return settings.darkModeEnabled;
 });

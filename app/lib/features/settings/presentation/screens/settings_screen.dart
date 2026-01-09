@@ -256,6 +256,75 @@ class SettingsScreen extends ConsumerWidget {
                 ),
               ),
 
+              // Dark Mode Toggle Card
+              SolidCard(
+                padding: const EdgeInsets.all(16),
+                margin: const EdgeInsets.only(bottom: 12),
+                child: Row(
+                  children: [
+                    // Icon
+                    Container(
+                      width: 40,
+                      height: 40,
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [
+                            Colors.indigo.shade400,
+                            Colors.indigo.shade600,
+                          ],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        ),
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(
+                        settings.darkModeEnabled
+                            ? Icons.dark_mode
+                            : Icons.light_mode,
+                        color: Colors.white,
+                        size: 20,
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+
+                    // Text
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Dark Mode',
+                            style: AppTextStyles.bodyLarge.copyWith(
+                              color: AppColors.textPrimaryDark,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          const SizedBox(height: 2),
+                          Text(
+                            settings.darkModeEnabled
+                                ? 'Enabled'
+                                : 'Disabled',
+                            style: AppTextStyles.bodySmall.copyWith(
+                              color: AppColors.textSecondaryDark,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    // Switch
+                    Switch(
+                      value: settings.darkModeEnabled,
+                      onChanged: (value) {
+                        ref.read(settingsNotifierProvider.notifier).setDarkModeEnabled(value);
+                      },
+                      activeThumbColor: Colors.white,
+                      activeTrackColor: AppColors.primary,
+                    ),
+                  ],
+                ),
+              ),
+
               // Map Style Preference Card
               SolidCard(
                 padding: const EdgeInsets.all(16),

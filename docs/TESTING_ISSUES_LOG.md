@@ -2066,3 +2066,187 @@ This session focused on addressing Issue #9 (Home screen too cluttered) through 
 
 **Last Updated:** 2026-01-08 (Session 15 - Firebase Sync & Route Regeneration)
 **Status:** Critical sync issue resolved, Impeller ad error remains open
+---
+
+## Session 16: Light/Dark Theme Toggle Implementation (2026-01-09)
+
+**Issue #60: Light/Dark Theme Toggle Not Working (ROOT CAUSE IDENTIFIED)**
+- **Severity:** HIGH - Feature Request (Issue #59 from GitHub)
+- **Status:** 🔄 **IN PROGRESS** - Root cause identified, implementation planned for next session
+
+### Problem Description
+User requested light/dark theme toggle in settings. Implementation completed but theme does not visually change when toggled.
+
+### Investigation Process
+
+**Phase 1: Model & Provider Setup (COMPLETED ✅)**
+1. Added `darkModeEnabled` field to `UserSettingsHive` model (line 35)
+   - Added Hive annotation `@HiveField(9)`
+   - Updated `copyWith()`, `toJson()`, `fromJson()` methods
+   - Default value: `true` (dark mode enabled)
+   - Regenerated Hive adapters with `dart run build_runner build`
+
+2. Created `setDarkModeEnabled()` method in `SettingsNotifier` (lines 55-61)
+   - Updates state with `copyWith()`
+   - Persists to Hive via `_dataSource.saveSettings()`
+
+3. Added dark mode toggle UI in `settings_screen.dart` (lines 259-326)
+   - Indigo gradient icon (changes between dark_mode/light_mode)
+   - Text shows "Dark Mode" with "Enabled"/"Disabled" status
+   - Switch widget connected to `settings.darkModeEnabled`
+   - Calls `setDarkModeEnabled(value)` on change
+
+4. Created `darkModeProvider` in `settings_providers.dart` (lines 129-133)
+   - `Provider<bool>` that watches `settingsNotifierProvider`
+   - Extracts just the `darkModeEnabled` field for MaterialApp
+
+5. Connected MaterialApp to theme provider in `main.dart` (lines 65-77)
+   - Watches `darkModeProvider`
+   - Sets `themeMode: darkModeEnabled ? ThemeMode.dark : ThemeMode.light`
+
+**Phase 2: Testing & Debugging (COMPLETED ✅)**
+
+Added comprehensive debug logging to trace the issue:
+```
+🎨 [SettingsNotifier] setDarkModeEnabled called with value: false
+🎨 [SettingsNotifier] Current state before update: darkModeEnabled=true
+🎨 [SettingsNotifier] State after update: darkModeEnabled=false
+🎨 [SettingsNotifier] Settings saved to Hive
+🎨 [darkModeProvider] Provider recomputed, darkModeEnabled=false
+🎨 [MyApp.build] Building MaterialApp with darkModeEnabled=false
+```
+
+**Key Findings:**
+- ✅ `setDarkModeEnabled()` IS being called when user toggles
+- ✅ State IS changing in the notifier (true → false, false → true)
+- ✅ Settings IS being saved to Hive
+- ✅ `darkModeProvider` IS recomputing after state changes
+- ✅ `MyApp.build()` IS being called with correct darkModeEnabled value
+- ✅ MaterialApp IS receiving correct `themeMode` (ThemeMode.dark or ThemeMode.light)
+- ✅ Settings screen UI updates correctly (switch, icon, text all change)
+- ❌ **BUT theme does NOT visually change** - app stays dark
+
+### Root Cause Analysis
+
+**The provider system is working perfectly.** The issue is that **all UI widgets use hardcoded dark theme colors** instead of reading from the MaterialApp theme.
+
+**Evidence:**
+```dart
+// Current implementation (WRONG - ignores theme):
+backgroundColor: AppColors.backgroundDark,  // Hardcoded dark color
+color: AppColors.textPrimaryDark,          // Always white text
+
+// What it SHOULD be (theme-aware):
+backgroundColor: Theme.of(context).colorScheme.surface,
+color: Theme.of(context).colorScheme.onSurface,
+```
+
+**Scope of the Problem:**
+- **611 occurrences** of `AppColors.*` across **40 files**
+- **171 occurrences** of hardcoded dark-specific colors (`AppColors.backgroundDark`, `AppColors.textPrimaryDark`, etc.) across **23 files**
+- App was designed "dark mode first" (see `app_theme.dart:7` comment)
+- All widgets ignore MaterialApp's theme and use hardcoded colors
+
+**Files Most Affected:**
+- `home_screen.dart`: 15 instances
+- `goals_list_screen.dart`: 54 instances  
+- `settings_screen.dart`: 53 instances
+- `profile_screen.dart`: 36 instances
+- Plus 36 more files with varying counts
+
+### Solution Plan
+
+**Option 1: Make Widgets Theme-Aware (RECOMMENDED)**
+
+**Why This Is The Right Approach:**
+- ✅ Theme-agnostic: widgets automatically adapt to any theme
+- ✅ Future-proof: easy to add new themes (AMOLED black, high contrast, etc.)
+- ✅ Idiomatic Flutter: standard Material Design pattern
+- ✅ Maintainable: one source of truth (ThemeData)
+- ✅ Dynamic switching: works automatically with MaterialApp theme changes
+
+**Implementation Strategy:**
+
+1. **Replace hardcoded colors with theme references:**
+   ```dart
+   // Background colors:
+   AppColors.backgroundDark → Theme.of(context).colorScheme.surface
+   AppColors.surfaceDark → Theme.of(context).colorScheme.surface
+   AppColors.cardDark → Theme.of(context).colorScheme.surfaceContainerHighest
+   
+   // Text colors:
+   AppColors.textPrimaryDark → Theme.of(context).colorScheme.onSurface
+   AppColors.textSecondaryDark → Theme.of(context).colorScheme.onSurfaceVariant
+   
+   // Special colors (KEEP as-is - same in both themes):
+   AppColors.primary → AppColors.primary (bright blue)
+   AppColors.milestone → AppColors.milestone (orange)
+   AppColors.primaryGradient → AppColors.primaryGradient
+   ```
+
+2. **Keep AppColors for theme-independent colors:**
+   - Primary blue (`#0D7FF2`)
+   - Milestone orange (`#FFA500`)
+   - Gradients
+   - Map colors
+   - Premium gold
+
+3. **Update systematically by feature:**
+   - Settings screen (53 instances)
+   - Home screen (15 instances)
+   - Goals screens (54 instances in goals_list_screen alone)
+   - Profile screen (36 instances)
+   - Auth screens
+   - Run tracking screens
+   - Remaining widgets
+
+4. **Testing strategy:**
+   - Test each screen in both light and dark mode
+   - Verify toggle works immediately
+   - Check for color contrast issues
+   - Validate against design mockups
+
+**Scope of Work:**
+- **Type:** REPLACEMENT (not creation) - replacing hardcoded colors with theme references
+- **Files:** 40 files
+- **Lines:** ~611 color references
+- **Effort:** Multiple sessions (systematic, file-by-file approach recommended)
+- **Risk:** HIGH if rushed - needs careful testing to avoid breaking UI
+
+### Files Modified (This Session)
+
+**✅ Completed:**
+1. `user_settings_hive.dart` - Added darkModeEnabled field + Hive adapter
+2. `settings_providers.dart` - Added setDarkModeEnabled() + darkModeProvider
+3. `settings_screen.dart` - Added dark mode toggle UI card
+4. `main.dart` - Connected MaterialApp to darkModeProvider
+
+**Debug logging added & removed (clean):**
+- Added logging to trace provider notifications
+- Confirmed provider system works correctly
+- Removed all debug logging after diagnosis
+
+### Next Steps
+
+**Session 17 (Planned):**
+1. Start with settings screen (highest priority, user-facing)
+2. Create color mapping reference guide
+3. Update settings_screen.dart to be theme-aware
+4. Test thoroughly in both light and dark modes
+5. Proceed file-by-file to remaining screens
+
+**Decision:** User confirmed Option 1 (theme-aware widgets) as the correct long-term solution.
+
+### Current State
+
+- ✅ Dark mode toggle UI exists and is functional
+- ✅ State management working correctly (Riverpod + Hive)
+- ✅ MaterialApp theme switching working correctly
+- ❌ Widgets not using MaterialApp theme (using hardcoded dark colors)
+- 📋 Systematic refactor planned for next session
+
+**Status:** 🔄 **ROOT CAUSE IDENTIFIED** - Implementation planned for Session 17
+
+---
+
+**Last Updated:** 2026-01-09 (Session 16 - Theme Toggle Investigation)
