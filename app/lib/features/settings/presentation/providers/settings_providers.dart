@@ -111,8 +111,8 @@ class SettingsNotifier extends StateNotifier<UserSettingsHive> {
     // Delete user profile
     await firestore.collection('users').doc(userId).delete();
 
-    // Delete local Hive data
-    await HiveService.clearAllData();
+    // Delete user-specific Hive boxes from disk
+    await HiveService.deleteUserBoxes(userId);
 
     // Delete Firebase Auth account
     await user.delete();

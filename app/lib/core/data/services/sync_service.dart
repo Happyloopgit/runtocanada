@@ -8,6 +8,7 @@ import '../models/sync_queue_item.dart';
 import '../../../features/runs/data/datasources/run_local_datasource.dart';
 import '../../../features/goals/data/datasources/goal_local_datasource.dart';
 import '../../services/directions_service.dart';
+import 'hive_service.dart';
 
 /// Service for synchronizing data between local (Hive) and cloud (Firestore)
 class SyncService {
@@ -33,7 +34,9 @@ class SyncService {
 
   /// Initialize the sync service
   Future<void> initialize() async {
-    _syncQueueBox = await Hive.openBox<SyncQueueItem>('syncQueue');
+    // Use user-scoped syncQueue box (requires user to be logged in)
+    // This is safe because SyncService is only used after authentication
+    _syncQueueBox = HiveService.getBox<SyncQueueItem>(HiveService.syncQueueBox);
 
     // Listen to connectivity changes
     _connectivitySubscription = _connectivity.onConnectivityChanged.listen((result) {

@@ -4,6 +4,7 @@ import '../../data/services/auth_service.dart';
 import '../../domain/models/user_model.dart';
 import 'package:run_to_canada/features/premium/data/services/revenue_cat_service.dart';
 import 'package:run_to_canada/core/data/providers/sync_providers.dart';
+import 'package:run_to_canada/core/data/services/hive_service.dart';
 
 /// Provider for AuthService instance
 final authServiceProvider = Provider<AuthService>((ref) {
@@ -24,10 +25,23 @@ final currentUserProvider = StreamProvider<UserModel?>((ref) async* {
 
   await for (final user in authService.authStateChanges) {
     if (user == null) {
+      // User logged out - close user boxes
+      await HiveService.closeUserBoxes();
       yield null;
     } else {
       try {
         final userModel = await authService.getUserProfile(user.uid);
+
+        // CRITICAL: Initialize user-scoped Hive boxes BEFORE any data operations
+        try {
+          await HiveService.initializeForUser(user.uid);
+          print('✅ Initialized Hive boxes for user: ${user.uid}');
+        } catch (e) {
+          // ignore: avoid_print
+          print('❌ Failed to initialize Hive boxes: $e');
+          yield null;
+          return;
+        }
 
         // Initialize RevenueCat when user logs in
         try {
@@ -41,6 +55,7 @@ final currentUserProvider = StreamProvider<UserModel?>((ref) async* {
 
         // Sync data from Firestore when user logs in
         // This restores goals/runs on new devices or after reinstall
+        // Now safe because user-scoped boxes are initialized
         try {
           final syncService = ref.read(syncServiceProvider);
           await syncService.performFullSync(user.uid);

@@ -6,10 +6,10 @@ This document tracks technical debt, future enhancements, and backlog items for 
 
 | Category | Count |
 |----------|-------|
-| Tech Debt | 0 |
+| Tech Debt | 3 |
 | Future Enhancements | 8 |
 | Nice to Have | 4 |
-| **Total** | **12** |
+| **Total** | **15** |
 
 ---
 
@@ -19,7 +19,9 @@ Technical debt items that need to be addressed for code quality, performance, or
 
 | ID | Priority | Component | Description | Impact | Effort | Added | Reference |
 |----|----------|-----------|-------------|--------|--------|-------|-----------|
-| - | - | - | No technical debt logged yet | - | - | - | - |
+| TD-001 | Low | Storage | Add Hive encryption for user-scoped boxes | Unencrypted local data accessible on rooted/jailbroken devices | Medium | 2026-01-09 | Session 22 multi-user fix |
+| TD-002 | Low | Data Access | Remove redundant userId filtering in datasources | Box already user-scoped, filtering adds unnecessary overhead | Small | 2026-01-09 | Session 22 multi-user fix |
+| TD-003 | Low | Architecture | Implement lazy datasource initialization | Datasources created before login could cause StateError | Small | 2026-01-09 | Session 22 multi-user fix |
 
 ---
 

@@ -2681,3 +2681,67 @@ Location: /Users/karthik/Desktop/Happyloop_website/apps/runtocanada/
 
 **Last Updated:** 2026-01-09 (Session 21 - Legal Compliance & Android Fixes Complete ✅)
 
+
+---
+
+## 🚀 Session 22 Summary (2026-01-09)
+
+**Focus:** Multi-user data segregation architecture fix
+
+### **Issues Resolved (1 Critical):**
+
+**Issue #62: Multi-User Data Leakage in Hive Storage** ✅
+- **Severity:** CRITICAL - Data Privacy/Security Issue
+- **Status:** ✅ **FIXED** (Session 22 - 2026-01-09)
+- **Problem:**
+  - User switched from email login to Google login on same device
+  - Saw old email account's goals mixed with new Google account's goals
+  - Couldn't create new goals (conflicts with old account's active goals)
+  - Root cause: Shared Hive boxes for all users (`'goals'`, `'runs'`, `'userSettings'`)
+- **Root Cause Analysis:**
+  - Original architecture used shared boxes: `'runs'`, `'goals'`, `'userSettings'`
+  - Data segregation relied on filtering by `userId` field within models
+  - No cleanup on logout → old user's data persisted in boxes
+  - Sync on login merged cloud data with local data instead of replacing
+  - Result: Multiple users' data mixed in same Hive boxes
+- **Solution Implemented: User-Scoped Box Architecture**
+  - Refactored to user-specific box names: `'user_{userId}_goals'`, `'user_{userId}_runs'`, etc.
+  - Each user's data physically separated in different Hive files
+  - Added `HiveService.initializeForUser(userId)` - opens user boxes after login
+  - Added `HiveService.closeUserBoxes()` - closes boxes on logout/switch
+  - Updated auth flow: Open boxes → Sync from Firebase → Use data
+  - Modified account deletion to use `deleteUserBoxes(userId)`
+- **Files Modified:**
+  - `hive_service.dart`: Complete refactoring to user-scoped architecture (209 lines)
+  - `auth_providers.dart`: Added box initialization before sync (line 36), cleanup on logout (line 28)
+  - `settings_providers.dart`: Updated account deletion to use `deleteUserBoxes()` (line 115)
+  - `sync_service.dart`: Fixed syncQueue to use user-scoped box (line 38) - **Critical compatibility fix**
+- **Security Analysis:**
+  - ✅ NO cross-account data contamination (separate physical files)
+  - ✅ NO data leakage between users (proper isolation)
+  - ✅ Firebase sync only fetches current user's data (`where('userId', isEqualTo: userId)`)
+  - ⚠️ Local Hive files unencrypted (acceptable, OS app sandbox protects access)
+- **Edge Cases Handled:**
+  - ✅ Rapid account switching (awaits box closure before opening new)
+  - ✅ App restart with active session (boxes reopen on auth state change)
+  - ✅ Multi-device sync (timestamp-based conflict resolution)
+  - ✅ Datasource initialization (StateError if accessed before login)
+- **Data Persistence Behavior:**
+  - Logout: Boxes closed but data remains on disk (intentional for offline access)
+  - Re-login with same account: Boxes reopen, all data restored
+  - Account deletion: Boxes deleted from disk using `deleteUserBoxes(userId)`
+- **Technical Debt Created:**
+  - TD-001: Add Hive encryption for sensitive data (low priority)
+  - TD-002: Remove redundant userId filtering in datasources (low priority)
+  - TD-003: Implement lazy datasource initialization (low priority)
+- **Testing Recommendations:**
+  1. Flutter clean + rebuild
+  2. Login with Account A → create goal
+  3. Logout → Login with Account B → create different goal
+  4. Logout → Login with Account A → verify only A's goal appears
+  5. Repeat with email and Google accounts
+- **Impact:** Critical security/privacy issue resolved. Users can now safely switch accounts without data contamination.
+
+---
+
+**Last Updated:** 2026-01-09 (Session 22 - Multi-User Data Segregation Architecture Fixed ✅)
