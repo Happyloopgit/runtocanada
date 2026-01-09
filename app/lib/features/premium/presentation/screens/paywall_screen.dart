@@ -42,7 +42,6 @@ class _PaywallScreenState extends ConsumerState<PaywallScreen> {
     final packagesAsync = ref.watch(subscriptionPackagesProvider);
 
     return Scaffold(
-      backgroundColor: AppColors.background,
       extendBodyBehindAppBar: true,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
@@ -52,7 +51,7 @@ class _PaywallScreenState extends ConsumerState<PaywallScreen> {
             width: 36,
             height: 36,
             decoration: BoxDecoration(
-              color: AppColors.surface.withValues(alpha: 0.8),
+              color: Theme.of(context).colorScheme.surface.withValues(alpha: 0.8),
               shape: BoxShape.circle,
             ),
             child: const Icon(Icons.close, size: 20),
@@ -179,7 +178,7 @@ class _PaywallScreenState extends ConsumerState<PaywallScreen> {
                                   benefit,
                                   style: AppTextStyles.bodyLarge.copyWith(
                                     fontWeight: FontWeight.w500,
-                                    color: AppColors.textPrimary,
+                                    color: Theme.of(context).colorScheme.onSurface,
                                   ),
                                 ),
                               ),
@@ -316,7 +315,7 @@ class _PaywallScreenState extends ConsumerState<PaywallScreen> {
                     Text(
                       'By subscribing, you agree to our Terms of Service and Privacy Policy. Subscription automatically renews unless auto-renew is turned off at least 24 hours before the end of the current period.',
                       style: AppTextStyles.bodySmall.copyWith(
-                        color: AppColors.textSecondary,
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
                         fontSize: 11,
                       ),
                       textAlign: TextAlign.center,
@@ -368,10 +367,12 @@ class _PaywallScreenState extends ConsumerState<PaywallScreen> {
         children: [
           Container(
             decoration: BoxDecoration(
-              color: isSelected ? AppColors.surfaceLight : AppColors.cardDark,
+              color: isSelected
+                  ? Theme.of(context).colorScheme.surfaceContainerHighest
+                  : Theme.of(context).colorScheme.surfaceContainer,
               borderRadius: BorderRadius.circular(16),
               border: Border.all(
-                color: isSelected ? AppColors.premium : AppColors.border.withValues(alpha: 0.3),
+                color: isSelected ? AppColors.premium : Theme.of(context).colorScheme.outlineVariant.withValues(alpha: 0.3),
                 width: isSelected ? 2 : 1,
               ),
               boxShadow: isSelected
@@ -395,7 +396,7 @@ class _PaywallScreenState extends ConsumerState<PaywallScreen> {
                     shape: BoxShape.circle,
                     gradient: isSelected ? AppColors.premiumGradient : null,
                     border: Border.all(
-                      color: isSelected ? Colors.transparent : AppColors.border,
+                      color: isSelected ? Colors.transparent : Theme.of(context).colorScheme.outline,
                       width: 2,
                     ),
                   ),
@@ -419,7 +420,7 @@ class _PaywallScreenState extends ConsumerState<PaywallScreen> {
                         title,
                         style: AppTextStyles.titleMedium.copyWith(
                           fontWeight: FontWeight.bold,
-                          color: AppColors.textPrimary,
+                          color: Theme.of(context).colorScheme.onSurface,
                         ),
                       ),
                       if (subtitle != null) ...[
@@ -427,7 +428,7 @@ class _PaywallScreenState extends ConsumerState<PaywallScreen> {
                         Text(
                           subtitle,
                           style: AppTextStyles.bodySmall.copyWith(
-                            color: AppColors.textSecondary,
+                            color: Theme.of(context).colorScheme.onSurfaceVariant,
                           ),
                         ),
                       ],
@@ -445,7 +446,7 @@ class _PaywallScreenState extends ConsumerState<PaywallScreen> {
                       price,
                       style: AppTextStyles.titleLarge.copyWith(
                         fontWeight: FontWeight.bold,
-                        color: isSelected ? AppColors.premium : AppColors.textPrimary,
+                        color: isSelected ? AppColors.premium : Theme.of(context).colorScheme.onSurface,
                       ),
                     ),
                     if (badge != null) ...[

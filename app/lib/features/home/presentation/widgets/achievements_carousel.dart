@@ -35,7 +35,7 @@ class AchievementsCarousel extends StatelessWidget {
             Text(
               'Recent Achievements',
               style: AppTextStyles.headlineSmall.copyWith(
-                color: AppColors.textPrimaryDark,
+                color: Theme.of(context).colorScheme.onSurface,
               ),
             ),
             if (onViewAll != null)

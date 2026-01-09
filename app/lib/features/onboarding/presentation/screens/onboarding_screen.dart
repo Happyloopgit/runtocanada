@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:run_to_canada/core/constants/route_constants.dart';
 import 'package:run_to_canada/core/navigation/app_router.dart';
-import 'package:run_to_canada/core/theme/app_colors.dart';
 import 'package:run_to_canada/core/widgets/custom_button.dart';
 import 'package:run_to_canada/features/onboarding/data/onboarding_service.dart';
 import 'package:run_to_canada/features/onboarding/presentation/widgets/onboarding_page.dart';
@@ -65,7 +64,6 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.backgroundDark,
       body: SafeArea(
         child: Stack(
           children: [

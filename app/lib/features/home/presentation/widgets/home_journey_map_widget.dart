@@ -31,21 +31,21 @@ class _HomeJourneyMapWidgetState extends State<HomeJourneyMapWidget> {
     // If no route polyline, show placeholder
     if (widget.goal.routePolyline.isEmpty) {
       return Container(
-        color: AppColors.surfaceDark,
-        child: const Center(
+        color: Theme.of(context).colorScheme.surface,
+        child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(
+              const Icon(
                 Icons.map_outlined,
                 size: 64,
                 color: AppColors.primary,
               ),
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
               Text(
                 'Route not available',
                 style: TextStyle(
-                  color: AppColors.textSecondaryDark,
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
                   fontSize: 14,
                 ),
               ),

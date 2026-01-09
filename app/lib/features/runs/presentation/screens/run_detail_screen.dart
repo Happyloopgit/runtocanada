@@ -139,8 +139,6 @@ class _RunDetailScreenState extends ConsumerState<RunDetailScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Run Details'),
-        backgroundColor: AppColors.primary,
-        foregroundColor: Colors.white,
         actions: [
           IconButton(
             icon: const Icon(Icons.delete_outline),
@@ -170,7 +168,9 @@ class _RunDetailScreenState extends ConsumerState<RunDetailScreen> {
                         const SizedBox(width: 12),
                         Text(
                           formattedDate,
-                          style: AppTextStyles.headlineSmall,
+                          style: AppTextStyles.headlineSmall.copyWith(
+                            color: Theme.of(context).colorScheme.onSurface,
+                          ),
                         ),
                       ],
                     ),
@@ -182,7 +182,7 @@ class _RunDetailScreenState extends ConsumerState<RunDetailScreen> {
                         Container(
                           height: 40,
                           width: 1,
-                          color: AppColors.divider,
+                          color: Theme.of(context).dividerTheme.color ?? Theme.of(context).colorScheme.outlineVariant,
                         ),
                         _buildTimeInfo('End', formattedEndTime),
                       ],
@@ -198,7 +198,9 @@ class _RunDetailScreenState extends ConsumerState<RunDetailScreen> {
             if (_currentRun.routePoints.isNotEmpty) ...[
               Text(
                 'Route Map',
-                style: AppTextStyles.headlineSmall,
+                style: AppTextStyles.headlineSmall.copyWith(
+                  color: Theme.of(context).colorScheme.onSurface,
+                ),
               ),
               const SizedBox(height: 8),
               RouteMapWidget(
@@ -255,7 +257,9 @@ class _RunDetailScreenState extends ConsumerState<RunDetailScreen> {
             // Stats grid
             Text(
               'Performance Metrics',
-              style: AppTextStyles.headlineSmall,
+              style: AppTextStyles.headlineSmall.copyWith(
+                color: Theme.of(context).colorScheme.onSurface,
+              ),
             ),
             const SizedBox(height: 12),
             Row(
@@ -326,7 +330,9 @@ class _RunDetailScreenState extends ConsumerState<RunDetailScreen> {
               children: [
                 Text(
                   'Notes',
-                  style: AppTextStyles.headlineSmall,
+                  style: AppTextStyles.headlineSmall.copyWith(
+                    color: Theme.of(context).colorScheme.onSurface,
+                  ),
                 ),
                 if (!_isEditingNotes)
                   TextButton.icon(
@@ -378,21 +384,23 @@ class _RunDetailScreenState extends ConsumerState<RunDetailScreen> {
                 width: double.infinity,
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: AppColors.surface,
+                  color: Theme.of(context).colorScheme.surface,
                   borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: AppColors.border),
+                  border: Border.all(color: Theme.of(context).colorScheme.outlineVariant),
                 ),
                 child: _currentRun.notes == null || _currentRun.notes!.isEmpty
                     ? Text(
                         'No notes for this run',
                         style: AppTextStyles.bodyMedium.copyWith(
-                          color: AppColors.textSecondary,
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
                           fontStyle: FontStyle.italic,
                         ),
                       )
                     : Text(
                         _currentRun.notes!,
-                        style: AppTextStyles.bodyLarge,
+                        style: AppTextStyles.bodyLarge.copyWith(
+                          color: Theme.of(context).colorScheme.onSurface,
+                        ),
                       ),
               ),
             ],
@@ -441,7 +449,7 @@ class _RunDetailScreenState extends ConsumerState<RunDetailScreen> {
         Text(
           label,
           style: AppTextStyles.caption.copyWith(
-            color: AppColors.textSecondary,
+            color: Theme.of(context).colorScheme.onSurfaceVariant,
           ),
         ),
         const SizedBox(height: 4),
@@ -449,6 +457,7 @@ class _RunDetailScreenState extends ConsumerState<RunDetailScreen> {
           time,
           style: AppTextStyles.bodyLarge.copyWith(
             fontWeight: FontWeight.w600,
+            color: Theme.of(context).colorScheme.onSurface,
           ),
         ),
       ],
@@ -472,9 +481,9 @@ class _StatCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppColors.surface,
+        color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.border),
+        border: Border.all(color: Theme.of(context).colorScheme.outlineVariant),
       ),
       child: Column(
         children: [
@@ -487,7 +496,7 @@ class _StatCard extends StatelessWidget {
           Text(
             label,
             style: AppTextStyles.caption.copyWith(
-              color: AppColors.textSecondary,
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
             ),
             textAlign: TextAlign.center,
           ),
@@ -496,6 +505,7 @@ class _StatCard extends StatelessWidget {
             value,
             style: AppTextStyles.headlineSmall.copyWith(
               fontWeight: FontWeight.bold,
+              color: Theme.of(context).colorScheme.onSurface,
             ),
             textAlign: TextAlign.center,
             maxLines: 1,

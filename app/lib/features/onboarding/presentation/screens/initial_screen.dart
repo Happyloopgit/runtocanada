@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:run_to_canada/core/constants/route_constants.dart';
 import 'package:run_to_canada/core/navigation/app_router.dart';
-import 'package:run_to_canada/core/theme/app_colors.dart';
 import 'package:run_to_canada/core/widgets/loading_widgets.dart';
 import 'package:run_to_canada/features/onboarding/providers/onboarding_provider.dart';
 
@@ -35,16 +34,16 @@ class InitialScreen extends ConsumerWidget {
         });
 
         // Show loading while routing
-        return const Scaffold(
-          backgroundColor: AppColors.backgroundDark,
-          body: Center(
+        return Scaffold(
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+          body: const Center(
             child: LoadingSpinner(),
           ),
         );
       },
-      loading: () => const Scaffold(
-        backgroundColor: AppColors.backgroundDark,
-        body: Center(
+      loading: () => Scaffold(
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        body: const Center(
           child: LoadingSpinner(),
         ),
       ),
@@ -57,9 +56,9 @@ class InitialScreen extends ConsumerWidget {
           );
         });
 
-        return const Scaffold(
-          backgroundColor: AppColors.backgroundDark,
-          body: Center(
+        return Scaffold(
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+          body: const Center(
             child: LoadingSpinner(),
           ),
         );

@@ -35,7 +35,7 @@ class PageIndicator extends StatelessWidget {
                 : null,
             color: currentPage == index
                 ? null
-                : AppColors.textSecondaryDark.withValues(alpha: 0.3),
+                : Theme.of(context).colorScheme.onSurfaceVariant.withValues(alpha: 0.3),
             boxShadow: currentPage == index
                 ? [
                     BoxShadow(

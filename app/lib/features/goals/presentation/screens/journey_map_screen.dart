@@ -71,18 +71,20 @@ class _JourneyMapScreenState extends ConsumerState<JourneyMapScreen> {
             Icon(
               Icons.flag_outlined,
               size: 80,
-              color: Colors.grey[400],
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
             ),
             const SizedBox(height: 24),
             Text(
               'No Active Goal',
-              style: AppTextStyles.displayMedium,
+              style: AppTextStyles.displayMedium.copyWith(
+                color: Theme.of(context).colorScheme.onSurface,
+              ),
             ),
             const SizedBox(height: 12),
             Text(
               'Create a goal to start your virtual journey!',
               style: AppTextStyles.bodyLarge.copyWith(
-                color: Colors.grey[600],
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
               ),
               textAlign: TextAlign.center,
             ),
@@ -148,11 +150,11 @@ class _JourneyMapScreenState extends ConsumerState<JourneyMapScreen> {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(8),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.1),
+            color: Theme.of(context).shadowColor.withValues(alpha: 0.1),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -208,7 +210,9 @@ class _JourneyMapScreenState extends ConsumerState<JourneyMapScreen> {
         const SizedBox(width: 8),
         Text(
           label,
-          style: AppTextStyles.bodySmall,
+          style: AppTextStyles.bodySmall.copyWith(
+            color: Theme.of(context).colorScheme.onSurface,
+          ),
         ),
       ],
     );
@@ -368,7 +372,9 @@ class _JourneyMapScreenState extends ConsumerState<JourneyMapScreen> {
           // Goal name
           Text(
             goal.name,
-            style: AppTextStyles.displaySmall,
+            style: AppTextStyles.displaySmall.copyWith(
+              color: Theme.of(context).colorScheme.onSurface,
+            ),
           ),
           const SizedBox(height: 8),
 
@@ -399,12 +405,13 @@ class _JourneyMapScreenState extends ConsumerState<JourneyMapScreen> {
               '${goal.progressPercentage.toStringAsFixed(1)}% Complete',
               style: AppTextStyles.bodyLarge.copyWith(
                 fontWeight: FontWeight.bold,
+                color: Theme.of(context).colorScheme.onSurface,
               ),
             ),
             Text(
               '${goal.currentProgressInKm.toStringAsFixed(2)} / ${goal.totalDistanceInKm.toStringAsFixed(2)} km',
               style: AppTextStyles.bodyMedium.copyWith(
-                color: Colors.grey[600],
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
               ),
             ),
           ],
@@ -415,8 +422,8 @@ class _JourneyMapScreenState extends ConsumerState<JourneyMapScreen> {
           child: LinearProgressIndicator(
             value: goal.progressPercentage / 100,
             minHeight: 12,
-            backgroundColor: Colors.grey[300],
-            valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary),
+            backgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest,
+            valueColor: const AlwaysStoppedAnimation<Color>(AppColors.primary),
           ),
         ),
       ],
@@ -453,9 +460,9 @@ class _JourneyMapScreenState extends ConsumerState<JourneyMapScreen> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppColors.surface,
+        color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.border),
+        border: Border.all(color: Theme.of(context).colorScheme.outlineVariant),
       ),
       child: Column(
         children: [
@@ -465,13 +472,14 @@ class _JourneyMapScreenState extends ConsumerState<JourneyMapScreen> {
             value,
             style: AppTextStyles.headlineSmall.copyWith(
               fontWeight: FontWeight.bold,
+              color: Theme.of(context).colorScheme.onSurface,
             ),
           ),
           const SizedBox(height: 4),
           Text(
             label,
             style: AppTextStyles.bodySmall.copyWith(
-              color: Colors.grey[600],
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
             ),
           ),
         ],
@@ -517,7 +525,7 @@ class _JourneyMapScreenState extends ConsumerState<JourneyMapScreen> {
                 Text(
                   'Next Milestone',
                   style: AppTextStyles.bodySmall.copyWith(
-                    color: Colors.grey[600],
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
@@ -526,6 +534,7 @@ class _JourneyMapScreenState extends ConsumerState<JourneyMapScreen> {
                   milestone.cityName,
                   style: AppTextStyles.headlineSmall.copyWith(
                     fontWeight: FontWeight.bold,
+                    color: Theme.of(context).colorScheme.onSurface,
                   ),
                 ),
                 const SizedBox(height: 4),
