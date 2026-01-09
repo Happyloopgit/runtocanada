@@ -36,7 +36,7 @@ class EmptyGoalState extends StatelessWidget {
             Text(
               'No Active Journey',
               style: AppTextStyles.headlineMedium.copyWith(
-                color: AppColors.textPrimaryDark,
+                color: Theme.of(context).colorScheme.onSurface,
                 fontWeight: FontWeight.bold,
               ),
               textAlign: TextAlign.center,
@@ -47,7 +47,7 @@ class EmptyGoalState extends StatelessWidget {
             Text(
               'Create your first goal to start your virtual journey! Choose a destination and track your progress as you run.',
               style: AppTextStyles.bodyLarge.copyWith(
-                color: AppColors.textSecondaryDark,
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
               ),
               textAlign: TextAlign.center,
             ),
@@ -67,7 +67,7 @@ class EmptyGoalState extends StatelessWidget {
             Text(
               'Or',
               style: AppTextStyles.bodyMedium.copyWith(
-                color: AppColors.textSecondaryDark,
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
               ),
             ),
             const SizedBox(height: 16),

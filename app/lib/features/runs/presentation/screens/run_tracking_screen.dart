@@ -219,7 +219,7 @@ class _RunTrackingScreenState extends ConsumerState<RunTrackingScreen> {
         }
       },
       child: Scaffold(
-        backgroundColor: AppColors.background,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         extendBodyBehindAppBar: true,
         appBar: AppBar(
           backgroundColor: Colors.transparent,
@@ -270,7 +270,7 @@ class _RunTrackingScreenState extends ConsumerState<RunTrackingScreen> {
                         Text(
                           useMetric ? 'KILOMETERS' : 'MILES',
                           style: AppTextStyles.labelLarge.copyWith(
-                            color: AppColors.textSecondary,
+                            color: Theme.of(context).colorScheme.onSurfaceVariant,
                             letterSpacing: 2,
                           ),
                         ),
@@ -379,10 +379,10 @@ class _RunTrackingScreenState extends ConsumerState<RunTrackingScreen> {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
       decoration: BoxDecoration(
-        color: AppColors.glassOverlay,
+        color: Theme.of(context).colorScheme.surface.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: AppColors.border,
+          color: Theme.of(context).dividerTheme.color ?? Colors.grey,
           width: 1,
         ),
         boxShadow: [
@@ -410,7 +410,7 @@ class _RunTrackingScreenState extends ConsumerState<RunTrackingScreen> {
             Text(
               unit,
               style: AppTextStyles.labelSmall.copyWith(
-                color: AppColors.textSecondary,
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
                 fontSize: 9,
               ),
             ),
@@ -418,7 +418,7 @@ class _RunTrackingScreenState extends ConsumerState<RunTrackingScreen> {
           Text(
             label,
             style: AppTextStyles.labelSmall.copyWith(
-              color: AppColors.textSecondary,
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
               letterSpacing: 1,
             ),
           ),
@@ -431,13 +431,13 @@ class _RunTrackingScreenState extends ConsumerState<RunTrackingScreen> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
       decoration: BoxDecoration(
-        color: AppColors.surface.withValues(alpha: 0.95),
+        color: Theme.of(context).colorScheme.surface.withValues(alpha: 0.95),
         borderRadius: const BorderRadius.vertical(
           top: Radius.circular(24),
         ),
         border: Border(
           top: BorderSide(
-            color: AppColors.border,
+            color: Theme.of(context).dividerTheme.color ?? Colors.grey,
             width: 1,
           ),
         ),
@@ -487,49 +487,53 @@ class _RunTrackingScreenState extends ConsumerState<RunTrackingScreen> {
     Color? color,
     required VoidCallback onPressed,
   }) {
-    final buttonColor = color ?? (isPrimary ? AppColors.primary : AppColors.surface);
-    final iconColor = isPrimary || color != null ? Colors.white : AppColors.textPrimary;
-
     return GestureDetector(
       onTap: onPressed,
-      child: Container(
-        width: size,
-        height: size,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          gradient: isPrimary
-              ? LinearGradient(
-                  colors: [AppColors.primary, AppColors.primaryDark],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                )
-              : null,
-          color: isPrimary ? null : buttonColor,
-          border: Border.all(
-            color: isPrimary ? Colors.transparent : AppColors.border,
-            width: 1,
-          ),
-          boxShadow: isPrimary
-              ? [
-                  BoxShadow(
-                    color: AppColors.primary.withValues(alpha: 0.4),
-                    blurRadius: 20,
-                    offset: const Offset(0, 8),
-                  ),
-                ]
-              : [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.1),
-                    blurRadius: 10,
-                    offset: const Offset(0, 4),
-                  ),
-                ],
-        ),
-        child: Icon(
-          icon,
-          color: iconColor,
-          size: size * 0.4,
-        ),
+      child: Builder(
+        builder: (context) {
+          final buttonColor = color ?? (isPrimary ? AppColors.primary : Theme.of(context).colorScheme.surface);
+          final iconColor = isPrimary || color != null ? Colors.white : Theme.of(context).colorScheme.onSurface;
+
+          return Container(
+            width: size,
+            height: size,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              gradient: isPrimary
+                  ? LinearGradient(
+                      colors: [AppColors.primary, AppColors.primaryDark],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    )
+                  : null,
+              color: isPrimary ? null : buttonColor,
+              border: Border.all(
+                color: isPrimary ? Colors.transparent : Theme.of(context).dividerTheme.color ?? Colors.grey,
+                width: 1,
+              ),
+              boxShadow: isPrimary
+                  ? [
+                      BoxShadow(
+                        color: AppColors.primary.withValues(alpha: 0.4),
+                        blurRadius: 20,
+                        offset: const Offset(0, 8),
+                      ),
+                    ]
+                  : [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.1),
+                        blurRadius: 10,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
+            ),
+            child: Icon(
+              icon,
+              color: iconColor,
+              size: size * 0.4,
+            ),
+          );
+        },
       ),
     );
   }

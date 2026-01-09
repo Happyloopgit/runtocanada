@@ -26,9 +26,9 @@ class RunHistoryScreen extends ConsumerWidget {
     final runsAsync = ref.watch(runListProvider);
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
-        backgroundColor: AppColors.surface,
+        backgroundColor: Theme.of(context).colorScheme.surface,
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
@@ -36,7 +36,9 @@ class RunHistoryScreen extends ConsumerWidget {
         ),
         title: Text(
           'Run History',
-          style: AppTextStyles.titleLarge,
+          style: AppTextStyles.titleLarge.copyWith(
+            color: Theme.of(context).colorScheme.onSurface,
+          ),
         ),
         centerTitle: false,
       ),
@@ -62,13 +64,15 @@ class RunHistoryScreen extends ConsumerWidget {
                 const SizedBox(height: 16),
                 Text(
                   'Error loading runs',
-                  style: AppTextStyles.headlineSmall,
+                  style: AppTextStyles.headlineSmall.copyWith(
+                    color: Theme.of(context).colorScheme.onSurface,
+                  ),
                 ),
                 const SizedBox(height: 8),
                 Text(
                   error.toString(),
                   style: AppTextStyles.bodyMedium.copyWith(
-                    color: AppColors.textSecondary,
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
                   ),
                   textAlign: TextAlign.center,
                 ),
@@ -95,18 +99,20 @@ class RunHistoryScreen extends ConsumerWidget {
             Icon(
               Icons.directions_run,
               size: 120,
-              color: AppColors.textHint,
+              color: Theme.of(context).colorScheme.onSurfaceVariant.withValues(alpha: 0.6),
             ),
             const SizedBox(height: 24),
             Text(
               'No Runs Yet',
-              style: AppTextStyles.displayMedium,
+              style: AppTextStyles.displayMedium.copyWith(
+                color: Theme.of(context).colorScheme.onSurface,
+              ),
             ),
             const SizedBox(height: 12),
             Text(
               'Start your first run to begin your journey!',
               style: AppTextStyles.bodyLarge.copyWith(
-                color: AppColors.textSecondary,
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
               ),
               textAlign: TextAlign.center,
             ),
@@ -312,18 +318,20 @@ class _RunListItem extends StatelessWidget {
                 ),
               ),
               // Timeline connector line
-              Container(
-                width: 2,
-                height: 20,
-                margin: const EdgeInsets.symmetric(vertical: 4),
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      AppColors.border,
-                      AppColors.border.withValues(alpha: 0.0),
-                    ],
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
+              Builder(
+                builder: (context) => Container(
+                  width: 2,
+                  height: 20,
+                  margin: const EdgeInsets.symmetric(vertical: 4),
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        Theme.of(context).dividerTheme.color ?? Colors.grey,
+                        (Theme.of(context).dividerTheme.color ?? Colors.grey).withValues(alpha: 0.0),
+                      ],
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                    ),
                   ),
                 ),
               ),
@@ -354,13 +362,13 @@ class _RunListItem extends StatelessWidget {
                           formattedDate,
                           style: AppTextStyles.bodyLarge.copyWith(
                             fontWeight: FontWeight.w600,
-                            color: Colors.white,
+                            color: Theme.of(context).colorScheme.onSurface,
                           ),
                         ),
                         Text(
                           formattedTime,
                           style: AppTextStyles.bodySmall.copyWith(
-                            color: AppColors.textSecondary,
+                            color: Theme.of(context).colorScheme.onSurfaceVariant,
                           ),
                         ),
                       ],
@@ -372,6 +380,7 @@ class _RunListItem extends StatelessWidget {
                       children: [
                         Expanded(
                           child: _buildCompactStat(
+                            context,
                             icon: Icons.route,
                             label: 'Distance',
                             value: '${run.distanceInKm.toStringAsFixed(2)} km',
@@ -379,6 +388,7 @@ class _RunListItem extends StatelessWidget {
                         ),
                         Expanded(
                           child: _buildCompactStat(
+                            context,
                             icon: Icons.timer,
                             label: 'Duration',
                             value: run.formattedDuration,
@@ -386,6 +396,7 @@ class _RunListItem extends StatelessWidget {
                         ),
                         Expanded(
                           child: _buildCompactStat(
+                            context,
                             icon: Icons.speed,
                             label: 'Pace',
                             value: run.formattedAveragePace,
@@ -400,7 +411,7 @@ class _RunListItem extends StatelessWidget {
                       Container(
                         padding: const EdgeInsets.all(10),
                         decoration: BoxDecoration(
-                          color: AppColors.background.withValues(alpha: 0.5),
+                          color: Theme.of(context).scaffoldBackgroundColor.withValues(alpha: 0.5),
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Row(
@@ -408,14 +419,14 @@ class _RunListItem extends StatelessWidget {
                             Icon(
                               Icons.note,
                               size: 14,
-                              color: AppColors.textSecondary,
+                              color: Theme.of(context).colorScheme.onSurfaceVariant,
                             ),
                             const SizedBox(width: 8),
                             Expanded(
                               child: Text(
                                 run.notes!,
                                 style: AppTextStyles.bodySmall.copyWith(
-                                  color: AppColors.textSecondary,
+                                  color: Theme.of(context).colorScheme.onSurfaceVariant,
                                   fontStyle: FontStyle.italic,
                                 ),
                                 maxLines: 2,
@@ -436,7 +447,8 @@ class _RunListItem extends StatelessWidget {
     );
   }
 
-  Widget _buildCompactStat({
+  Widget _buildCompactStat(
+    BuildContext context, {
     required IconData icon,
     required String label,
     required String value,
@@ -451,7 +463,7 @@ class _RunListItem extends StatelessWidget {
             Text(
               label,
               style: AppTextStyles.labelSmall.copyWith(
-                color: AppColors.textSecondary,
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
                 fontSize: 10,
               ),
             ),
@@ -462,7 +474,7 @@ class _RunListItem extends StatelessWidget {
           value,
           style: AppTextStyles.bodyMedium.copyWith(
             fontWeight: FontWeight.w600,
-            color: Colors.white,
+            color: Theme.of(context).colorScheme.onSurface,
           ),
         ),
       ],

@@ -75,7 +75,7 @@ class JourneyMapCard extends StatelessWidget {
                     _Badge(
                       icon: Icons.calendar_today,
                       label: 'Day $dayNumber',
-                      color: AppColors.surfaceDark,
+                      color: Theme.of(context).colorScheme.surface,
                     ),
                   ],
                 ),
@@ -93,7 +93,7 @@ class JourneyMapCard extends StatelessWidget {
                       vertical: 8,
                     ),
                     blurStrength: 10,
-                    backgroundColor: AppColors.surfaceDark.withValues(alpha: 0.8),
+                    backgroundColor: Theme.of(context).colorScheme.surface.withValues(alpha: 0.8),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
@@ -107,7 +107,7 @@ class JourneyMapCard extends StatelessWidget {
                           child: Text(
                             'Currently near Journey',
                             style: AppTextStyles.labelMedium.copyWith(
-                              color: AppColors.textPrimaryDark,
+                              color: Theme.of(context).colorScheme.onSurface,
                               fontWeight: FontWeight.w500,
                             ),
                             overflow: TextOverflow.ellipsis,
@@ -175,7 +175,7 @@ class _BadgeState extends State<_Badge> with SingleTickerProviderStateMixin {
     final badge = GlassCard(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
       blurStrength: 10,
-      backgroundColor: AppColors.surfaceDark.withValues(alpha: 0.9),
+      backgroundColor: Theme.of(context).colorScheme.surface.withValues(alpha: 0.9),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -188,7 +188,7 @@ class _BadgeState extends State<_Badge> with SingleTickerProviderStateMixin {
           Text(
             widget.label,
             style: AppTextStyles.labelSmall.copyWith(
-              color: AppColors.textPrimaryDark,
+              color: Theme.of(context).colorScheme.onSurface,
               fontWeight: FontWeight.w600,
             ),
           ),

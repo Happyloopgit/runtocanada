@@ -2355,3 +2355,65 @@ color: Theme.of(context).colorScheme.onSurface,
 ---
 
 **Last Updated:** 2026-01-09 (Session 17 - Theme Widget Refactoring Complete for 6 Files)
+
+## Session 18: Theme Refactoring - Journey Widgets & Run Screens (2026-01-09)
+
+**🎯 SESSION GOALS:** Continue Issue #60 theme refactoring - Complete journey widgets, run screens, and forgot password screen
+
+**📋 FILES COMPLETED:**
+
+**Journey Widgets (Home Screen Components):**
+1. `journey_map_card.dart` - 5 color references
+   - Fixed surface backgrounds, text colors
+2. `journey_stats_grid.dart` - 0 refs (already theme-aware with gradients)
+3. `next_milestone_card.dart` - 0 refs (already theme-aware with milestone colors)
+4. `empty_goal_state.dart` - 3 color references
+   - Fixed text primary/secondary colors
+
+**Auth Screen:**
+5. `forgot_password_screen.dart` - 2 color references
+   - Fixed secondary text colors
+
+**Run Screens:**
+6. `run_tracking_screen.dart` - 9 color references
+   - Fixed background, glass overlay, borders, text colors
+   - Added Builder widget for context access in circular buttons
+7. `run_summary_screen.dart` - 6 color references (4 + 2 headings)
+   - Fixed surface, borders, text colors
+   - Added theme colors to "Route Map" and "Add Notes" headings
+8. `run_history_screen.dart` - 14 color references (9 + 3 headings + 2 white text fixes)
+   - Fixed background, surface, borders, dividers, text colors
+   - Added context parameter to `_buildCompactStat` method
+   - Fixed AppBar title, error heading, empty state heading
+   - **Critical Fix:** Changed white text (date headings & stat values) to theme-aware colors (invisible in light mode issue)
+
+**📊 SESSION 18 STATISTICS:**
+
+**Files Modified:** 8 files (7 screens/widgets)
+**Total Color References Updated:** 39 references
+
+**Key Fixes:**
+- ✅ Fixed invisible text in light mode (run_history_screen dates & values)
+- ✅ Added proper context handling for theme access in StatelessWidgets
+- ✅ Fixed all headings to use theme-aware colors
+- ✅ Validated with `flutter analyze` - zero errors
+
+**Compilation Status:** ✅ All files passing flutter analyze (50 pre-existing info/warnings unrelated to changes)
+
+**⏭️ NEXT SESSION PRIORITIES:**
+
+Continue systematic refactoring:
+1. `run_detail_screen.dart`
+2. `achievements_carousel.dart`
+3. Onboarding widgets: `page_indicator.dart`, `onboarding_page.dart`, `initial_screen.dart`, `onboarding_screen.dart`
+4. Premium: `paywall_screen.dart`
+5. `home_journey_map_widget.dart`
+6. `journey_map_screen.dart`
+7. `goal_creation_screen.dart` (large file, many refs)
+8. `goals_list_screen.dart` (54 refs - save for last)
+
+**Issue #60 Status:** 🔄 **IN PROGRESS** - 14 files complete (~134 color refs, ~22% progress)
+
+---
+
+**Last Updated:** 2026-01-09 (Session 18 - Journey Widgets & Run Screens Complete)

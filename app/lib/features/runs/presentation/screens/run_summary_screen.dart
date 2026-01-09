@@ -194,9 +194,9 @@ class _RunSummaryScreenState extends ConsumerState<RunSummaryScreen> {
       // TODO: Delete run from Hive in Sprint 13
       Navigator.of(context).popUntil((route) => route.isFirst);
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Run discarded'),
-          backgroundColor: AppColors.textSecondary,
+        SnackBar(
+          content: const Text('Run discarded'),
+          backgroundColor: Theme.of(context).colorScheme.onSurfaceVariant,
         ),
       );
     }
@@ -248,7 +248,7 @@ class _RunSummaryScreenState extends ConsumerState<RunSummaryScreen> {
                         Text(
                           '$formattedDate at $formattedTime',
                           style: AppTextStyles.bodyMedium.copyWith(
-                            color: AppColors.textSecondary,
+                            color: Theme.of(context).colorScheme.onSurfaceVariant,
                           ),
                         ),
                       ],
@@ -264,7 +264,9 @@ class _RunSummaryScreenState extends ConsumerState<RunSummaryScreen> {
             if (widget.run.routePoints.isNotEmpty) ...[
               Text(
                 'Route Map',
-                style: AppTextStyles.headlineSmall,
+                style: AppTextStyles.headlineSmall.copyWith(
+                  color: Theme.of(context).colorScheme.onSurface,
+                ),
               ),
               const SizedBox(height: 8),
               RouteMapWidget(
@@ -388,7 +390,9 @@ class _RunSummaryScreenState extends ConsumerState<RunSummaryScreen> {
             // Notes section
             Text(
               'Add Notes (Optional)',
-              style: AppTextStyles.headlineSmall,
+              style: AppTextStyles.headlineSmall.copyWith(
+                color: Theme.of(context).colorScheme.onSurface,
+              ),
             ),
             const SizedBox(height: 8),
             CustomTextField(
@@ -464,9 +468,9 @@ class _StatCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppColors.surface,
+        color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.border),
+        border: Border.all(color: Theme.of(context).dividerTheme.color ?? Colors.grey),
       ),
       child: Column(
         children: [
@@ -479,7 +483,7 @@ class _StatCard extends StatelessWidget {
           Text(
             label,
             style: AppTextStyles.caption.copyWith(
-              color: AppColors.textSecondary,
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
             ),
             textAlign: TextAlign.center,
           ),
