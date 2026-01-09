@@ -16,6 +16,7 @@ class CustomTextField extends StatefulWidget {
   final IconData? prefixIcon;
   final Widget? suffixIcon;
   final int maxLines;
+  final int? maxLength;
   final bool enabled;
   final bool autofocus;
   final TextInputAction? textInputAction;
@@ -34,6 +35,7 @@ class CustomTextField extends StatefulWidget {
     this.prefixIcon,
     this.suffixIcon,
     this.maxLines = 1,
+    this.maxLength,
     this.enabled = true,
     this.autofocus = false,
     this.textInputAction,
@@ -63,6 +65,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
       onChanged: widget.onChanged,
       onFieldSubmitted: widget.onSubmitted,
       maxLines: widget.maxLines,
+      maxLength: widget.maxLength,
       enabled: widget.enabled,
       autofocus: widget.autofocus,
       textInputAction: widget.textInputAction,

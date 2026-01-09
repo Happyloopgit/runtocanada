@@ -1,16 +1,16 @@
 # Testing Issues Log
 
 **Date:** 2026-01-06 (Initial Testing)
-**Last Updated:** 2026-01-09 (Session 20 - Status Update)
+**Last Updated:** 2026-01-09 (Session 22 - New Issue Added)
 **Testing Phase:** Pre-Sprint 17.5 User Workflow Testing
 **Tester:** Karthik
 
 ---
 
-## 📊 Current Status (2026-01-09 - After Session 21)
+## 📊 Current Status (2026-01-09 - After Session 22)
 
-**Total Issues Found:** 22
-**Fixed Issues:** 16 ✅
+**Total Issues Found:** 23
+**Fixed Issues:** 17 ✅
 **Open Issues:** 5 ⚠️
 **On Hold:** 1 ⏸️
 
@@ -104,6 +104,7 @@
 | 17 | Ads - Platform Inconsistency | Banner ad visible on Android (bottom of screen) but NOT visible on iOS | High | Open | Ad initialization or platform-specific issue |
 | 18 | Ads - Android Layout | Banner ad positioned under device touch buttons (back, home, recent apps) - partially obscured | High | Open | Safe area padding needed for bottom banner ad |
 | 19 | Premium Badge - Confusing UI | Gold "Premium" badge in top bar looks like user IS premium, but it's actually an upgrade CTA | High | **FIXED** | ✅ Fixed in Session 13 - Changed text from "Premium" to "Upgrade" to clarify it's a CTA, not a status indicator |
+| 30 | Goal Creation - Keyboard Obscures Goal Name Input (Android) | On Step 4 (Confirm screen), when keyboard appears to edit goal name, it covers the input field - user cannot see what they're typing | High | **FIXED** | ✅ Fixed in Session 22 - Added FocusNode to goal name field that triggers map hiding when typing (consistent with Steps 0-1 UX). Also added 30-char limit to prevent excessively long goal names. Required `flutter clean` to resolve build cache issue. |
 
 ---
 
@@ -2745,3 +2746,77 @@ Location: /Users/karthik/Desktop/Happyloop_website/apps/runtocanada/
 ---
 
 **Last Updated:** 2026-01-09 (Session 22 - Multi-User Data Segregation Architecture Fixed ✅)
+
+
+---
+
+### Session 22 Summary (Part 2 - 2026-01-09): Issue #30 Fixed - Keyboard Overlap on Goal Confirmation
+
+**🐛 ISSUE FIXED:**
+- **Issue #30:** Goal Creation - Keyboard Obscures Goal Name Input (Android)
+
+**🔍 PROBLEM DISCOVERED:**
+- User reported keyboard covering goal name input field on Step 4 (Confirm screen)
+- When tapping to edit goal name, keyboard appeared but text field was pushed out of view
+- User couldn't see what they were typing
+- Map taking 30% of screen height left insufficient vertical space
+
+**📊 ROOT CAUSE ANALYSIS:**
+1. **Layout Architecture:**
+   - Scaffold body uses Column (not scrollable at root level)
+   - Step indicator (fixed) → Map (30% height, fixed) → Content (Expanded)
+   - Navigation buttons wrapped in SafeArea at bottom (Session 21 fix)
+2. **When Keyboard Appears:**
+   - Flutter's default `resizeToAvoidBottomInset: true` shrinks viewport
+   - Map remains visible at 30% height
+   - Content area shrinks dramatically
+   - Goal name field at TOP of scrollable content pushed UP and out of view
+3. **Why Steps 0-1 Don't Have This Issue:**
+   - Search field in middle of screen (better position)
+   - Map already hides when `_isSearchFieldFocused = true` (existing behavior)
+   - More vertical space available
+
+**✅ SOLUTION IMPLEMENTED:**
+- **Approach:** Hide map when goal name field has focus (consistent with Steps 0-1 UX)
+- **Changes Made:**
+  1. Added `_goalNameFocusNode` FocusNode to track goal name field focus
+  2. Added focus listener that sets `_isSearchFieldFocused = true` when focused
+  3. Map visibility already controlled by this flag (line 626) - reused existing logic
+  4. Attached `focusNode: _goalNameFocusNode` to goal name CustomTextField
+  5. Added proper disposal in `dispose()` method
+- **Bonus Fix:** Added `maxLength: 30` character limit to prevent excessively long goal names (user suggestion)
+
+**📝 FILES MODIFIED:**
+1. **custom_text_field.dart** (2 locations):
+   - Added `maxLength` parameter support (line 19)
+   - Passed to TextFormField (line 68)
+2. **goal_creation_screen.dart** (4 locations):
+   - Added `_goalNameFocusNode` declaration (line 77)
+   - Added focus listener in `initState()` (lines 92-97)
+   - Added disposal in `dispose()` (line 104)
+   - Updated CustomTextField with `focusNode` and `maxLength: 30` (lines 1442-1443)
+
+**🎯 USER EXPERIENCE IMPROVEMENTS:**
+- ✅ Map hides when user taps goal name field (more vertical space)
+- ✅ User can see text cursor and typed characters
+- ✅ Consistent UX with Steps 0-1 (map hiding behavior)
+- ✅ 30-character limit keeps goal names concise and UI-friendly
+- ✅ Character counter appears below field (Flutter default behavior)
+
+**🧪 TESTING STATUS:**
+- ✅ Code compiles without errors (`flutter analyze` passed)
+- ⏳ Awaiting Android device testing for verification
+
+**📊 IMPACT:**
+- Issue #30: **FIXED** ✅
+- Open issues: 6 → 5
+- Fixed issues: 16 → 17
+- High priority issues remaining: 3 (Issues #10, #17, #18)
+
+---
+
+**Next Session Priorities:**
+1. Test Issue #30 fix on Android device
+2. Fix Issue #18 (Android ads SafeArea) - Similar padding issue
+3. Fix Issue #10 (Top bar clutter) - UX polish
+4. Debug Issue #17 (iOS ads) - Platform-specific

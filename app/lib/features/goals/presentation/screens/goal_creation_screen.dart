@@ -74,6 +74,7 @@ class _GoalCreationScreenState extends ConsumerState<GoalCreationScreen> {
   // Text controllers
   final _goalNameController = TextEditingController();
   final _searchFocusNode = FocusNode(); // Focus node for search field
+  final _goalNameFocusNode = FocusNode(); // Focus node for goal name field
 
   // Debounce timer for search
   Timer? _searchDebounceTimer;
@@ -87,12 +88,20 @@ class _GoalCreationScreenState extends ConsumerState<GoalCreationScreen> {
         _isSearchFieldFocused = _searchFocusNode.hasFocus;
       });
     });
+
+    // Listen to goal name field focus changes (hide map when typing)
+    _goalNameFocusNode.addListener(() {
+      setState(() {
+        _isSearchFieldFocused = _goalNameFocusNode.hasFocus;
+      });
+    });
   }
 
   @override
   void dispose() {
     _goalNameController.dispose();
     _searchFocusNode.dispose();
+    _goalNameFocusNode.dispose();
     _searchDebounceTimer?.cancel();
     _circleManager = null;
     _polylineManager = null;
@@ -1430,6 +1439,8 @@ class _GoalCreationScreenState extends ConsumerState<GoalCreationScreen> {
                     label: 'Name your goal',
                     hint: 'Run to ${_destinationLocation?.placeName ?? "Destination"}',
                     controller: _goalNameController,
+                    focusNode: _goalNameFocusNode,
+                    maxLength: 30,
                     onChanged: (value) {
                       ref.read(goalCreationProvider.notifier).setGoalName(value);
                     },
