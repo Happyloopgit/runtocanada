@@ -25,9 +25,9 @@ class HomeScreen extends ConsumerWidget {
     final userAsync = ref.watch(currentUserProvider);
 
     return Scaffold(
-      backgroundColor: AppColors.backgroundDark,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
-        backgroundColor: AppColors.surfaceDark,
+        backgroundColor: Theme.of(context).colorScheme.surface,
         elevation: 0,
         leading: Padding(
           padding: const EdgeInsets.only(left: 16),
@@ -52,7 +52,7 @@ class HomeScreen extends ConsumerWidget {
               ? Text(
                   _getGreeting(user.fullName),
                   style: AppTextStyles.titleMedium.copyWith(
-                    color: AppColors.textPrimaryDark,
+                    color: Theme.of(context).colorScheme.onSurface,
                   ),
                 )
               : null,
@@ -122,7 +122,7 @@ class HomeScreen extends ConsumerWidget {
           ),
           IconButton(
             icon: const Icon(Icons.notifications_outlined),
-            color: AppColors.textPrimaryDark,
+            color: Theme.of(context).colorScheme.onSurface,
             onPressed: () {
               // TODO: Implement notifications
             },
@@ -190,7 +190,7 @@ class HomeScreen extends ConsumerWidget {
                 Text(
                   homeData.goalTitle!,
                   style: AppTextStyles.headlineMedium.copyWith(
-                    color: AppColors.textPrimaryDark,
+                    color: Theme.of(context).colorScheme.onSurface,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -254,7 +254,7 @@ class HomeScreen extends ConsumerWidget {
                 right: 0,
                 bottom: 80, // Above sticky button (button height + padding)
                 child: Container(
-                  color: AppColors.backgroundDark, // Solid background to isolate from gradient
+                  color: Theme.of(context).scaffoldBackgroundColor, // Solid background to isolate from gradient
                   padding: const EdgeInsets.symmetric(vertical: 8),
                   child: const BannerAdWidget(),
                 ),
@@ -271,9 +271,9 @@ class HomeScreen extends ConsumerWidget {
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
                     colors: [
-                      AppColors.backgroundDark.withValues(alpha: 0.0),
-                      AppColors.backgroundDark.withValues(alpha: 0.95),
-                      AppColors.backgroundDark,
+                      Theme.of(context).scaffoldBackgroundColor.withValues(alpha: 0.0),
+                      Theme.of(context).scaffoldBackgroundColor.withValues(alpha: 0.95),
+                      Theme.of(context).scaffoldBackgroundColor,
                     ],
                     stops: const [0.0, 0.3, 1.0],
                   ),
@@ -341,7 +341,7 @@ class HomeScreen extends ConsumerWidget {
             const SizedBox(height: 8),
             Text(
               error.toString(),
-              style: AppTextStyles.bodySmall.copyWith(color: AppColors.textSecondaryDark),
+              style: AppTextStyles.bodySmall.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant),
               textAlign: TextAlign.center,
             ),
           ],

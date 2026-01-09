@@ -82,14 +82,14 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
     final authState = ref.watch(authControllerProvider);
 
     return Scaffold(
-      backgroundColor: AppColors.backgroundDark,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: CustomIconButton(
           icon: Icons.arrow_back,
           onPressed: _navigateToLogin,
-          color: AppColors.textPrimaryDark,
+          color: Theme.of(context).colorScheme.onSurface,
         ),
       ),
       body: SafeArea(
@@ -119,7 +119,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                 Text(
                   'Create an account to track your run to Canada',
                   style: AppTextStyles.bodyLarge.copyWith(
-                    color: AppColors.textSecondaryDark,
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
                   ),
                   textAlign: TextAlign.center,
                 ),
@@ -236,7 +236,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                                 Text(
                                   'I accept the ',
                                   style: AppTextStyles.bodySmall.copyWith(
-                                    color: AppColors.textSecondaryDark,
+                                    color: Theme.of(context).colorScheme.onSurfaceVariant,
                                   ),
                                 ),
                                 GestureDetector(
@@ -254,7 +254,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                                 Text(
                                   ' and ',
                                   style: AppTextStyles.bodySmall.copyWith(
-                                    color: AppColors.textSecondaryDark,
+                                    color: Theme.of(context).colorScheme.onSurfaceVariant,
                                   ),
                                 ),
                                 GestureDetector(
@@ -293,19 +293,19 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                 Row(
                   children: [
                     Expanded(
-                      child: Divider(color: AppColors.divider, thickness: 1),
+                      child: Divider(color: Theme.of(context).dividerTheme.color, thickness: 1),
                     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
                       child: Text(
                         'OR',
                         style: AppTextStyles.labelMedium.copyWith(
-                          color: AppColors.textSecondaryDark,
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
                         ),
                       ),
                     ),
                     Expanded(
-                      child: Divider(color: AppColors.divider, thickness: 1),
+                      child: Divider(color: Theme.of(context).dividerTheme.color, thickness: 1),
                     ),
                   ],
                 ),
@@ -330,7 +330,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                     Text(
                       'Already have an account? ',
                       style: AppTextStyles.bodyMedium.copyWith(
-                        color: AppColors.textSecondaryDark,
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
                       ),
                     ),
                     CustomTextButton(

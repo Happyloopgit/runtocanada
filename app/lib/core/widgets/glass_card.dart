@@ -101,11 +101,11 @@ class SolidCard extends StatelessWidget {
       height: height,
       margin: margin,
       decoration: BoxDecoration(
-        color: backgroundColor ?? AppColors.cardDark,
+        color: backgroundColor ?? Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(borderRadius),
         border: borderWidth > 0
             ? Border.all(
-                color: borderColor ?? AppColors.border,
+                color: borderColor ?? Theme.of(context).dividerTheme.color!,
                 width: borderWidth,
               )
             : null,

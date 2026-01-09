@@ -70,7 +70,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     final authState = ref.watch(authControllerProvider);
 
     return Scaffold(
-      backgroundColor: AppColors.backgroundDark,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
@@ -122,7 +122,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 Text(
                   'Sign in to continue your journey to Canada',
                   style: AppTextStyles.bodyLarge.copyWith(
-                    color: AppColors.textSecondaryDark,
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
                   ),
                   textAlign: TextAlign.center,
                 ),
@@ -197,19 +197,19 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 Row(
                   children: [
                     Expanded(
-                      child: Divider(color: AppColors.divider, thickness: 1),
+                      child: Divider(color: Theme.of(context).dividerTheme.color, thickness: 1),
                     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
                       child: Text(
                         'OR',
                         style: AppTextStyles.labelMedium.copyWith(
-                          color: AppColors.textSecondaryDark,
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
                         ),
                       ),
                     ),
                     Expanded(
-                      child: Divider(color: AppColors.divider, thickness: 1),
+                      child: Divider(color: Theme.of(context).dividerTheme.color, thickness: 1),
                     ),
                   ],
                 ),
@@ -234,7 +234,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     Text(
                       "Don't have an account? ",
                       style: AppTextStyles.bodyMedium.copyWith(
-                        color: AppColors.textSecondaryDark,
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
                       ),
                     ),
                     CustomTextButton(

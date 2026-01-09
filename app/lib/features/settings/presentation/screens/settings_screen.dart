@@ -16,20 +16,20 @@ class SettingsScreen extends ConsumerWidget {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        backgroundColor: AppColors.surfaceCard,
+        backgroundColor: Theme.of(context).colorScheme.surface,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),
         ),
         title: Text(
           'Logout',
           style: AppTextStyles.headlineSmall.copyWith(
-            color: AppColors.textPrimaryDark,
+            color: Theme.of(context).colorScheme.onSurface,
           ),
         ),
         content: Text(
           'Are you sure you want to logout?',
           style: AppTextStyles.bodyMedium.copyWith(
-            color: AppColors.textSecondaryDark,
+            color: Theme.of(context).colorScheme.onSurfaceVariant,
           ),
         ),
         actions: [
@@ -63,7 +63,7 @@ class SettingsScreen extends ConsumerWidget {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        backgroundColor: AppColors.surfaceCard,
+        backgroundColor: Theme.of(context).colorScheme.surface,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),
         ),
@@ -76,7 +76,7 @@ class SettingsScreen extends ConsumerWidget {
         content: Text(
           'Are you sure you want to delete your account? This action cannot be undone. All your data will be permanently deleted.',
           style: AppTextStyles.bodyMedium.copyWith(
-            color: AppColors.textSecondaryDark,
+            color: Theme.of(context).colorScheme.onSurfaceVariant,
           ),
         ),
         actions: [
@@ -170,20 +170,20 @@ class SettingsScreen extends ConsumerWidget {
     final currentMapStyle = _stringToMapStyle(settings.mapStyle);
 
     return Scaffold(
-      backgroundColor: AppColors.backgroundDark,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
         title: Text(
           'Settings',
           style: AppTextStyles.titleMedium.copyWith(
-            color: AppColors.textPrimaryDark,
+            color: Theme.of(context).colorScheme.onSurface,
           ),
         ),
-        backgroundColor: AppColors.surfaceDark,
+        backgroundColor: Theme.of(context).colorScheme.surface,
         elevation: 0,
         leading: CustomIconButton(
           icon: Icons.arrow_back,
           onPressed: () => Navigator.pop(context),
-          color: AppColors.textPrimaryDark,
+          color: Theme.of(context).colorScheme.onSurface,
         ),
       ),
       body: SingleChildScrollView(
@@ -226,7 +226,7 @@ class SettingsScreen extends ConsumerWidget {
                           Text(
                             'Use Metric Units',
                             style: AppTextStyles.bodyLarge.copyWith(
-                              color: AppColors.textPrimaryDark,
+                              color: Theme.of(context).colorScheme.onSurface,
                               fontWeight: FontWeight.w600,
                             ),
                           ),
@@ -236,7 +236,7 @@ class SettingsScreen extends ConsumerWidget {
                                 ? 'Kilometers and meters'
                                 : 'Miles and feet',
                             style: AppTextStyles.bodySmall.copyWith(
-                              color: AppColors.textSecondaryDark,
+                              color: Theme.of(context).colorScheme.onSurfaceVariant,
                             ),
                           ),
                         ],
@@ -295,7 +295,7 @@ class SettingsScreen extends ConsumerWidget {
                           Text(
                             'Dark Mode',
                             style: AppTextStyles.bodyLarge.copyWith(
-                              color: AppColors.textPrimaryDark,
+                              color: Theme.of(context).colorScheme.onSurface,
                               fontWeight: FontWeight.w600,
                             ),
                           ),
@@ -305,7 +305,7 @@ class SettingsScreen extends ConsumerWidget {
                                 ? 'Enabled'
                                 : 'Disabled',
                             style: AppTextStyles.bodySmall.copyWith(
-                              color: AppColors.textSecondaryDark,
+                              color: Theme.of(context).colorScheme.onSurfaceVariant,
                             ),
                           ),
                         ],
@@ -356,7 +356,7 @@ class SettingsScreen extends ConsumerWidget {
                           Text(
                             'Default Map Style',
                             style: AppTextStyles.bodyLarge.copyWith(
-                              color: AppColors.textPrimaryDark,
+                              color: Theme.of(context).colorScheme.onSurface,
                               fontWeight: FontWeight.w600,
                             ),
                           ),
@@ -364,7 +364,7 @@ class SettingsScreen extends ConsumerWidget {
                           Text(
                             _getMapStyleName(currentMapStyle),
                             style: AppTextStyles.bodySmall.copyWith(
-                              color: AppColors.textSecondaryDark,
+                              color: Theme.of(context).colorScheme.onSurfaceVariant,
                             ),
                           ),
                         ],
@@ -374,7 +374,7 @@ class SettingsScreen extends ConsumerWidget {
                     // Arrow
                     Icon(
                       Icons.chevron_right,
-                      color: AppColors.textSecondaryDark,
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
                     ),
                   ],
                 ),
@@ -416,7 +416,7 @@ class SettingsScreen extends ConsumerWidget {
                           Text(
                             'Milestone Notifications',
                             style: AppTextStyles.bodyLarge.copyWith(
-                              color: AppColors.textPrimaryDark,
+                              color: Theme.of(context).colorScheme.onSurface,
                               fontWeight: FontWeight.w600,
                             ),
                           ),
@@ -424,7 +424,7 @@ class SettingsScreen extends ConsumerWidget {
                           Text(
                             'Get notified when you reach milestones',
                             style: AppTextStyles.bodySmall.copyWith(
-                              color: AppColors.textSecondaryDark,
+                              color: Theme.of(context).colorScheme.onSurfaceVariant,
                             ),
                           ),
                         ],
@@ -478,7 +478,7 @@ class SettingsScreen extends ConsumerWidget {
                       child: Text(
                         'Logout',
                         style: AppTextStyles.bodyLarge.copyWith(
-                          color: AppColors.textPrimaryDark,
+                          color: Theme.of(context).colorScheme.onSurface,
                           fontWeight: FontWeight.w600,
                         ),
                       ),
@@ -487,7 +487,7 @@ class SettingsScreen extends ConsumerWidget {
                     // Arrow
                     Icon(
                       Icons.chevron_right,
-                      color: AppColors.textSecondaryDark,
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
                     ),
                   ],
                 ),
@@ -579,7 +579,7 @@ class SettingsScreen extends ConsumerWidget {
                           Text(
                             'App Version',
                             style: AppTextStyles.bodyLarge.copyWith(
-                              color: AppColors.textPrimaryDark,
+                              color: Theme.of(context).colorScheme.onSurface,
                               fontWeight: FontWeight.w600,
                             ),
                           ),
@@ -587,7 +587,7 @@ class SettingsScreen extends ConsumerWidget {
                           Text(
                             '1.0.0',
                             style: AppTextStyles.bodySmall.copyWith(
-                              color: AppColors.textSecondaryDark,
+                              color: Theme.of(context).colorScheme.onSurfaceVariant,
                             ),
                           ),
                         ],
@@ -634,7 +634,7 @@ class SettingsScreen extends ConsumerWidget {
                       child: Text(
                         'Privacy Policy',
                         style: AppTextStyles.bodyLarge.copyWith(
-                          color: AppColors.textPrimaryDark,
+                          color: Theme.of(context).colorScheme.onSurface,
                           fontWeight: FontWeight.w600,
                         ),
                       ),
@@ -643,7 +643,7 @@ class SettingsScreen extends ConsumerWidget {
                     // Icon
                     Icon(
                       Icons.open_in_new,
-                      color: AppColors.textSecondaryDark,
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
                       size: 20,
                     ),
                   ],
@@ -687,7 +687,7 @@ class SettingsScreen extends ConsumerWidget {
                       child: Text(
                         'Terms of Service',
                         style: AppTextStyles.bodyLarge.copyWith(
-                          color: AppColors.textPrimaryDark,
+                          color: Theme.of(context).colorScheme.onSurface,
                           fontWeight: FontWeight.w600,
                         ),
                       ),
@@ -696,7 +696,7 @@ class SettingsScreen extends ConsumerWidget {
                     // Icon
                     Icon(
                       Icons.open_in_new,
-                      color: AppColors.textSecondaryDark,
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
                       size: 20,
                     ),
                   ],
@@ -731,7 +731,7 @@ class SettingsScreen extends ConsumerWidget {
   void _showMapStylePicker(BuildContext context, WidgetRef ref, MapStyle currentStyle) {
     showModalBottomSheet(
       context: context,
-      backgroundColor: AppColors.surfaceCard,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
@@ -744,7 +744,7 @@ class SettingsScreen extends ConsumerWidget {
             width: 40,
             height: 4,
             decoration: BoxDecoration(
-              color: AppColors.textSecondaryDark.withValues(alpha: 0.3),
+              color: Theme.of(context).colorScheme.onSurfaceVariant.withValues(alpha: 0.3),
               borderRadius: BorderRadius.circular(2),
             ),
           ),
@@ -756,7 +756,7 @@ class SettingsScreen extends ConsumerWidget {
               'Select Default Map Style',
               style: AppTextStyles.headlineSmall.copyWith(
                 fontWeight: FontWeight.bold,
-                color: AppColors.textPrimaryDark,
+                color: Theme.of(context).colorScheme.onSurface,
               ),
             ),
           ),
@@ -774,21 +774,21 @@ class SettingsScreen extends ConsumerWidget {
                     : null,
                 color: currentStyle == style
                     ? null
-                    : AppColors.surfaceInput,
+                    : Theme.of(context).colorScheme.surfaceContainerHighest,
                 shape: BoxShape.circle,
               ),
               child: Icon(
                 Icons.map,
                 color: currentStyle == style
                     ? Colors.white
-                    : AppColors.textSecondaryDark,
+                    : Theme.of(context).colorScheme.onSurfaceVariant,
                 size: 16,
               ),
             ),
             title: Text(
               _getMapStyleName(style),
               style: AppTextStyles.bodyLarge.copyWith(
-                color: AppColors.textPrimaryDark,
+                color: Theme.of(context).colorScheme.onSurface,
                 fontWeight: currentStyle == style
                     ? FontWeight.w600
                     : FontWeight.normal,
@@ -820,7 +820,7 @@ class _SectionHeader extends StatelessWidget {
     return Text(
       title.toUpperCase(),
       style: AppTextStyles.labelSmall.copyWith(
-        color: AppColors.textSecondaryDark,
+        color: Theme.of(context).colorScheme.onSurfaceVariant,
         fontWeight: FontWeight.bold,
         letterSpacing: 1.2,
       ),

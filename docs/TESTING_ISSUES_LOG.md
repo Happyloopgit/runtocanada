@@ -2242,11 +2242,116 @@ color: Theme.of(context).colorScheme.onSurface,
 - ✅ Dark mode toggle UI exists and is functional
 - ✅ State management working correctly (Riverpod + Hive)
 - ✅ MaterialApp theme switching working correctly
-- ❌ Widgets not using MaterialApp theme (using hardcoded dark colors)
-- 📋 Systematic refactor planned for next session
+- ✅ SolidCard widget now theme-aware
+- 🔄 Systematic widget refactoring in progress (3 screens completed)
+- ❌ Remaining screens still use hardcoded dark colors
 
-**Status:** 🔄 **ROOT CAUSE IDENTIFIED** - Implementation planned for Session 17
+**Status:** 🔄 **IN PROGRESS** - Systematic refactoring started in Session 17
 
 ---
 
-**Last Updated:** 2026-01-09 (Session 16 - Theme Toggle Investigation)
+**SESSION 17 - Widget Theme Refactoring (2026-01-09)**
+
+**🎨 THEME-AWARE REFACTORING COMPLETED:**
+
+**Files Modified:**
+
+1. **`glass_card.dart` (SolidCard widget)** - Foundation widget
+   - Background: `AppColors.cardDark` → `Theme.of(context).colorScheme.surface`
+   - Border: `AppColors.border` → `Theme.of(context).dividerTheme.color`
+   - **Impact:** All screens using SolidCard now automatically theme-aware for card backgrounds
+
+2. **`settings_screen.dart`** - 53 color references updated ✅
+   - Scaffold background → `scaffoldBackgroundColor`
+   - AppBar background → `colorScheme.surface`
+   - All primary text → `colorScheme.onSurface`
+   - All secondary text → `colorScheme.onSurfaceVariant`
+   - Section headers → `colorScheme.onSurfaceVariant`
+   - Dialog backgrounds → `colorScheme.surface`
+   - Modal bottom sheet → theme-aware
+   - **Status:** ✅ Fully functional, tested by user
+
+3. **`home_screen.dart`** - 8 color references updated ✅
+   - Scaffold background → `scaffoldBackgroundColor`
+   - AppBar (background, title, icons) → theme colors
+   - Goal title text → `colorScheme.onSurface`
+   - Banner ad container → `scaffoldBackgroundColor`
+   - Sticky button gradient overlay → theme colors (3 instances)
+   - Error message text → `colorScheme.onSurfaceVariant`
+   - **Status:** ✅ Ready for testing
+
+**Color Mapping Reference:**
+
+| Hardcoded Color | Theme-Aware Replacement | Dark Value | Light Value |
+|----------------|------------------------|------------|-------------|
+| `AppColors.backgroundDark` | `Theme.of(context).scaffoldBackgroundColor` | `#101922` | `#F5F7F8` |
+| `AppColors.surfaceDark` | `Theme.of(context).colorScheme.surface` | `#1C2A38` | `#FFFFFF` |
+| `AppColors.cardDark` | `Theme.of(context).colorScheme.surface` | `#182430` | `#FFFFFF` |
+| `AppColors.surfaceInput` | `Theme.of(context).colorScheme.surfaceContainerHighest` | `#223649` | `#F5F7F8` |
+| `AppColors.textPrimaryDark` | `Theme.of(context).colorScheme.onSurface` | `#FFFFFF` | `#111418` |
+| `AppColors.textSecondaryDark` | `Theme.of(context).colorScheme.onSurfaceVariant` | `#90ADCB` | `#637588` |
+| `AppColors.textHintDark` | `Theme.of(context).colorScheme.onSurfaceVariant.withValues(alpha: 0.7)` | Dimmed | Dimmed |
+| `AppColors.border` | `Theme.of(context).dividerTheme.color` | `#2A3F54` | `#E0E0E0` |
+
+**Theme-Independent Colors (Keep As-Is):**
+- `AppColors.primary` / `AppColors.primaryGradient` - Bright blue (same in both themes)
+- `AppColors.milestone` / `AppColors.milestoneGradient` - Orange (same in both themes)
+- `AppColors.error`, `AppColors.success`, `AppColors.warning` - Status colors
+- Custom icon gradients, premium gold, map colors
+
+**Compilation Status:**
+- ✅ Zero errors in refactored files
+- ✅ All files passing `flutter analyze`
+
+**Testing Results:**
+- ✅ Settings screen: Theme toggle works, light/dark modes fully functional (user tested)
+- ⏳ Home screen: Ready for user testing
+
+---
+
+**📊 SESSION 17 STATISTICS:**
+
+**Files Modified:** 6 files (1 shared widget + 5 screens)
+1. `glass_card.dart` (SolidCard) - 2 color references
+2. `settings_screen.dart` - 53 color references ✅ User tested & working
+3. `home_screen.dart` - 8 color references ✅ User tested & working
+4. `profile_screen.dart` - 14 color references ✅ User tested & working
+5. `login_screen.dart` - 8 color references
+6. `signup_screen.dart` - 10 color references
+
+**Total Color References Updated:** 95 references across 6 files
+
+**Compilation Status:** ✅ All files passing flutter analyze with zero errors
+
+**User Testing Results:**
+- ✅ Settings screen: Theme toggle works, light/dark modes fully functional
+- ✅ Home screen: Theme switching confirmed working
+- ✅ Profile screen: Theme switching confirmed working
+
+**Remaining Work:**
+- `goals_list_screen.dart` - 54 color references (large, complex file - deferred)
+- Run tracking screens
+- Journey widgets (map card, stats grid, milestone card, empty goal state)
+- Forgot password screen
+- Additional widget components
+- ~34 additional files with color references
+
+**Estimated Progress:** ~16% complete (95 of ~611 estimated total color references)
+
+---
+
+**⏭️ NEXT SESSION PRIORITIES:**
+
+1. Continue with remaining screens:
+   - Journey widgets (JourneyMapCard, JourneyStatsGrid, NextMilestoneCard, EmptyGoalState)
+   - Run tracking screens
+   - Forgot password screen
+2. Return to `goals_list_screen.dart` (54 instances - complex, needs careful refactoring)
+3. Refactor remaining widget components
+4. Final verification pass on all screens
+
+**Issue #60 Status:** 🔄 **IN PROGRESS** - 6 files complete, systematic refactoring ongoing
+
+---
+
+**Last Updated:** 2026-01-09 (Session 17 - Theme Widget Refactoring Complete for 6 Files)

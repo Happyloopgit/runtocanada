@@ -54,7 +54,7 @@ class ProfileScreen extends ConsumerWidget {
     final statsAsync = ref.watch(userStatsProvider);
 
     return Scaffold(
-      backgroundColor: AppColors.backgroundDark,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: userAsync.when(
         data: (user) {
           if (user == null) {
@@ -65,13 +65,13 @@ class ProfileScreen extends ConsumerWidget {
                   Icon(
                     Icons.person_off,
                     size: 64,
-                    color: AppColors.textSecondaryDark,
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
                   ),
                   const SizedBox(height: 16),
                   Text(
                     'Not logged in',
                     style: AppTextStyles.headlineSmall.copyWith(
-                      color: AppColors.textSecondaryDark,
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
                     ),
                   ),
                 ],
@@ -85,7 +85,7 @@ class ProfileScreen extends ConsumerWidget {
               SliverAppBar(
                 expandedHeight: 240,
                 pinned: true,
-                backgroundColor: AppColors.surfaceDark,
+                backgroundColor: Theme.of(context).colorScheme.surface,
                 flexibleSpace: FlexibleSpaceBar(
                   background: Container(
                     decoration: BoxDecoration(
@@ -120,7 +120,7 @@ class ProfileScreen extends ConsumerWidget {
                             padding: const EdgeInsets.all(4),
                             child: CircleAvatar(
                               radius: 46,
-                              backgroundColor: AppColors.surfaceDark,
+                              backgroundColor: Theme.of(context).colorScheme.surface,
                               child: Text(
                                 user.fullName.substring(0, 1).toUpperCase(),
                                 style: AppTextStyles.displayLarge.copyWith(
@@ -217,7 +217,7 @@ class ProfileScreen extends ConsumerWidget {
                       Text(
                         'YOUR STATISTICS',
                         style: AppTextStyles.labelSmall.copyWith(
-                          color: AppColors.textSecondaryDark,
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
                           fontWeight: FontWeight.bold,
                           letterSpacing: 1.2,
                         ),
@@ -311,7 +311,7 @@ class ProfileScreen extends ConsumerWidget {
                       Text(
                         'QUICK ACTIONS',
                         style: AppTextStyles.labelSmall.copyWith(
-                          color: AppColors.textSecondaryDark,
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
                           fontWeight: FontWeight.bold,
                           letterSpacing: 1.2,
                         ),
@@ -345,14 +345,14 @@ class ProfileScreen extends ConsumerWidget {
                               child: Text(
                                 'View Run History',
                                 style: AppTextStyles.bodyLarge.copyWith(
-                                  color: AppColors.textPrimaryDark,
+                                  color: Theme.of(context).colorScheme.onSurface,
                                   fontWeight: FontWeight.w600,
                                 ),
                               ),
                             ),
                             Icon(
                               Icons.chevron_right,
-                              color: AppColors.textSecondaryDark,
+                              color: Theme.of(context).colorScheme.onSurfaceVariant,
                             ),
                           ],
                         ),
@@ -385,14 +385,14 @@ class ProfileScreen extends ConsumerWidget {
                               child: Text(
                                 'Manage Goals',
                                 style: AppTextStyles.bodyLarge.copyWith(
-                                  color: AppColors.textPrimaryDark,
+                                  color: Theme.of(context).colorScheme.onSurface,
                                   fontWeight: FontWeight.w600,
                                 ),
                               ),
                             ),
                             Icon(
                               Icons.chevron_right,
-                              color: AppColors.textSecondaryDark,
+                              color: Theme.of(context).colorScheme.onSurfaceVariant,
                             ),
                           ],
                         ),
@@ -432,14 +432,14 @@ class ProfileScreen extends ConsumerWidget {
                               child: Text(
                                 'View Achievements',
                                 style: AppTextStyles.bodyLarge.copyWith(
-                                  color: AppColors.textPrimaryDark,
+                                  color: Theme.of(context).colorScheme.onSurface,
                                   fontWeight: FontWeight.w600,
                                 ),
                               ),
                             ),
                             Icon(
                               Icons.chevron_right,
-                              color: AppColors.textSecondaryDark,
+                              color: Theme.of(context).colorScheme.onSurfaceVariant,
                             ),
                           ],
                         ),
@@ -474,7 +474,7 @@ class ProfileScreen extends ConsumerWidget {
               Text(
                 error.toString(),
                 style: AppTextStyles.bodySmall.copyWith(
-                  color: AppColors.textSecondaryDark,
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
                 ),
                 textAlign: TextAlign.center,
               ),
@@ -542,7 +542,7 @@ class _ModernStatCard extends StatelessWidget {
                 value,
                 style: AppTextStyles.headlineMedium.copyWith(
                   fontWeight: FontWeight.bold,
-                  color: AppColors.textPrimaryDark,
+                  color: Theme.of(context).colorScheme.onSurface,
                 ),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
@@ -556,7 +556,7 @@ class _ModernStatCard extends StatelessWidget {
           Text(
             label,
             style: AppTextStyles.bodySmall.copyWith(
-              color: AppColors.textSecondaryDark,
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
             ),
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
