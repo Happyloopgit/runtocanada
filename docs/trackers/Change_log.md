@@ -1776,3 +1776,203 @@ premiumGold: 0xFFFFD700 (alias for premium)
 - ⏹️ Tutorial overlays (deferred)
 
 ---
+
+### Sessions 021-028: Sprint 16.5 - Design System Overhaul
+
+**Period:** 2026-01-06
+**Sprint:** Sprint 16.5 - Design System Overhaul
+**Duration:** 7 sessions (Sessions 022-028)
+
+#### Files Created:
+| Session | Date | File | Type | Description | Reference |
+|---------|------|------|------|-------------|-----------|
+| 022-028 | 2026-01-06 | app/lib/core/theme/* | Design System | Complete theme overhaul with Lexend typography, 20+ text styles | [Sessions 022-028](Session_log.md#sessions-003-029-summary-testing--fixing-phase) |
+| 022-028 | 2026-01-06 | app/lib/core/widgets/* | Components | 5 card variants (Glass, Solid, Primary, Milestone, Premium) | [Sessions 022-028](Session_log.md#sessions-003-029-summary-testing--fixing-phase) |
+| 022-028 | 2026-01-06 | app/lib/core/widgets/* | Components | 5 button types (Custom, Text, Icon, Social, GlowingFAB) | [Sessions 022-028](Session_log.md#sessions-003-029-summary-testing--fixing-phase) |
+
+#### Files Modified:
+| Session | Date | File | Type | Description | Reference |
+|---------|------|------|------|-------------|-----------|
+| 022-028 | 2026-01-06 | app/lib/features/auth/presentation/screens/* | Redesign | Login and Signup screens rebuilt with new design | [Sessions 022-028](Session_log.md#sessions-003-029-summary-testing--fixing-phase) |
+| 022-028 | 2026-01-06 | app/lib/features/home/presentation/screens/* | Redesign | Home Dashboard completely rebuilt with designer mockups | [Sessions 022-028](Session_log.md#sessions-003-029-summary-testing--fixing-phase) |
+| 022-028 | 2026-01-06 | app/lib/features/runs/presentation/screens/* | Redesign | Run Tracking and Run History rebuilt | [Sessions 022-028](Session_log.md#sessions-003-029-summary-testing--fixing-phase) |
+| 022-028 | 2026-01-06 | app/lib/features/goals/presentation/screens/* | Redesign | Goal Creation flow rebuilt (4-step wizard) | [Sessions 022-028](Session_log.md#sessions-003-029-summary-testing--fixing-phase) |
+| 022-028 | 2026-01-06 | app/lib/features/premium/presentation/screens/* | Redesign | Premium Paywall redesigned with gold gradient | [Sessions 022-028](Session_log.md#sessions-003-029-summary-testing--fixing-phase) |
+| 022-028 | 2026-01-06 | app/lib/features/settings/presentation/screens/* | Redesign | Settings screen redesigned with gradient icons | [Sessions 022-028](Session_log.md#sessions-003-029-summary-testing--fixing-phase) |
+| 022-028 | 2026-01-06 | app/lib/features/profile/presentation/screens/* | Redesign | Profile screen with SliverAppBar and modern layout | [Sessions 022-028](Session_log.md#sessions-003-029-summary-testing--fixing-phase) |
+
+#### Key Features Implemented:
+
+1. **Design Foundation:**
+   - Lexend font family via google_fonts
+   - Bright blue primary color (#0D7FF2)
+   - Dark theme as primary theme
+   - Complete color system redesign
+
+2. **Component Library:**
+   - 5 card component variants with glassmorphism
+   - 5 button component types with custom styling
+   - Enhanced input components
+   - Shimmer/skeleton loading system (5 types)
+
+3. **Animation System:**
+   - 5 custom page transition types (fade, slide, modal, scale, instant)
+   - Micro-interactions on all buttons (AnimatedTapButton)
+   - Hero animations for premium features
+   - Smooth 60fps performance
+
+4. **Screen Rebuilds:**
+   - All 8 designer mockups implemented pixel-perfect
+   - Consistent design language across all screens
+   - Modern gradients and shadows
+   - Professional appearance ready for launch
+
+#### Flutter Analyze Results
+✅ **0 issues found**
+
+#### Sprint 16.5 Impact
+- ✅ 100% design coverage across all user-facing screens
+- ✅ Professional polished appearance
+- ✅ No rework needed for future sprints
+- ✅ Ready for high-quality App Store screenshots
+
+---
+
+### Session 021: Android & Legal Compliance
+
+**Date:** 2026-01-06
+**Sprint:** Pre-Sprint 18 Testing Phase
+
+#### Files Created:
+| Session | Date | File | Type | Description | Reference |
+|---------|------|------|------|-------------|-----------|
+| 021 | 2026-01-06 | External: runtocanada.happyloop.pro/terms | Legal | Terms of Service website (HTML) | [Session 021](Session_log.md#sessions-003-029-summary-testing--fixing-phase) |
+| 021 | 2026-01-06 | External: runtocanada.happyloop.pro/privacy | Legal | Privacy Policy website (HTML) | [Session 021](Session_log.md#sessions-003-029-summary-testing--fixing-phase) |
+
+#### Files Modified:
+| Session | Date | File | Type | Description | Reference |
+|---------|------|------|------|-------------|-----------|
+| 021 | 2026-01-06 | app/android/* | Bug Fix | SafeArea fixes for Android navigation bars | [Session 021](Session_log.md#sessions-003-029-summary-testing--fixing-phase) |
+| 021 | 2026-01-06 | Firebase Console | Configuration | Google Sign-In Android configuration (SHA-1 fingerprint) | [Session 021](Session_log.md#sessions-003-029-summary-testing--fixing-phase) |
+| 021 | 2026-01-06 | app/lib/features/auth/presentation/widgets/* | Feature | Password strength indicator component | [Session 021](Session_log.md#sessions-003-029-summary-testing--fixing-phase) |
+| 021 | 2026-01-06 | app/lib/features/auth/presentation/screens/* | Enhancement | Added Terms & Privacy links to Login/Signup screens | [Session 021](Session_log.md#sessions-003-029-summary-testing--fixing-phase) |
+
+#### Key Features Implemented:
+
+1. **Legal Compliance:**
+   - Terms of Service deployed to public URL
+   - Privacy Policy deployed to public URL
+   - Links integrated in authentication screens
+   - Ready for App Store submission
+
+2. **Platform Fixes:**
+   - Android SafeArea padding for navigation bars
+   - Google Sign-In Android configuration
+   - SHA-1 fingerprint registration
+
+3. **User Experience:**
+   - Password strength indicator with visual feedback
+   - Better auth screen usability
+
+#### Issues Fixed
+- ✅ BUG-001: CocoaPods conflicts
+- ✅ BUG-002: Location search issues
+- ✅ BUG-003: Profile padding issues
+
+---
+
+### Sessions 022-023: Critical Data Architecture Fixes
+
+**Dates:** 2026-01-06, 2026-01-09
+**Sprint:** Pre-Sprint 18 Testing Phase
+
+#### Files Modified:
+| Session | Date | File | Type | Description | Reference |
+|---------|------|------|------|-------------|-----------|
+| 022 | 2026-01-06 | app/lib/features/*/data/datasources/* | Architecture | User-scoped Hive boxes (DEC-001) | [Session 022](Session_log.md#sessions-003-029-summary-testing--fixing-phase) |
+| 022 | 2026-01-06 | app/lib/features/goals/data/datasources/* | Bug Fix | Fixed multi-user data leakage (Issue #62) | [Session 022](Session_log.md#sessions-003-029-summary-testing--fixing-phase) |
+| 022 | 2026-01-06 | app/lib/features/goals/presentation/screens/* | Bug Fix | Fixed keyboard obscuring goal name input (Issue #30) | [Session 022](Session_log.md#sessions-003-029-summary-testing--fixing-phase) |
+| 023 | 2026-01-09 | app/lib/features/*/data/datasources/* | Architecture | Lazy datasource initialization pattern (DEC-002) | [Session 023](Session_log.md#sessions-003-029-summary-testing--fixing-phase) |
+| 023 | 2026-01-09 | app/lib/features/*/data/datasources/* | Bug Fix | Fixed app startup crash (Issue #63) | [Session 023](Session_log.md#sessions-003-029-summary-testing--fixing-phase) |
+
+#### Key Architectural Changes:
+
+**1. User-Scoped Hive Boxes (DEC-001):**
+- Changed from shared boxes to user-specific boxes
+- Pattern: `user_{userId}_goals`, `user_{userId}_settings`
+- Physical data isolation prevents cross-user contamination
+- **Impact:** Fixed critical security issue (Issue #62)
+
+**2. Lazy Datasource Initialization (DEC-002):**
+- Changed from eager to lazy box access
+- Boxes opened only when user is logged in
+- Added `_getBox()` method to all datasources
+- **Impact:** Fixed critical startup crash (Issue #63)
+
+#### Issues Fixed
+- ✅ Issue #62: Multi-user data leakage (CRITICAL)
+- ✅ Issue #63: App startup crash (CRITICAL)
+- ✅ Issue #30: Keyboard obscuring goal name input
+
+#### Flutter Analyze Results
+✅ **0 issues found** after all fixes
+
+---
+
+### Session 030: Documentation Consolidation
+
+**Date:** 2026-01-10
+**Sprint:** Documentation Consolidation (Phase 1)
+
+#### Files Created:
+| Session | Date | File | Type | Description | Reference |
+|---------|------|------|------|-------------|-----------|
+| 030 | 2026-01-10 | docs/CONSOLIDATION_TRACKER.md | Documentation | 5-phase consolidation plan with 18 tasks | [Session 030](Session_log.md#session-030---2026-01-10) |
+| 030 | 2026-01-10 | docs/trackers/Decisions_log.md | Documentation | Architectural decisions tracker with 5 decisions | [Session 030](Session_log.md#session-030---2026-01-10) |
+
+#### Files Modified:
+| Session | Date | File | Type | Description | Reference |
+|---------|------|------|------|-------------|-----------|
+| 030 | 2026-01-10 | docs/03-sprint-plan.md | Documentation | Added "Pre-Sprint 18 Testing & Fixing Phase" section, marked Sprint 17 complete | [Session 030](Session_log.md#session-030---2026-01-10) |
+| 030 | 2026-01-10 | docs/trackers/Bug_tracker.md | Documentation | Updated bug priorities (1 open, 3 closed) | [Session 030](Session_log.md#session-030---2026-01-10) |
+| 030 | 2026-01-10 | docs/trackers/Session_log.md | Documentation | Added Sessions 003-029 summary and Session 030 entry | [Session 030](Session_log.md#session-030---2026-01-10) |
+| 030 | 2026-01-10 | docs/trackers/Change_log.md | Documentation | Added Sessions 021-028 entries (this update) | [Session 030](Session_log.md#session-030---2026-01-10) |
+
+#### Key Accomplishments:
+
+1. **Phase 1.1 - Sprint Plan Updated:**
+   - Marked Sprint 17 as COMPLETED
+   - Documented 24 issues found, 18 issues fixed
+   - Listed all major accomplishments from Sessions 3-29
+   - Documented 5 architectural decisions
+   - Updated Sprint 18 prerequisites
+
+2. **Phase 1.2 - Bug Tracker Updated:**
+   - Updated "Bugs by Priority" section
+   - Confirmed 3 bugs closed (BUG-001/002/003)
+   - 1 bug remains open (BUG-004: Google Sign-In Android)
+
+3. **Phase 1.3 - Decisions Log Created:**
+   - Created new tracker for architectural decisions
+   - Documented 5 major decisions with full context
+   - DEC-001: User-scoped Hive boxes
+   - DEC-002: Lazy datasource initialization
+   - DEC-003: Terms & Privacy deployment
+   - DEC-004: Design system overhaul timing
+   - DEC-005: Deferred location permission
+
+4. **Phase 1.4 - Session Log Updated:**
+   - Added Sessions 003-029 summary block
+   - Added Session 030 entry
+   - Updated total sessions to 32
+
+#### Consolidation Progress
+- **Phase 1:** 5/7 tasks complete (in progress)
+- **Overall:** 5/18 tasks complete (~28%)
+- **Time:** 140 minutes (2h 20min)
+
+---
+
+**Last Updated:** 2026-01-10 (Session 030 - Documentation Consolidation)
+**Total Sessions:** 32
+

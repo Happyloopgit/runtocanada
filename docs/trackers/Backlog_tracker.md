@@ -346,6 +346,8 @@ Consider these factors when prioritizing:
 
 ---
 
-**Last Updated:** 2025-12-28
-**Total Items:** 12
-**Next Review:** After Sprint 0 completion
+**Last Updated:** 2026-01-10 (Session 030 - Documentation Consolidation)
+**Total Items:** 14
+**Tech Debt Open:** 2 (TD-001, TD-002)
+**Tech Debt Complete:** 1 (TD-003 - Session 23)
+**Next Review:** After Sprint 18 completion

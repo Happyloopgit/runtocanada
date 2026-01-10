@@ -64,7 +64,7 @@ High-priority bugs that significantly impact core functionality or user experien
 
 | Bug ID | Status | Sprint | Component | Description | Reference |
 |--------|--------|--------|-----------|-------------|-----------|
-| BUG-002 | Open | Sprint 9 | Goal Creation / Geocoding | Location search not showing suggestions - blocks goal creation feature | [Session 017](Session_log.md#session-017---2025-12-31) |
+| BUG-004 | Open | Sprint 2 | Google Sign-In / Android | Google Sign-In fails on Android with API Exception 10 (Developer Console configuration issue) | [Session 022](#bug-004-google-sign-in-failing-on-android-with-api-exception-10) |
 
 ### Medium
 
@@ -72,7 +72,7 @@ Medium-priority bugs that affect features but have workarounds available.
 
 | Bug ID | Status | Sprint | Component | Description | Reference |
 |--------|--------|--------|-----------|-------------|-----------|
-| BUG-001 | Open | Sprint 9 | iOS/CocoaPods | CocoaPods dependency conflicts preventing iOS build | [Session 011](Session_log.md#session-011---2025-12-31) |
+| - | - | - | - | No medium priority bugs | - |
 
 ### Low
 
@@ -80,7 +80,7 @@ Low-priority bugs that are cosmetic or affect edge cases.
 
 | Bug ID | Status | Sprint | Component | Description | Reference |
 |--------|--------|--------|-----------|-------------|-----------|
-| BUG-003 | Open | Sprint 14 | Profile / UI | Profile screen stat cards padding issues on Android | [Session 017](Session_log.md#session-017---2025-12-31) |
+| - | - | - | - | No low priority bugs | - |
 
 ---
 
@@ -605,7 +605,7 @@ When reporting bugs via feedback:
 
 ---
 
-**Last Updated:** 2026-01-06
+**Last Updated:** 2026-01-10 (Session 030)
 **Total Bugs Logged:** 4
-**Bugs Fixed:** 3
+**Bugs Closed:** 3
 **Open Bugs:** 1
