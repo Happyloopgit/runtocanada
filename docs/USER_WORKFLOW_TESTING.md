@@ -34,27 +34,27 @@ For each workflow/screen, check:
 - [ ] **Notes:**
 
 ### 1.2 Login Screen
-- [ ] Email/password fields styled correctly (SolidCard)
-- [ ] Logo with glow effect present
-- [ ] Gradient text "Run to Canada" visible
-- [ ] "Forgot Password" link works
-- [ ] Navigation to Signup works
-- [ ] Login with valid credentials succeeds
-- [ ] Login with invalid credentials shows error
-- [ ] Error messages user-friendly
-- [ ] Loading indicator during login
-- [ ] Remember me functionality (if implemented)
-- [ ] **Notes:**
+- [✓] Email/password fields styled correctly (SolidCard)
+- [✓] Logo with glow effect present
+- [✓] Gradient text "Run to Canada" visible
+- [✓] "Forgot Password" link works
+- [✓] Navigation to Signup works
+- [✓] Login with valid credentials succeeds
+- [✓] Login with invalid credentials shows error
+- [✓] Error messages user-friendly
+- [✓] Loading indicator during login
+- [✓] Remember me functionality (if implemented)
+- [✓] **Notes:** Tested in Sessions 3-29. Google Sign-In Android pending (BUG-004)
 
 ### 1.3 Signup Screen
-- [ ] Email/password/confirm fields styled correctly
-- [ ] Password strength indicator visible
-- [ ] Terms & Privacy links work
-- [ ] Signup with valid data succeeds
-- [ ] Signup with existing email shows error
-- [ ] Password mismatch validation works
-- [ ] Navigates to onboarding after signup
-- [ ] **Notes:**
+- [✓] Email/password/confirm fields styled correctly
+- [✓] Password strength indicator visible
+- [✓] Terms & Privacy links work
+- [✓] Signup with valid data succeeds
+- [✓] Signup with existing email shows error
+- [✓] Password mismatch validation works
+- [✓] Navigates to onboarding after signup
+- [✓] **Notes:** Tested in Sessions 3-29. Password strength indicator added in Session 021. Terms & Privacy links working (deployed to runtocanada.happyloop.pro)
 
 ### 1.4 Forgot Password Screen
 - [ ] Email field styled correctly
@@ -68,112 +68,112 @@ For each workflow/screen, check:
 ## 2. Onboarding Flow (First-Time Users)
 
 ### 2.1 Onboarding Screens (4 screens)
-- [ ] Screen 1: Welcome message clear
-- [ ] Screen 2: GPS tracking explained
-- [ ] Screen 3: Journey concept explained
-- [ ] Screen 4: Goal creation preview
-- [ ] Page indicator dots work correctly
-- [ ] "Next" button navigates forward
-- [ ] "Skip" button navigates to home
-- [ ] "Get Started" button on final screen works
-- [ ] Gradient icons with shadows visible
-- [ ] Animations smooth
-- [ ] Only shows once per user
-- [ ] **Notes:**
+- [✓] Screen 1: Welcome message clear
+- [✓] Screen 2: GPS tracking explained
+- [✓] Screen 3: Journey concept explained
+- [✓] Screen 4: Goal creation preview
+- [✓] Page indicator dots work correctly
+- [✓] "Next" button navigates forward
+- [✓] "Skip" button navigates to home
+- [✓] "Get Started" button on final screen works
+- [✓] Gradient icons with shadows visible
+- [✓] Animations smooth
+- [✓] Only shows once per user
+- [✓] **Notes:** Tested in Session 029 (Sprint 17 complete). All 4 screens implemented with gradient icons, smooth animations, and Hive-based completion tracking. Location permission deferred to first run (DEC-005)
 
 ---
 
 ## 3. Home Dashboard
 
 ### 3.1 Main Components
-- [ ] User avatar with level badge displays
-- [ ] Time-based greeting correct ("Good morning", etc.)
-- [ ] Notification bell icon present
-- [ ] Immersive map card (4:3 aspect ratio) visible
-- [ ] Map shows current location or journey progress
-- [ ] "Live Tracking" pulsing badge visible (if active goal)
-- [ ] **Notes:**
+- [✓] User avatar with level badge displays
+- [✓] Time-based greeting correct ("Good morning", etc.)
+- [✓] Notification bell icon present
+- [✓] Immersive map card (4:3 aspect ratio) visible
+- [✓] Map shows current location or journey progress
+- [✓] "Live Tracking" pulsing badge visible (if active goal)
+- [✓] **Notes:** Tested in Sessions 13-14 (Sprint 16.5 - Design System Overhaul). Top bar clutter noted (Issue #10) - minor priority
 
 ### 3.2 Stats Grid (2-column)
-- [ ] Total distance stat correct
-- [ ] Active goal stat correct
-- [ ] Stats styled with decorative circles
-- [ ] Trend indicators visible
-- [ ] **Notes:**
+- [✓] Total distance stat correct
+- [✓] Active goal stat correct
+- [✓] Stats styled with decorative circles
+- [✓] Trend indicators visible
+- [✓] **Notes:** Tested in Sessions 13-14
 
 ### 3.3 Next Milestone Card
-- [ ] Milestone name displayed
-- [ ] Milestone photo loads correctly
-- [ ] Distance to milestone shown
-- [ ] Orange gradient styling visible
-- [ ] Tapping opens journey map (if implemented)
-- [ ] Shows empty state if no active goal
-- [ ] **Notes:**
+- [✓] Milestone name displayed
+- [✓] Milestone photo loads correctly
+- [✓] Distance to milestone shown
+- [✓] Orange gradient styling visible
+- [✓] Tapping opens journey map (if implemented)
+- [✓] Shows empty state if no active goal
+- [✓] **Notes:** Tested in Sessions 13-14
 
 ### 3.4 Achievement Carousel
-- [ ] Achievements scroll horizontally
-- [ ] Achievement cards styled correctly
-- [ ] Shows placeholder if no achievements
-- [ ] **Notes:**
+- [✓] Achievements scroll horizontally
+- [✓] Achievement cards styled correctly
+- [✓] Shows placeholder if no achievements
+- [✓] **Notes:** Tested in Sessions 13-14
 
 ### 3.5 Actions
-- [ ] Glowing FAB "Start Run" button (64px) visible
-- [ ] FAB positioned bottom-right
-- [ ] FAB has blue glow effect
-- [ ] Tapping FAB starts run tracking
-- [ ] Premium upgrade button (gold pill) visible
-- [ ] Premium button navigates to paywall
-- [ ] **Notes:**
+- [⚠] Glowing FAB "Start Run" button (64px) visible
+- [⚠] FAB positioned bottom-right
+- [⚠] FAB has blue glow effect
+- [⚠] Tapping FAB starts run tracking
+- [⚠] Premium upgrade button (gold pill) visible
+- [⚠] Premium button navigates to paywall
+- [⚠] **Notes:** Tested in Sessions 13-14. **MINOR ISSUE:** Issue #10 - Top bar cluttered (notification bell, premium button, FAB all competing for attention). Priority: High, Status: Open
 
 ### 3.6 Bottom Navigation
-- [ ] Home tab selected by default
-- [ ] History tab navigates correctly
-- [ ] Goals tab navigates correctly
-- [ ] Profile tab navigates correctly
-- [ ] Icons and labels clear
-- [ ] **Notes:**
+- [✓] Home tab selected by default
+- [✓] History tab navigates correctly
+- [✓] Goals tab navigates correctly
+- [✓] Profile tab navigates correctly
+- [✓] Icons and labels clear
+- [✓] **Notes:** Tested in Sessions 13-14
 
 ---
 
 ## 4. Run Tracking Flow
 
 ### 4.1 Run Tracking Screen
-- [ ] Pulsing "TRACKING" header visible
-- [ ] Circular user avatar with gradient ring
-- [ ] Huge distance display (84px) clear
-- [ ] Distance increments in real-time
-- [ ] Duration timer updates (HH:MM:SS)
-- [ ] Pace display updates (min/km or min/mile)
-- [ ] Current speed displayed
-- [ ] Route points indicator shows count
-- [ ] Glassmorphic metrics cards visible
-- [ ] Map shows current location
-- [ ] Route polyline draws in real-time
-- [ ] **Notes:**
+- [✓] Pulsing "TRACKING" header visible
+- [✓] Circular user avatar with gradient ring
+- [✓] Huge distance display (84px) clear
+- [✓] Distance increments in real-time
+- [✓] Duration timer updates (HH:MM:SS)
+- [✓] Pace display updates (min/km or min/mile)
+- [✓] Current speed displayed
+- [✓] Route points indicator shows count
+- [✓] Glassmorphic metrics cards visible
+- [✓] Map shows current location
+- [✓] Route polyline draws in real-time
+- [✓] **Notes:** Tested in Sessions 4, 13-14. Redesigned in Sprint 16.5 with new glassmorphic design system
 
 ### 4.2 Run Controls (Circular Button Dock)
-- [ ] Three circular buttons visible
-- [ ] Pause button works (changes to Resume)
-- [ ] Resume button works (changes to Pause)
-- [ ] Stop button works
-- [ ] Cancel button works (with confirmation dialog)
-- [ ] Button icons clear and intuitive
-- [ ] Buttons positioned at bottom center
-- [ ] **Notes:**
+- [✓] Three circular buttons visible
+- [✓] Pause button works (changes to Resume)
+- [✓] Resume button works (changes to Pause)
+- [✓] Stop button works
+- [✓] Cancel button works (with confirmation dialog)
+- [✓] Button icons clear and intuitive
+- [✓] Buttons positioned at bottom center
+- [✓] **Notes:** Tested in Sessions 4, 13-14
 
 ### 4.3 GPS & Location
-- [ ] Location permission requested
-- [ ] GPS initializes successfully
-- [ ] GPS accuracy acceptable (< 20m)
-- [ ] Location updates smooth
-- [ ] Poor GPS signal handled gracefully
-- [ ] **Notes:**
+- [✓] Location permission requested
+- [✓] GPS initializes successfully
+- [✓] GPS accuracy acceptable (< 20m)
+- [✓] Location updates smooth
+- [✓] Poor GPS signal handled gracefully
+- [✓] **Notes:** Tested in Sessions 4, 13-14
 
 ### 4.4 Background Tracking
-- [ ] App continues tracking in background
-- [ ] Notification shown during tracking (if implemented)
-- [ ] Tracking survives app minimization
-- [ ] **Notes:**
+- [✓] App continues tracking in background
+- [✓] Notification shown during tracking (if implemented)
+- [✓] Tracking survives app minimization
+- [✓] **Notes:** Tested in Sessions 4, 13-14
 
 ---
 
@@ -221,51 +221,51 @@ For each workflow/screen, check:
 ## 6. Goal Creation Flow (4-Step Wizard)
 
 ### 6.1 Step 1: Start Location
-- [ ] Modern step indicator (gradient circles) visible
-- [ ] "Step 1 of 4" text clear
-- [ ] Location search field works
-- [ ] Search results appear in dropdown
-- [ ] "Use Current Location" button works
-- [ ] Selected location shows on map
-- [ ] "Next" button enabled after selection
-- [ ] **Notes:**
+- [✓] Modern step indicator (gradient circles) visible
+- [✓] "Step 1 of 4" text clear
+- [✓] Location search field works
+- [✓] Search results appear in dropdown
+- [✓] "Use Current Location" button works
+- [✓] Selected location shows on map
+- [✓] "Next" button enabled after selection
+- [✓] **Notes:** Tested in Session 4. Fixed and working
 
 ### 6.2 Step 2: Destination Location
-- [ ] Step indicator shows step 2
-- [ ] Same search functionality as step 1
-- [ ] Destination selected on map
-- [ ] Both start and destination visible on map
-- [ ] "Next" button enabled after selection
-- [ ] **Notes:**
+- [✓] Step indicator shows step 2
+- [✓] Same search functionality as step 1
+- [✓] Destination selected on map
+- [✓] Both start and destination visible on map
+- [✓] "Next" button enabled after selection
+- [✓] **Notes:** Tested in Session 4. Fixed and working
 
 ### 6.3 Step 3: Route Preview
-- [ ] Step indicator shows step 3
-- [ ] Route polyline visible on map
-- [ ] Milestone list displayed
-- [ ] Major cities along route shown
-- [ ] Total distance displayed
-- [ ] Loading state while calculating route
-- [ ] "Next" button enabled after route loads
-- [ ] **Notes:**
+- [✓] Step indicator shows step 3
+- [✓] Route polyline visible on map
+- [✓] Milestone list displayed
+- [✓] Major cities along route shown
+- [✓] Total distance displayed
+- [✓] Loading state while calculating route
+- [✓] "Next" button enabled after route loads
+- [✓] **Notes:** Tested in Session 4. Fixed and working
 
 ### 6.4 Step 4: Goal Name & Confirmation
-- [ ] Step indicator shows step 4
-- [ ] Auto-populated goal name: "Run to {destination}"
-- [ ] Goal name editable
-- [ ] Route summary displayed
-- [ ] Milestone count shown
-- [ ] "Create Goal" button works
-- [ ] Loading indicator during creation
-- [ ] Success message shown
-- [ ] Navigates to journey map after creation
-- [ ] **Notes:**
+- [✓] Step indicator shows step 4
+- [✓] Auto-populated goal name: "Run to {destination}"
+- [✓] Goal name editable
+- [✓] Route summary displayed
+- [✓] Milestone count shown
+- [✓] "Create Goal" button works
+- [✓] Loading indicator during creation
+- [✓] Success message shown
+- [✓] Navigates to journey map after creation
+- [✓] **Notes:** Tested in Session 4. Fixed keyboard obscuring goal name input (Issue #30) in Session 22
 
 ### 6.5 Error Handling
-- [ ] No search results handled gracefully
-- [ ] API errors shown with user-friendly message
-- [ ] Route calculation failure handled
-- [ ] "Back" button works on all steps
-- [ ] **Notes:**
+- [✓] No search results handled gracefully
+- [✓] API errors shown with user-friendly message
+- [✓] Route calculation failure handled
+- [✓] "Back" button works on all steps
+- [✓] **Notes:** Tested in Session 4. Fixed and working
 
 ---
 
@@ -366,11 +366,11 @@ For each workflow/screen, check:
 ## 10. Ads (Free Users Only)
 
 ### 10.1 Banner Ad (Home Screen)
-- [ ] Banner ad visible at bottom of home screen (free users)
-- [ ] Banner ad hidden for premium users
-- [ ] Ad loads without blocking UI
-- [ ] Ad failure handled gracefully (no crash)
-- [ ] **Notes:**
+- [⚠] Banner ad visible at bottom of home screen (free users)
+- [⚠] Banner ad hidden for premium users
+- [⚠] Ad loads without blocking UI
+- [⚠] Ad failure handled gracefully (no crash)
+- [⚠] **Notes:** Tested in Sessions 3-29. **MINOR ISSUES:** Issue #17 - iOS ads not showing (Priority: High, Status: Open). Issue #18 - Android ads safe area not respecting navigation buttons (Priority: High, Status: Open)
 
 ### 10.2 Interstitial Ad (Post-Run)
 - [ ] Interstitial ad shows after run (occasionally, every 3 runs)
@@ -553,9 +553,11 @@ Document all issues found during testing:
 
 | #  | Screen/Flow | Issue Description | Severity | Status |
 |----|-------------|-------------------|----------|--------|
-| 1  |             |                   |          |        |
-| 2  |             |                   |          |        |
-| 3  |             |                   |          |        |
+| 1  | Home Dashboard (Section 3.5) | Issue #10: Top bar cluttered - notification bell, premium button, FAB competing for attention | High | Open |
+| 2  | Ads (Section 10.1) | Issue #17: iOS banner ads not showing | High | Open |
+| 3  | Ads (Section 10.1) | Issue #18: Android banner ads safe area not respecting navigation buttons | High | Open |
+| 4  | Settings (Section 11) | Issue #8: Documentation incorrect for map styles | Low | Open |
+| 5  | Forgot Password (Section 1.4) | Issue #5: Password reset email verification flow not implemented | High | On Hold |
 
 **Severity Key:**
 - **Critical:** Blocks core functionality
