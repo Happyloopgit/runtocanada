@@ -44,6 +44,9 @@ class RunTrackingService {
   final _statusController = StreamController<RunStatus>.broadcast();
   final _statsController = StreamController<RunStats>.broadcast();
 
+  // Timer for smooth UI updates
+  Timer? _uiUpdateTimer;
+
   // Getters
   RunStatus get status => _status;
   String? get currentRunId => _currentRunId;
@@ -95,6 +98,13 @@ class RunTrackingService {
       distanceFilter: 5, // Update every 5 meters
     );
 
+    // Start periodic timer for smooth UI updates (every second)
+    _uiUpdateTimer = Timer.periodic(const Duration(seconds: 1), (_) {
+      if (_status == RunStatus.running || _status == RunStatus.paused) {
+        _emitStats();
+      }
+    });
+
     _statusController.add(_status);
     _emitStats();
   }
@@ -135,6 +145,10 @@ class RunTrackingService {
     // Stop listening to GPS
     await _locationService.stopListening();
 
+    // Stop UI update timer
+    _uiUpdateTimer?.cancel();
+    _uiUpdateTimer = null;
+
     final endTime = DateTime.now();
     final startTime = _startTime!;
 
@@ -174,8 +188,8 @@ class RunTrackingService {
     // Save to Hive
     await _runLocalDataSource.saveRun(run);
 
-    // Reset state
-    _status = RunStatus.stopped;
+    // Reset state to idle (not stopped) so user can start a new run immediately
+    _status = RunStatus.idle;
     _currentRunId = null;
     _userId = null;
     _startTime = null;
@@ -195,6 +209,10 @@ class RunTrackingService {
   /// Cancel the current run without saving
   Future<void> cancelRun() async {
     await _locationService.stopListening();
+
+    // Stop UI update timer
+    _uiUpdateTimer?.cancel();
+    _uiUpdateTimer = null;
 
     _status = RunStatus.idle;
     _currentRunId = null;
@@ -341,6 +359,8 @@ class RunTrackingService {
 
   /// Dispose and cleanup
   void dispose() {
+    _uiUpdateTimer?.cancel();
+    _uiUpdateTimer = null;
     _locationService.dispose();
     _statusController.close();
     _statsController.close();

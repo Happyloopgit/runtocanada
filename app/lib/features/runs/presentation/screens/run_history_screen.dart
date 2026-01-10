@@ -7,12 +7,16 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_text_styles.dart';
 import '../../../../core/widgets/loading_indicator.dart';
 import '../../../../core/widgets/glass_card.dart';
+import '../../../../features/auth/presentation/providers/auth_providers.dart';
 import 'run_detail_screen.dart';
 
-// Provider for run list
-final runListProvider = FutureProvider<List<RunModel>>((ref) async {
+// Provider for run list - filters by current user and uses autoDispose to refresh
+final runListProvider = FutureProvider.autoDispose<List<RunModel>>((ref) async {
+  final userAsync = await ref.watch(currentUserProvider.future);
+  if (userAsync == null) return [];
+
   final dataSource = RunLocalDataSource();
-  final runs = dataSource.getAllRuns();
+  final runs = dataSource.getRunsByUserId(userAsync.uid);
   // Sort by start time descending (newest first)
   runs.sort((a, b) => b.startTime.compareTo(a.startTime));
   return runs;

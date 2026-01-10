@@ -5,7 +5,8 @@ import 'package:run_to_canada/features/goals/domain/models/milestone_model.dart'
 import 'package:run_to_canada/features/goals/presentation/providers/goal_service_provider.dart';
 
 /// Provider to get active goal for current user
-final activeGoalProvider = FutureProvider<GoalModel?>((ref) async {
+/// Using autoDispose to ensure fresh data on rebuild
+final activeGoalProvider = FutureProvider.autoDispose<GoalModel?>((ref) async {
   final userAsync = await ref.watch(currentUserProvider.future);
   if (userAsync == null) return null;
 
@@ -14,7 +15,7 @@ final activeGoalProvider = FutureProvider<GoalModel?>((ref) async {
 });
 
 /// Provider to check if current user has an active goal
-final hasActiveGoalProvider = FutureProvider<bool>((ref) async {
+final hasActiveGoalProvider = FutureProvider.autoDispose<bool>((ref) async {
   final userAsync = await ref.watch(currentUserProvider.future);
   if (userAsync == null) return false;
 
@@ -23,7 +24,7 @@ final hasActiveGoalProvider = FutureProvider<bool>((ref) async {
 });
 
 /// Provider to get next milestone for current user
-final nextMilestoneProvider = FutureProvider<MilestoneModel?>((ref) async {
+final nextMilestoneProvider = FutureProvider.autoDispose<MilestoneModel?>((ref) async {
   final userAsync = await ref.watch(currentUserProvider.future);
   if (userAsync == null) return null;
 
@@ -32,7 +33,7 @@ final nextMilestoneProvider = FutureProvider<MilestoneModel?>((ref) async {
 });
 
 /// Provider to get progress stats for current user
-final progressStatsProvider = FutureProvider<Map<String, dynamic>?>((ref) async {
+final progressStatsProvider = FutureProvider.autoDispose<Map<String, dynamic>?>((ref) async {
   final userAsync = await ref.watch(currentUserProvider.future);
   if (userAsync == null) return null;
 
@@ -41,13 +42,13 @@ final progressStatsProvider = FutureProvider<Map<String, dynamic>?>((ref) async 
 });
 
 /// Provider to get goal title (e.g., "Toronto to Vancouver")
-final goalTitleProvider = FutureProvider<String?>((ref) async {
+final goalTitleProvider = FutureProvider.autoDispose<String?>((ref) async {
   final goal = await ref.watch(activeGoalProvider.future);
   return goal?.name;
 });
 
 /// Provider to get covered distance in km
-final coveredDistanceProvider = FutureProvider<double>((ref) async {
+final coveredDistanceProvider = FutureProvider.autoDispose<double>((ref) async {
   final stats = await ref.watch(progressStatsProvider.future);
   if (stats == null) return 0.0;
 
@@ -56,7 +57,7 @@ final coveredDistanceProvider = FutureProvider<double>((ref) async {
 });
 
 /// Provider to get remaining distance in km
-final remainingDistanceProvider = FutureProvider<double>((ref) async {
+final remainingDistanceProvider = FutureProvider.autoDispose<double>((ref) async {
   final stats = await ref.watch(progressStatsProvider.future);
   if (stats == null) return 0.0;
 
@@ -66,7 +67,7 @@ final remainingDistanceProvider = FutureProvider<double>((ref) async {
 
 /// Provider to get weekly trend percentage
 /// TODO: Implement real weekly trend calculation based on run history
-final weeklyTrendProvider = FutureProvider<double?>((ref) async {
+final weeklyTrendProvider = FutureProvider.autoDispose<double?>((ref) async {
   // For now, return null to indicate no trend data
   // In the future, calculate based on last 7 days of runs
   return null;
@@ -105,7 +106,8 @@ class HomeScreenData {
 }
 
 /// Provider that combines all home screen data
-final homeScreenDataProvider = FutureProvider<HomeScreenData>((ref) async {
+/// Using autoDispose to ensure it refreshes when navigating back to home screen
+final homeScreenDataProvider = FutureProvider.autoDispose<HomeScreenData>((ref) async {
   final activeGoal = await ref.watch(activeGoalProvider.future);
   final nextMilestone = await ref.watch(nextMilestoneProvider.future);
   final progressStats = await ref.watch(progressStatsProvider.future);

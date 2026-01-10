@@ -11,11 +11,11 @@
 
 | Category | Count | Status |
 |----------|-------|--------|
-| 🔴 Critical Bugs | 4 | Open |
+| 🔴 Critical Bugs | 4 | ✅ All Fixed (Session 033) |
 | 🟡 High Priority UX | 7 | Open |
 | 🟠 Medium Priority | 5 | Open |
 | 🎨 Design System V2 | 4 | Open |
-| **TOTAL** | **20** | **All Open** |
+| **TOTAL** | **20** | **4 Fixed, 16 Open** |
 
 ---
 
@@ -23,7 +23,7 @@
 
 ### BUG-006: New Goal Not Appearing on Home Screen
 **Priority:** Critical
-**Status:** 🔴 Open
+**Status:** ✅ FIXED (Session 033)
 **Component:** Home Dashboard / Data Sync
 
 **Description:**
@@ -49,11 +49,17 @@
 
 **Fix Priority:** 1 (First bug to fix)
 
+**Fix Details:**
+- Converted all home screen providers to use `FutureProvider.autoDispose`
+- This ensures providers refresh when navigating back to home screen
+- File: [home_providers.dart](app/lib/features/home/presentation/providers/home_providers.dart)
+- The issue was that `FutureProvider` cached the "no active goal" state and never refetched
+
 ---
 
 ### BUG-007: Runs Not Showing in Activity Screen
 **Priority:** Critical
-**Status:** 🔴 Open
+**Status:** ✅ FIXED (Session 033)
 **Component:** Run History / Data Display
 
 **Description:**
@@ -84,11 +90,17 @@
 
 **Fix Priority:** 2
 
+**Fix Details:**
+- Changed `runListProvider` to use `FutureProvider.autoDispose` and filter by current user
+- Previously used `getAllRuns()` which returned runs from ALL users without filtering
+- Now uses `getRunsByUserId(userAsync.uid)` to only show current user's runs
+- File: [run_history_screen.dart](app/lib/features/runs/presentation/screens/run_history_screen.dart)
+
 ---
 
 ### BUG-008: "Already Tracking" Error After Saving Run
 **Priority:** Critical
-**Status:** 🔴 Open
+**Status:** ✅ FIXED (Session 033)
 **Component:** Run Tracking / State Management
 
 **Description:**
@@ -115,11 +127,17 @@
 
 **Fix Priority:** 3
 
+**Fix Details:**
+- Changed status from `RunStatus.stopped` to `RunStatus.idle` after run completion
+- The `startRun()` method checks for `RunStatus.idle`, but stop was setting it to `stopped`
+- File: [run_tracking_service.dart](app/lib/features/runs/data/services/run_tracking_service.dart)
+- Line 178: Changed `_status = RunStatus.stopped` to `_status = RunStatus.idle`
+
 ---
 
 ### BUG-009: Timer Not Progressing Smoothly
 **Priority:** High (Originally listed as critical)
-**Status:** 🔴 Open
+**Status:** ✅ FIXED (Session 033)
 **Component:** Run Tracking / UI Performance
 
 **Description:**
@@ -143,6 +161,16 @@
 - State update frequency
 
 **Fix Priority:** 4
+
+**Fix Details:**
+- Added a `Timer.periodic` that emits stats every second for smooth UI updates
+- Previously, stats only updated when GPS position changed (irregular intervals)
+- Added `_uiUpdateTimer` field to track the timer instance
+- Timer starts when run starts and stops when run stops/cancels
+- File: [run_tracking_service.dart](app/lib/features/runs/data/services/run_tracking_service.dart)
+- Lines 102-106: Start timer on run start
+- Lines 148-150: Stop timer on run stop
+- Lines 213-215: Stop timer on run cancel
 
 ---
 
@@ -659,13 +687,13 @@ Current plan: 100km free limit.
 
 | Phase | Issues | Status | Time Est. | Time Actual | Notes |
 |-------|--------|--------|-----------|-------------|-------|
-| Phase 1 | 4 bugs | 🔴 Not Started | 3-4 hours | - | Critical |
+| Phase 1 | 4 bugs | ✅ Complete | 3-4 hours | ~2 hours | Session 033 - All critical bugs fixed |
 | Phase 2 | 6 items | 🔴 Not Started | 8-10 hours | - | UX Priority |
 | Phase 3 | 1 item | 🔴 Not Started | 8-12 hours | - | Algorithm |
 | Phase 4 | 3 items | 🔴 Not Started | 12-15 hours | - | Design |
 | Phase 5 | 5 items | 🔴 Not Started | 10-12 hours | - | Medium |
 | Phase 6 | 1 item | 🔴 Not Started | 5-6 hours | - | Monetization |
-| **TOTAL** | **20** | **0% Done** | **46-59 hours** | **0 hours** | - |
+| **TOTAL** | **20** | **20% Done** | **46-59 hours** | **~2 hours** | 4/20 issues complete |
 
 ---
 
@@ -678,6 +706,6 @@ Current plan: 100km free limit.
 
 ---
 
-**Last Updated:** 2026-01-10 (Created)
-**Next Review:** After Phase 1 completion
-**Status:** Active working document - will be archived when complete
+**Last Updated:** 2026-01-10 (Session 033 - Phase 1 Complete)
+**Next Review:** Before Phase 2 start
+**Status:** Active working document - Phase 1 (Critical Bugs) ✅ Complete
