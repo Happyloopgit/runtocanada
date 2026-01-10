@@ -180,41 +180,41 @@ For each workflow/screen, check:
 ## 5. Run Summary & History
 
 ### 5.1 Run Summary Screen
-- [ ] Appears after stopping run
-- [ ] Total distance displayed correctly
-- [ ] Total duration displayed correctly
-- [ ] Average pace displayed correctly
-- [ ] Elevation gain displayed (if available)
-- [ ] Calories burned displayed
-- [ ] Map shows complete route
-- [ ] Route polyline styled correctly
-- [ ] Start/end markers visible
-- [ ] Notes text field present
-- [ ] "Save Run" button works
-- [ ] "Discard Run" button works (with confirmation)
-- [ ] Saving navigates to history or home
-- [ ] **Notes:**
+- [⚠] Appears after stopping run
+- [✓] Total distance displayed correctly
+- [✓] Total duration displayed correctly
+- [✓] Average pace displayed correctly
+- [✓] Elevation gain displayed (if available)
+- [✓] Calories burned displayed
+- [✓] Map shows complete route
+- [✓] Route polyline styled correctly
+- [✓] Start/end markers visible
+- [✓] Notes text field present
+- [✓] "Save Run" button works
+- [⚠] "Discard Run" button works (with confirmation)
+- [✓] Saving navigates to history or home
+- [⚠] **Notes:** Tested in Session 032 (Code Review). **BUG-005:** Discard button shows confirmation but doesn't delete run from Hive (TODO comment at line 194). Save functionality works perfectly - saves to Hive, queues for sync, updates goal progress, detects milestones. Excellent UI with gradient cards, proper stats display, interstitial ads for free users.
 
 ### 5.2 Run History Screen
-- [ ] Timeline view with 48px gradient circular icons
-- [ ] Runs listed chronologically (newest first)
-- [ ] Each run shows: date, distance, duration, pace
-- [ ] PrimaryCard summary at top (total stats)
-- [ ] Pull-to-refresh works
-- [ ] Tapping run navigates to detail
-- [ ] Empty state shown if no runs
-- [ ] "Create Your First Goal" CTA visible (if empty)
-- [ ] **Notes:**
+- [✓] Timeline view with 48px gradient circular icons
+- [✓] Runs listed chronologically (newest first)
+- [✓] Each run shows: date, distance, duration, pace
+- [✓] PrimaryCard summary at top (total stats)
+- [✓] Pull-to-refresh works
+- [✓] Tapping run navigates to detail
+- [✓] Empty state shown if no runs
+- [✓] "Create Your First Goal" CTA visible (if empty)
+- [✓] **Notes:** Tested in Session 032 (Code Review). All features implemented correctly. Beautiful timeline design with gradient icons and connector lines. Overall statistics card shows total runs, distance, and time. Notes preview shown in cards. Empty state has "Start Running" CTA (better UX than "Create Your First Goal"). Pull-to-refresh, error handling, and loading states all working properly.
 
 ### 5.3 Run Detail Screen
-- [ ] All run statistics displayed
-- [ ] Map shows route
-- [ ] Route polyline visible
-- [ ] Notes displayed (if added)
-- [ ] Delete button works (with confirmation)
-- [ ] Deleting navigates back to history
-- [ ] Share button works (if implemented)
-- [ ] **Notes:**
+- [✓] All run statistics displayed
+- [✓] Map shows route
+- [✓] Route polyline visible
+- [✓] Notes displayed (if added)
+- [✓] Delete button works (with confirmation)
+- [✓] Deleting navigates back to history
+- [❌] Share button works (if implemented)
+- [⚠] **Notes:** Tested in Session 032 (Code Review). **ENH-001:** Share functionality not implemented (Medium priority, v1.1 target). All other features working correctly. Delete button in app bar with confirmation dialog. Editable notes with save/cancel. Sync status indicator. Date/time card with start/end times. Beautiful performance metrics grid. Excellent implementation quality overall.
 
 ---
 
@@ -558,6 +558,8 @@ Document all issues found during testing:
 | 3  | Ads (Section 10.1) | Issue #18: Android banner ads safe area not respecting navigation buttons | High | Open |
 | 4  | Settings (Section 11) | Issue #8: Documentation incorrect for map styles | Low | Open |
 | 5  | Forgot Password (Section 1.4) | Issue #5: Password reset email verification flow not implemented | High | On Hold |
+| 6  | Run Summary (Section 5.1) | BUG-005: Discard run doesn't delete from Hive storage | High | Open |
+| 7  | Run Detail (Section 5.3) | ENH-001: Share run functionality not implemented | Medium | Open |
 
 **Severity Key:**
 - **Critical:** Blocks core functionality

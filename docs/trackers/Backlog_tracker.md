@@ -7,9 +7,9 @@ This document tracks technical debt, future enhancements, and backlog items for 
 | Category | Count |
 |----------|-------|
 | Tech Debt | 2 |
-| Future Enhancements | 8 |
+| Future Enhancements | 9 |
 | Nice to Have | 4 |
-| **Total** | **14** |
+| **Total** | **15** |
 
 ---
 
@@ -41,6 +41,7 @@ Planned features and enhancements for future sprints or post-MVP releases.
 | FE-006 | Medium | Integration | Fitness App Integration - Sync with Apple Health, Google Fit, Strava | v1.2 | 2025-12-28 | Product concept |
 | FE-007 | Medium | Features | Virtual Tourism - Detailed city guides when you "arrive" at destinations | v1.2 | 2025-12-28 | Product concept |
 | FE-008 | Low | Integration | Wearable Support - Apple Watch, Wear OS support for tracking | v2.0 | 2025-12-28 | Product concept |
+| ENH-001 | Medium | Social | Share Individual Runs - Share run statistics and route map on social media | v1.1 | 2026-01-10 | Session 032 Testing |
 
 ---
 
@@ -127,6 +128,7 @@ Nice additions but not essential for core experience.
 | FE-001 | Friends & Following | High | Add friends, see their progress | 🔲 Planned |
 | FE-002 | Share Progress | High | Share milestones on social media | 🔲 Planned |
 | FE-003 | Multiple Goals | High | Track multiple concurrent journeys | 🔲 Planned |
+| ENH-001 | Share Individual Runs | Medium | Share run stats and route map | 🔲 Planned |
 
 **Dependencies:**
 - v1.0 must be stable and launched
@@ -179,6 +181,7 @@ Nice additions but not essential for core experience.
 | FE-001 | High | Friends & Following | v1.1 | 🔲 Planned |
 | FE-002 | High | Share Journey Progress | v1.1 | 🔲 Planned |
 | FE-004 | Medium | Community Challenges | v1.2 | 🔲 Planned |
+| ENH-001 | Medium | Share Individual Runs | v1.1 | 🔲 Planned |
 
 ### Goals & Journey
 
@@ -346,8 +349,9 @@ Consider these factors when prioritizing:
 
 ---
 
-**Last Updated:** 2026-01-10 (Session 030 - Documentation Consolidation)
-**Total Items:** 14
+**Last Updated:** 2026-01-10 (Session 032 - Run Summary & History Testing)
+**Total Items:** 15
 **Tech Debt Open:** 2 (TD-001, TD-002)
 **Tech Debt Complete:** 1 (TD-003 - Session 23)
+**Future Enhancements:** 9 (FE-001 to FE-008, ENH-001)
 **Next Review:** After Sprint 18 completion

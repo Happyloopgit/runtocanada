@@ -6,11 +6,11 @@ This document tracks all bugs discovered and their resolution status.
 
 | Status | Count |
 |--------|-------|
-| Open | 1 |
+| Open | 2 |
 | In Progress | 0 |
 | Fixed | 0 |
 | Closed | 3 |
-| **Total** | **4** |
+| **Total** | **5** |
 
 ---
 
@@ -19,6 +19,7 @@ This document tracks all bugs discovered and their resolution status.
 | Bug ID | Priority | Sprint | Component | Description | Discovered | Assigned | Reference |
 |--------|----------|--------|-----------|-------------|------------|----------|-----------|
 | BUG-004 | High | Sprint 2 | Google Sign-In / Android | Google Sign-In fails on Android with API Exception 10 (Developer Console configuration issue) | 2026-01-06 | - | [Session 022](#bug-004-google-sign-in-failing-on-android-with-api-exception-10) |
+| BUG-005 | High | Sprint 5 | Run Summary / Data Persistence | Discard run button doesn't delete run from Hive storage (TODO comment, functionality incomplete) | 2026-01-10 | - | [Session 032](#bug-005-discard-run-doesnt-delete-from-hive-storage) |
 
 ---
 
@@ -65,6 +66,7 @@ High-priority bugs that significantly impact core functionality or user experien
 | Bug ID | Status | Sprint | Component | Description | Reference |
 |--------|--------|--------|-----------|-------------|-----------|
 | BUG-004 | Open | Sprint 2 | Google Sign-In / Android | Google Sign-In fails on Android with API Exception 10 (Developer Console configuration issue) | [Session 022](#bug-004-google-sign-in-failing-on-android-with-api-exception-10) |
+| BUG-005 | Open | Sprint 5 | Run Summary / Data Persistence | Discard run button doesn't delete run from Hive storage | [Session 032](#bug-005-discard-run-doesnt-delete-from-hive-storage) |
 
 ### Medium
 
@@ -605,7 +607,110 @@ When reporting bugs via feedback:
 
 ---
 
-**Last Updated:** 2026-01-10 (Session 030)
-**Total Bugs Logged:** 4
+### BUG-005: Discard Run Doesn't Delete from Hive Storage
+
+**Priority:** High
+
+**Status:** Open
+
+**Sprint:** Sprint 5 - Run Tracking & Summary
+
+**Component:** Run Summary / Data Persistence
+
+**Description:**
+
+- **What happened:** When user clicks "Discard" button on Run Summary screen and confirms the action, the run is not actually deleted from Hive storage. The code shows a TODO comment indicating this functionality was planned for Sprint 13 but never implemented.
+
+- **Expected behavior:**
+  - User completes a run and sees Run Summary screen
+  - User clicks "Discard" button
+  - Confirmation dialog appears: "Are you sure you want to discard this run? This action cannot be undone."
+  - User clicks "Discard" in dialog
+  - Run should be deleted from Hive storage
+  - User should see "Run discarded" snackbar
+  - User returns to home screen
+  - Discarded run should NOT appear in Run History
+
+- **Actual behavior:**
+  - All steps above happen correctly EXCEPT the run is not deleted from Hive
+  - The discarded run still appears in Run History screen
+  - This defeats the purpose of the "Discard" button
+
+- **Code Location:**
+  - File: [run_summary_screen.dart:194](app/lib/features/runs/presentation/screens/run_summary_screen.dart#L194)
+  - TODO comment: `// TODO: Delete run from Hive in Sprint 13`
+  - Function: `_discardRun()` at lines 168-203
+
+- **Steps to reproduce:**
+  1. Start a run using the "Start Run" FAB button
+  2. Let GPS track for a few seconds/minutes
+  3. Stop the run
+  4. On Run Summary screen, tap "Discard" button (red outlined button on left)
+  5. Confirm discard in dialog
+  6. Observe "Run discarded" snackbar appears
+  7. Navigate to Run History screen
+  8. Observe: The "discarded" run still appears in the list
+
+- **Environment:**
+  - Platform: iOS / Android (both affected)
+  - Component: Run Summary Screen
+  - Data Layer: Hive local storage
+  - Code Review: Session 032
+
+- **Impact:**
+  - **High Priority** - Misleads users about data persistence
+  - Users expect discarded runs to be deleted
+  - Confusion when discarded runs appear in history
+  - Can lead to cluttered run history with unwanted data
+  - Data integrity issue - user thinks data is deleted but it's not
+
+- **Root Cause:**
+  - TODO comment indicates functionality was deferred to Sprint 13
+  - Sprint 13 focused on History screens but discard functionality was not completed
+  - Function shows confirmation dialog and snackbar but missing actual deletion logic
+
+- **Required Fix:**
+  1. Add deletion logic to `_discardRun()` function:
+     ```dart
+     if (confirmed == true && mounted) {
+       final runLocalDataSource = RunLocalDataSource();
+       await runLocalDataSource.deleteRun(widget.run.id);
+
+       Navigator.of(context).popUntil((route) => route.isFirst);
+       ScaffoldMessenger.of(context).showSnackBar(
+         SnackBar(
+           content: const Text('Run discarded'),
+           backgroundColor: Theme.of(context).colorScheme.onSurfaceVariant,
+         ),
+       );
+     }
+     ```
+  2. Remove TODO comment
+  3. Test on both iOS and Android
+  4. Verify run does not appear in history after discard
+  5. Verify run is not synced to Firebase after discard
+
+- **Workaround:**
+  - User can navigate to Run History after "discarding"
+  - Open the run details
+  - Use the delete button in app bar
+  - This properly deletes the run
+
+**Discovered:** 2026-01-10 (Session 032 - Run Summary & History Testing)
+
+**Assigned:** Unassigned
+
+**Reference:** Session 032 - Phase 5 Systematic Testing (Run Summary & History)
+
+**Notes:**
+- This is a data integrity bug that affects user trust
+- Relatively simple fix (add 2 lines of code)
+- Should be fixed before Sprint 18 (Polish & Testing)
+- Delete functionality IS implemented correctly in Run Detail screen (can use as reference)
+
+---
+
+**Last Updated:** 2026-01-10 (Session 032)
+**Total Bugs Logged:** 5
 **Bugs Closed:** 3
-**Open Bugs:** 1
+**Open Bugs:** 2
