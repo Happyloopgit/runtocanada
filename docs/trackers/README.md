@@ -90,6 +90,48 @@ This folder contains tracking documents for managing the development of the Run 
 
 ---
 
+### 🏗️ [Build_tracker.md](./Build_tracker.md)
+**Purpose:** Track all production builds for iOS and Android
+
+**What it contains:**
+- Build history with version, build number, date, size
+- Distribution channel status (TestFlight, Play Console)
+- Build-specific notes and features
+- Git tag references
+- Build checklist and conventions
+
+**When to update:**
+- After creating production builds (`flutter build ipa` or `flutter build appbundle`)
+- When uploading builds to App Store Connect or Play Console
+- After creating git tags for builds
+
+**Example use case:**
+> You just built version 1.0.0+1 for iOS and Android. Log both builds with sizes, distribution status, and create git tag `v1.0.0-build.1`.
+
+---
+
+### 📦 [Version_tracker.md](./Version_tracker.md)
+**Purpose:** Track app versions and releases
+
+**What it contains:**
+- Version history with release dates and types
+- Feature summaries for each version
+- Version numbering conventions
+- Planned future versions
+- Release channel information (Beta, Production)
+- Version support lifecycle
+
+**When to update:**
+- When releasing a new version
+- When planning future versions
+- After sprint completions that warrant version bump
+- When deprecating old versions
+
+**Example use case:**
+> You're releasing version 1.1.0 with health data integration. Update Version_tracker.md with the new features, increment version number, and note the release date.
+
+---
+
 ## Tracker Workflow
 
 ### Daily Development Workflow
@@ -131,6 +173,8 @@ This folder contains tracking documents for managing the development of the Run 
 - **Tech Debt:** TD-XXX (e.g., TD-001, TD-002)
 - **Future Enhancement:** FE-XXX (e.g., FE-001, FE-002)
 - **Nice to Have:** NTH-XXX (e.g., NTH-001, NTH-002)
+- **Version:** vMAJOR.MINOR.PATCH (e.g., v1.0.0, v1.1.0)
+- **Build Tag:** vMAJOR.MINOR.PATCH-build.N (e.g., v1.0.0-build.1)
 
 ### Priority Levels
 
@@ -312,6 +356,8 @@ The trackers complement [03-sprint-plan.md](../03-sprint-plan.md):
 | Change Log | 2 | 2025-12-28 |
 | Bug Tracker | 0 | 2025-12-28 |
 | Backlog | 12 | 2025-12-28 |
+| Build Tracker | 1 | 2026-01-11 |
+| Version Tracker | 1 | 2026-01-11 |
 
 ---
 
