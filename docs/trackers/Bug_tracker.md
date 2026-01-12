@@ -6,20 +6,40 @@ This document tracks all bugs discovered and their resolution status.
 
 | Status | Count |
 |--------|-------|
-| Open | 2 |
+| Open | 10 |
 | In Progress | 0 |
 | Fixed | 0 |
 | Closed | 3 |
-| **Total** | **5** |
+| **Total** | **13** |
 
 ---
 
 ## Open Bugs
 
+### 🔴 Critical Priority (Blockers for Beta Testing)
+
+| Bug ID | Priority | Sprint | Component | Description | Discovered | Assigned | Reference |
+|--------|----------|--------|-----------|-------------|------------|----------|-----------|
+| BUG-006 | Critical | Sprint 20 | iOS/Android Config | App icon not showing - default Flutter icon displays instead of custom icon | 2026-01-11 | - | TestFlight Build 1.0.0+1 |
+| BUG-007 | Critical | Sprint 11 | Goals Screen / Data | Goals screen shows empty when goal exists (home screen shows goal correctly) | 2026-01-11 | - | TestFlight Build 1.0.0+1 |
+| BUG-008 | Critical | Sprint 6 | Home Screen / State | Home screen stats don't update after completing run (requires sign out/in to refresh) | 2026-01-11 | - | TestFlight Build 1.0.0+1 |
+| BUG-009 | Critical | Sprint 11 | Journey Map / Map | Journey progress screen doesn't auto-center map to show full route | 2026-01-11 | - | TestFlight Build 1.0.0+1 |
+| BUG-010 | Critical | Sprint 11 | Journey Map / Visualization | Last position of user showing incorrectly on journey map | 2026-01-11 | - | TestFlight Build 1.0.0+1 |
+| BUG-011 | Critical | Sprint 11 | Journey Map / Visualization | Journey completed segment not showing in different color from remaining segment | 2026-01-11 | - | TestFlight Build 1.0.0+1 |
+
+### 🟠 High Priority
+
 | Bug ID | Priority | Sprint | Component | Description | Discovered | Assigned | Reference |
 |--------|----------|--------|-----------|-------------|------------|----------|-----------|
 | BUG-004 | High | Sprint 2 | Google Sign-In / Android | Google Sign-In fails on Android with API Exception 10 (Developer Console configuration issue) | 2026-01-06 | - | [Session 022](#bug-004-google-sign-in-failing-on-android-with-api-exception-10) |
 | BUG-005 | High | Sprint 5 | Run Summary / Data Persistence | Discard run button doesn't delete run from Hive storage (TODO comment, functionality incomplete) | 2026-01-10 | - | [Session 032](#bug-005-discard-run-doesnt-delete-from-hive-storage) |
+| BUG-012 | High | Sprint 6 | Run History / Specification | Run history scope unclear - shows runs from active goal only or all runs? Needs clarification | 2026-01-11 | - | TestFlight Build 1.0.0+1 |
+
+### 🟡 Medium Priority
+
+| Bug ID | Priority | Sprint | Component | Description | Discovered | Assigned | Reference |
+|--------|----------|--------|-----------|-------------|------------|----------|-----------|
+| BUG-013 | Medium | Sprint 16 | Home Screen / Ads | Ad container positioning fixed to top of Start Run button, feels cluttered | 2026-01-11 | - | TestFlight Build 1.0.0+1 |
 
 ---
 
